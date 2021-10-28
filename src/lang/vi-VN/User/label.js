@@ -13,6 +13,10 @@ module.exports = {
   'app.user.list.col4': 'Nhóm tài khoản',
   'app.user.list.col5': 'Trạng thái',
   'app.user.list.col6': 'Mật khẩu',
+  'app.user.list.col7': 'Tỉnh/Thành phố',
+  'app.user.list.col8': 'Quận/Huyện',
+  'app.user.list.col9': 'Phường/Xã',
+  'app.user.list.col10': 'Địa chỉ',
 
   // search
   'app.user.search.col0': 'Tìm kiếm theo tên tài khoản',
@@ -20,6 +24,7 @@ module.exports = {
   'app.user.search.col2': 'Tìm kiếm theo tên',
   'app.user.search.col3': 'Tìm kiếm theo email',
   'app.user.search.col4': 'Tìm kiếm theo số điện thoại',
+  'app.user.search.col5': 'Tìm kiếm theo Tỉnh/Thành phố',
 
   // upload
   'app.user.upload.title': 'Nhập danh sách tài khoản từ tệp Excel!',
@@ -29,6 +34,10 @@ module.exports = {
 
   // placeholder
   'app.user.list.username': 'Nhập tên tài khoản',
+  'app.user.list.province': 'Chọn Tỉnh/Thành phố',
+  'app.user.list.district': 'Chọn Quận/Huyện',
+  'app.user.list.ward': 'Chọn Phường/Xã',
+  'app.user.list.address': 'Nhập địa chỉ',
   'app.user.list.password': 'Nhập mật khẩu',
   'app.user.list.fullName': 'Nhập tên đầy đủ',
   'app.user.list.email': 'Nhập email',

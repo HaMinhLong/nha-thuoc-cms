@@ -6,6 +6,8 @@ const UserGroupRole = require('./en-US/UserGroupRole');
 const Login = require('./en-US/Login');
 const Account = require('./en-US/Account');
 const Province = require('./en-US/Province');
+const District = require('./en-US/District');
+const Ward = require('./en-US/Ward');
 
 module.exports = {
   'app.common.validate.max300':
@@ -88,4 +90,6 @@ module.exports = {
   ...Login,
   ...Account,
   ...Province,
+  ...District,
+  ...Ward,
 };

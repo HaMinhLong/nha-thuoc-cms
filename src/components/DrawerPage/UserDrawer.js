@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
   Input,
+  Row,
+  Col,
   Button,
   Spin,
   Popconfirm,
@@ -12,6 +14,9 @@ import regexHelper from '../../utils/regexHelper';
 import { useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import UserGroupSelect from '../Common/UserGroupSelect';
+import ProvinceSelect from '../../components/Common/ProvinceSelect';
+import DistrictSelect from '../../components/Common/DistrictSelect';
+import WardSelect from '../../components/Common/WardSelect';
 
 const FormItem = Form.Item;
 const { isFullNameNnumber, isFullName, isPhone, isEmail, isPassword } =
@@ -158,7 +163,7 @@ const UserGroupDrawer = ({
         </h3>
       }
       placement="right"
-      width={isMobile ? '100%' : 420}
+      width={isMobile ? '100%' : 800}
       onClose={() => changeDrawer('close')}
       visible={visibleDrawer}
       footer={
@@ -203,194 +208,321 @@ const UserGroupDrawer = ({
             email: data.email || '',
             mobile: data.mobile || '',
             userGroupId: data.userGroupId || '',
+            provinceId: data.provinceId || '',
+            districtId: data.districtId || '',
+            address: data.address || '',
+            wardId: data.wardId || '',
             status: data.id ? data.status : -2,
           }}
           ref={formRef}
           layout="vertical"
           key={`${data.id}_${key}` || '0'}
         >
-          <FormItem
-            label={
-              <span>
-                <span style={{ color: 'red' }}>*</span>&nbsp;
-                {intl.formatMessage({
-                  id: 'app.user.list.col0',
-                })}
-              </span>
-            }
-            name="username"
-            rules={[
-              {
-                pattern: isFullNameNnumber,
-                message: intl.formatMessage({
-                  id: 'app.common.crud.validate.fomat',
-                }),
-              },
-              {
-                required: true,
-                message: intl.formatMessage({
-                  id: 'app.common.crud.validate.input',
-                }),
-              },
-            ]}
-          >
-            <Input
-              placeholder={intl.formatMessage({
-                id: 'app.user.list.username',
-              })}
-            />
-          </FormItem>
-          {!data.id && (
-            <FormItem
-              label={
-                <span>
-                  <span style={{ color: 'red' }}>*</span>&nbsp;
-                  {intl.formatMessage({
-                    id: 'app.user.list.col6',
+          <Row gutter={[20, 20]}>
+            <Col xs={24} md={12}>
+              <FormItem
+                label={
+                  <span>
+                    <span style={{ color: 'red' }}>*</span>&nbsp;
+                    {intl.formatMessage({
+                      id: 'app.user.list.col0',
+                    })}
+                  </span>
+                }
+                name="username"
+                rules={[
+                  {
+                    pattern: isFullNameNnumber,
+                    message: intl.formatMessage({
+                      id: 'app.common.crud.validate.fomat',
+                    }),
+                  },
+                  {
+                    required: true,
+                    message: intl.formatMessage({
+                      id: 'app.common.crud.validate.input',
+                    }),
+                  },
+                ]}
+              >
+                <Input
+                  placeholder={intl.formatMessage({
+                    id: 'app.user.list.username',
                   })}
-                </span>
-              }
-              name="password"
-              rules={[
-                {
-                  pattern: isPassword,
-                  message: intl.formatMessage({
-                    id: 'app.common.crud.validate.password',
-                  }),
-                },
-                {
-                  required: true,
-                  message: intl.formatMessage({
-                    id: 'app.common.crud.validate.input',
-                  }),
-                },
-              ]}
-            >
-              <Input.Password
-                placeholder={intl.formatMessage({
-                  id: 'app.user.list.password',
-                })}
-              />
-            </FormItem>
-          )}
-          <FormItem
-            label={
-              <span>
-                <span style={{ color: 'red' }}>*</span>&nbsp;
-                {intl.formatMessage({
-                  id: 'app.user.list.col1',
-                })}
-              </span>
-            }
-            name="fullName"
-            rules={[
-              {
-                pattern: isFullName,
-                message: intl.formatMessage({
-                  id: 'app.common.crud.validate.fomat',
-                }),
-              },
-              {
-                required: true,
-                message: intl.formatMessage({
-                  id: 'app.common.crud.validate.input',
-                }),
-              },
-            ]}
-          >
-            <Input
-              placeholder={intl.formatMessage({
-                id: 'app.user.list.fullName',
-              })}
-            />
-          </FormItem>
-          <FormItem
-            label={
-              <span>
-                <span style={{ color: 'red' }}>*</span>&nbsp;
-                {intl.formatMessage({
-                  id: 'app.user.list.col2',
-                })}
-              </span>
-            }
-            name="email"
-            rules={[
-              {
-                pattern: isEmail,
-                message: intl.formatMessage({
-                  id: 'app.common.crud.validate.phone_email',
-                }),
-              },
-              {
-                required: true,
-                message: intl.formatMessage({
-                  id: 'app.common.crud.validate.input',
-                }),
-              },
-            ]}
-          >
-            <Input
-              placeholder={intl.formatMessage({
-                id: 'app.user.list.email',
-              })}
-            />
-          </FormItem>
-          <FormItem
-            label={
-              <span>
-                {intl.formatMessage({
-                  id: 'app.user.list.col3',
-                })}
-              </span>
-            }
-            name="mobile"
-            rules={[
-              {
-                pattern: isPhone,
-                message: intl.formatMessage({
-                  id: 'app.common.crud.validate.phone_email',
-                }),
-              },
-            ]}
-          >
-            <Input
-              placeholder={intl.formatMessage({
-                id: 'app.user.list.phone',
-              })}
-            />
-          </FormItem>
-          <FormItem
-            name="userGroupId"
-            label={
-              <span>
-                <span style={{ color: 'red' }}>*</span>&nbsp;
-                <FormattedMessage id="app.user.list.col4" />
-              </span>
-            }
-            rules={[
-              {
-                required: true,
-                message: intl.formatMessage({
-                  id: 'app.common.crud.validate.select',
-                }),
-              },
-            ]}
-          >
-            <UserGroupSelect
-              placeholder={intl.formatMessage({
-                id: 'app.user.list.userGroup',
-              })}
-              allowClear
-            />
-          </FormItem>
-          <FormItem
-            // {...formItemLayout}
-            hidden
-            name="status"
-            // valuePropName="checked"
-          >
-            <Input />
-          </FormItem>
+                />
+              </FormItem>
+              {!data.id && (
+                <FormItem
+                  label={
+                    <span>
+                      <span style={{ color: 'red' }}>*</span>&nbsp;
+                      {intl.formatMessage({
+                        id: 'app.user.list.col6',
+                      })}
+                    </span>
+                  }
+                  name="password"
+                  rules={[
+                    {
+                      pattern: isPassword,
+                      message: intl.formatMessage({
+                        id: 'app.common.crud.validate.password',
+                      }),
+                    },
+                    {
+                      required: true,
+                      message: intl.formatMessage({
+                        id: 'app.common.crud.validate.input',
+                      }),
+                    },
+                  ]}
+                >
+                  <Input.Password
+                    placeholder={intl.formatMessage({
+                      id: 'app.user.list.password',
+                    })}
+                  />
+                </FormItem>
+              )}
+              <FormItem
+                label={
+                  <span>
+                    <span style={{ color: 'red' }}>*</span>&nbsp;
+                    {intl.formatMessage({
+                      id: 'app.user.list.col1',
+                    })}
+                  </span>
+                }
+                name="fullName"
+                rules={[
+                  {
+                    pattern: isFullName,
+                    message: intl.formatMessage({
+                      id: 'app.common.crud.validate.fomat',
+                    }),
+                  },
+                  {
+                    required: true,
+                    message: intl.formatMessage({
+                      id: 'app.common.crud.validate.input',
+                    }),
+                  },
+                ]}
+              >
+                <Input
+                  placeholder={intl.formatMessage({
+                    id: 'app.user.list.fullName',
+                  })}
+                />
+              </FormItem>
+              <FormItem
+                label={
+                  <span>
+                    <span style={{ color: 'red' }}>*</span>&nbsp;
+                    {intl.formatMessage({
+                      id: 'app.user.list.col2',
+                    })}
+                  </span>
+                }
+                name="email"
+                rules={[
+                  {
+                    pattern: isEmail,
+                    message: intl.formatMessage({
+                      id: 'app.common.crud.validate.phone_email',
+                    }),
+                  },
+                  {
+                    required: true,
+                    message: intl.formatMessage({
+                      id: 'app.common.crud.validate.input',
+                    }),
+                  },
+                ]}
+              >
+                <Input
+                  placeholder={intl.formatMessage({
+                    id: 'app.user.list.email',
+                  })}
+                />
+              </FormItem>
+              <FormItem
+                label={
+                  <span>
+                    {intl.formatMessage({
+                      id: 'app.user.list.col3',
+                    })}
+                  </span>
+                }
+                name="mobile"
+                rules={[
+                  {
+                    pattern: isPhone,
+                    message: intl.formatMessage({
+                      id: 'app.common.crud.validate.phone_email',
+                    }),
+                  },
+                ]}
+              >
+                <Input
+                  placeholder={intl.formatMessage({
+                    id: 'app.user.list.phone',
+                  })}
+                />
+              </FormItem>
+              <FormItem
+                name="userGroupId"
+                label={
+                  <span>
+                    <span style={{ color: 'red' }}>*</span>&nbsp;
+                    <FormattedMessage id="app.user.list.col4" />
+                  </span>
+                }
+                rules={[
+                  {
+                    required: true,
+                    message: intl.formatMessage({
+                      id: 'app.common.crud.validate.select',
+                    }),
+                  },
+                ]}
+              >
+                <UserGroupSelect
+                  placeholder={intl.formatMessage({
+                    id: 'app.user.list.userGroup',
+                  })}
+                  allowClear
+                />
+              </FormItem>
+              <FormItem
+                // {...formItemLayout}
+                hidden
+                name="status"
+                // valuePropName="checked"
+              >
+                <Input />
+              </FormItem>
+            </Col>
+            <Col xs={24} md={12}>
+              <FormItem
+                name="provinceId"
+                label={
+                  <span>
+                    <span style={{ color: 'red' }}>*</span>&nbsp;
+                    <FormattedMessage id="app.user.list.col7" />
+                  </span>
+                }
+                rules={[
+                  {
+                    required: true,
+                    message: intl.formatMessage({
+                      id: 'app.common.crud.validate.select',
+                    }),
+                  },
+                ]}
+              >
+                <ProvinceSelect
+                  placeholder={intl.formatMessage({
+                    id: 'app.user.list.province',
+                  })}
+                  allowClear
+                />
+              </FormItem>
+              <FormItem
+                shouldUpdate={(prevValues, currentValues) =>
+                  prevValues.provinceId !== currentValues.provinceId
+                }
+                noStyle
+              >
+                {({ getFieldValue }) => (
+                  <FormItem
+                    name="districtId"
+                    label={
+                      <span>
+                        <span style={{ color: 'red' }}>*</span>&nbsp;
+                        <FormattedMessage id="app.user.list.col8" />
+                      </span>
+                    }
+                    rules={[
+                      {
+                        required: true,
+                        message: intl.formatMessage({
+                          id: 'app.common.crud.validate.select',
+                        }),
+                      },
+                    ]}
+                  >
+                    <DistrictSelect
+                      placeholder={intl.formatMessage({
+                        id: 'app.user.list.district',
+                      })}
+                      filter
+                      filterField={getFieldValue('provinceId') || 'a'}
+                      allowClear
+                    />
+                  </FormItem>
+                )}
+              </FormItem>
+              <FormItem
+                shouldUpdate={(prevValues, currentValues) =>
+                  prevValues.districtId !== currentValues.districtId
+                }
+                noStyle
+              >
+                {({ getFieldValue }) => (
+                  <FormItem
+                    name="wardId"
+                    label={
+                      <span>
+                        <span style={{ color: 'red' }}>*</span>&nbsp;
+                        <FormattedMessage id="app.user.list.col9" />
+                      </span>
+                    }
+                    rules={[
+                      {
+                        required: true,
+                        message: intl.formatMessage({
+                          id: 'app.common.crud.validate.select',
+                        }),
+                      },
+                    ]}
+                  >
+                    <WardSelect
+                      placeholder={intl.formatMessage({
+                        id: 'app.user.list.ward',
+                      })}
+                      filter
+                      filterField={getFieldValue('districtId') || 'a'}
+                      allowClear
+                    />
+                  </FormItem>
+                )}
+              </FormItem>
+              <FormItem
+                name="address"
+                label={
+                  <span>
+                    <FormattedMessage id="app.user.list.col10" />
+                  </span>
+                }
+                rules={[
+                  {
+                    max: 200,
+                    message: intl.formatMessage({
+                      id: 'app.common.validate.max200',
+                    }),
+                  },
+                ]}
+              >
+                <Input
+                  placeholder={intl.formatMessage({
+                    id: 'app.user.list.address',
+                  })}
+                  suffix={<span className="suffix">[200]</span>}
+                />
+              </FormItem>
+            </Col>
+          </Row>
         </Form>
       </Spin>
     </Drawer>

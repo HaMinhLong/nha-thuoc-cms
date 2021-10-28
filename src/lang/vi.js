@@ -6,6 +6,8 @@ const UserGroupRole = require('./vi-VN/UserGroupRole');
 const Login = require('./vi-VN/Login');
 const Account = require('./vi-VN/Account');
 const Province = require('./vi-VN/Province');
+const District = require('./vi-VN/District');
+const Ward = require('./vi-VN/Ward');
 
 module.exports = {
   'app.common.validate.max300':
@@ -89,4 +91,6 @@ module.exports = {
   ...Login,
   ...Account,
   ...Province,
+  ...District,
+  ...Ward,
 };

@@ -4,6 +4,9 @@ import { useDispatch } from 'react-redux';
 import regexHelper from '../../utils/regexHelper';
 import { FormattedMessage } from 'react-intl';
 import user from '../../static/web/images/user.svg';
+import ProvinceSelect from '../../components/Common/ProvinceSelect';
+import DistrictSelect from '../../components/Common/DistrictSelect';
+import WardSelect from '../../components/Common/WardSelect';
 const FormItem = Form.Item;
 const { isEmail, isPhone, isFullName, isFullNameNnumber } = regexHelper;
 
@@ -77,6 +80,10 @@ const AccountInfo = ({ isMobile, intl, currentUser, getCurrentUser }) => {
                 fullName: currentUser.fullName || '',
                 email: currentUser.email || '',
                 mobile: currentUser.mobile || '',
+                provinceId: currentUser.provinceId || '',
+                districtId: currentUser.districtId || '',
+                wardId: currentUser.wardId || '',
+                address: currentUser.address || '',
                 status: currentUser.id ? currentUser.status : -2,
               }}
               ref={formRef}
@@ -107,6 +114,7 @@ const AccountInfo = ({ isMobile, intl, currentUser, getCurrentUser }) => {
                     }),
                   },
                 ]}
+                hidden
               >
                 <Input
                   disabled
@@ -200,6 +208,123 @@ const AccountInfo = ({ isMobile, intl, currentUser, getCurrentUser }) => {
                   placeholder={intl.formatMessage({
                     id: 'app.user.list.phone',
                   })}
+                />
+              </FormItem>
+              <FormItem
+                name="provinceId"
+                label={
+                  <span>
+                    <span style={{ color: 'red' }}>*</span>&nbsp;
+                    <FormattedMessage id="app.user.list.col7" />
+                  </span>
+                }
+                rules={[
+                  {
+                    required: true,
+                    message: intl.formatMessage({
+                      id: 'app.common.crud.validate.select',
+                    }),
+                  },
+                ]}
+              >
+                <ProvinceSelect
+                  placeholder={intl.formatMessage({
+                    id: 'app.user.list.province',
+                  })}
+                  allowClear
+                />
+              </FormItem>
+              <FormItem
+                shouldUpdate={(prevValues, currentValues) =>
+                  prevValues.provinceId !== currentValues.provinceId
+                }
+                noStyle
+              >
+                {({ getFieldValue }) => (
+                  <FormItem
+                    name="districtId"
+                    label={
+                      <span>
+                        <span style={{ color: 'red' }}>*</span>&nbsp;
+                        <FormattedMessage id="app.user.list.col8" />
+                      </span>
+                    }
+                    rules={[
+                      {
+                        required: true,
+                        message: intl.formatMessage({
+                          id: 'app.common.crud.validate.select',
+                        }),
+                      },
+                    ]}
+                  >
+                    <DistrictSelect
+                      placeholder={intl.formatMessage({
+                        id: 'app.user.list.district',
+                      })}
+                      filter
+                      filterField={getFieldValue('provinceId') || 'a'}
+                      allowClear
+                    />
+                  </FormItem>
+                )}
+              </FormItem>
+              <FormItem
+                shouldUpdate={(prevValues, currentValues) =>
+                  prevValues.districtId !== currentValues.districtId
+                }
+                noStyle
+              >
+                {({ getFieldValue }) => (
+                  <FormItem
+                    name="wardId"
+                    label={
+                      <span>
+                        <span style={{ color: 'red' }}>*</span>&nbsp;
+                        <FormattedMessage id="app.user.list.col9" />
+                      </span>
+                    }
+                    rules={[
+                      {
+                        required: true,
+                        message: intl.formatMessage({
+                          id: 'app.common.crud.validate.select',
+                        }),
+                      },
+                    ]}
+                  >
+                    <WardSelect
+                      placeholder={intl.formatMessage({
+                        id: 'app.user.list.ward',
+                      })}
+                      filter
+                      filterField={getFieldValue('districtId') || 'a'}
+                      allowClear
+                    />
+                  </FormItem>
+                )}
+              </FormItem>
+              <FormItem
+                name="address"
+                label={
+                  <span>
+                    <FormattedMessage id="app.user.list.col10" />
+                  </span>
+                }
+                rules={[
+                  {
+                    max: 200,
+                    message: intl.formatMessage({
+                      id: 'app.common.validate.max200',
+                    }),
+                  },
+                ]}
+              >
+                <Input
+                  placeholder={intl.formatMessage({
+                    id: 'app.user.list.address',
+                  })}
+                  suffix={<span className="suffix">[200]</span>}
                 />
               </FormItem>
               <Button

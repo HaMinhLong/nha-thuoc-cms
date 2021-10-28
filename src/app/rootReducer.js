@@ -5,6 +5,8 @@ import configReducer from '../features/config/configSlice';
 import userGroupRoleReducer from '../features/userGroupRole/userGroupRoleSlice';
 import authReducer from '../features/auth/authSlice';
 import provinceReducer from '../features/province/provinceSlice';
+import districtReducer from '../features/district/districtSlice';
+import wardReducer from '../features/ward/wardSlice';
 
 export const rootReducer = {
   userGroup: userGroupReducer,
@@ -14,4 +16,6 @@ export const rootReducer = {
   userGroupRole: userGroupRoleReducer,
   auth: authReducer,
   province: provinceReducer,
+  district: districtReducer,
+  ward: wardReducer,
 };

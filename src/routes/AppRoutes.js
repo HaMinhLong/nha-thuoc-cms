@@ -9,6 +9,8 @@ import Config from '../pages/Config/Config';
 import UserGroupRole from '../pages/UserGroupRole/UserGroupRole';
 import Account from '../pages/Account/Account';
 import Province from '../pages/Province/Province';
+import District from '../pages/District/District';
+import Ward from '../pages/Ward/Ward';
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
 const AppRoutes = ({ headerPage }) => {
@@ -35,6 +37,12 @@ const AppRoutes = ({ headerPage }) => {
         </Route>
         <Route path="/province/:id">
           <Province isMobile={isMobile} intl={intl} headerPage={headerPage} />
+        </Route>
+        <Route path="/district/:id">
+          <District isMobile={isMobile} intl={intl} headerPage={headerPage} />
+        </Route>
+        <Route path="/ward/:id">
+          <Ward isMobile={isMobile} intl={intl} headerPage={headerPage} />
         </Route>
         <Route path="/grant-permissions/:id">
           <UserGroupRole

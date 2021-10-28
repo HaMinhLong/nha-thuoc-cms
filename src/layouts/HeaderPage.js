@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Layout, Menu } from 'antd';
 import { Link } from 'react-router-dom';
 import { useIntl } from 'react-intl';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo-page.png';
 import { useDispatch, useSelector } from 'react-redux';
 import RightContentHeader from '../components/RightContentHeader/RightContentHeader';
 import { userGroupRole } from '../features/userGroupRole/userGroupRoleSlice';
