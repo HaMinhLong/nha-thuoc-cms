@@ -11,6 +11,7 @@ import { wardSaga } from '../features/ward/wardSaga';
 import { paymentMethodSaga } from '../features/paymentMethod/paymentMethodSaga';
 import { medicalFacilityGroupSaga } from '../features/medicalFacilityGroup/medicalFacilityGroupSaga';
 import { specialistSaga } from '../features/specialist/specialistSaga';
+import { medicalFacilitySaga } from '../features/medicalFacility/medicalFacilitySaga';
 import { placeSaga } from '../features/place/placeSaga';
 
 export default function* rootSaga() {
@@ -27,6 +28,7 @@ export default function* rootSaga() {
     paymentMethodSaga(),
     medicalFacilityGroupSaga(),
     specialistSaga(),
+    medicalFacilitySaga(),
     placeSaga(),
   ]);
 }

@@ -10,6 +10,7 @@ import wardReducer from '../features/ward/wardSlice';
 import paymentMethodReducer from '../features/paymentMethod/paymentMethodSlice';
 import medicalFacilityGroupReducer from '../features/medicalFacilityGroup/medicalFacilityGroupSlice';
 import specialistReducer from '../features/specialist/specialistSlice';
+import medicalFacilityReducer from '../features/medicalFacility/medicalFacilitySlice';
 import placeReducer from '../features/place/placeSlice';
 
 export const rootReducer = {
@@ -26,4 +27,5 @@ export const rootReducer = {
   medicalFacilityGroup: medicalFacilityGroupReducer,
   specialist: specialistReducer,
   place: placeReducer,
+  medicalFacility: medicalFacilityReducer,
 };

@@ -11,6 +11,7 @@ const Ward = require('./vi-VN/Ward');
 const PaymentMethod = require('./vi-VN/PaymentMethod');
 const MedicalFacilityGroup = require('./vi-VN/MedicalFacilityGroup');
 const Specialist = require('./vi-VN/Specialist');
+const MedicalFacility = require('./vi-VN/MedicalFacility');
 const Place = require('./vi-VN/Place');
 
 module.exports = {
@@ -102,4 +103,5 @@ module.exports = {
   ...MedicalFacilityGroup,
   ...Specialist,
   ...Place,
+  ...MedicalFacility,
 };

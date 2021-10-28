@@ -14,6 +14,7 @@ import Ward from '../pages/Ward/Ward';
 import PaymentMethod from '../pages/PaymentMethod/PaymentMethod';
 import MedicalFacilityGroup from '../pages/MedicalFacilityGroup/MedicalFacilityGroup';
 import Specialist from '../pages/Specialist/Specialist';
+import MedicalFacility from '../pages/MedicalFacility/MedicalFacility';
 import Place from '../pages/Place/Place';
 
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
@@ -66,10 +67,16 @@ const AppRoutes = ({ headerPage }) => {
         <Route path="/specialist/:id">
           <Specialist isMobile={isMobile} intl={intl} headerPage={headerPage} />
         </Route>
+        <Route path="/medical-facility/:id">
+          <MedicalFacility
+            isMobile={isMobile}
+            intl={intl}
+            headerPage={headerPage}
+          />
+        </Route>
         <Route path="/place/:id">
           <Place isMobile={isMobile} intl={intl} headerPage={headerPage} />
         </Route>
-
         <Route path="/grant-permissions/:id">
           <UserGroupRole
             isMobile={isMobile}

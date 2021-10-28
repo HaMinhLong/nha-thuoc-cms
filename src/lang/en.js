@@ -11,6 +11,7 @@ const Ward = require('./en-US/Ward');
 const PaymentMethod = require('./en-US/PaymentMethod');
 const MedicalFacilityGroup = require('./en-US/MedicalFacilityGroup');
 const Specialist = require('./en-US/Specialist');
+const MedicalFacility = require('./en-US/MedicalFacility');
 const Place = require('./en-US/Place');
 
 module.exports = {
@@ -101,4 +102,5 @@ module.exports = {
   ...MedicalFacilityGroup,
   ...Specialist,
   ...Place,
+  ...MedicalFacility,
 };

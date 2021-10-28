@@ -1,7 +1,7 @@
 module.exports = {
   // Tiêu đề
   'app.place.list.title': 'place',
-  'app.place.list.header': 'Manage place',
+  'app.place.list.header': 'Manage places',
   'app.place.update.header': 'Edit place',
   'app.place.create.header': 'Add new place',
 
