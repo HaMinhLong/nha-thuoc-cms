@@ -9,6 +9,7 @@ const Province = require('./en-US/Province');
 const District = require('./en-US/District');
 const Ward = require('./en-US/Ward');
 const PaymentMethod = require('./en-US/PaymentMethod');
+const MedicalFacilityGroup = require('./en-US/MedicalFacilityGroup');
 
 module.exports = {
   'app.common.validate.max300':
@@ -95,4 +96,5 @@ module.exports = {
   ...District,
   ...Ward,
   ...PaymentMethod,
+  ...MedicalFacilityGroup,
 };

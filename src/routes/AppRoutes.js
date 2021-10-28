@@ -12,6 +12,7 @@ import Province from '../pages/Province/Province';
 import District from '../pages/District/District';
 import Ward from '../pages/Ward/Ward';
 import PaymentMethod from '../pages/PaymentMethod/PaymentMethod';
+import MedicalFacilityGroup from '../pages/MedicalFacilityGroup/MedicalFacilityGroup';
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
 const AppRoutes = ({ headerPage }) => {
@@ -47,6 +48,13 @@ const AppRoutes = ({ headerPage }) => {
         </Route>
         <Route path="/payment-method/:id">
           <PaymentMethod
+            isMobile={isMobile}
+            intl={intl}
+            headerPage={headerPage}
+          />
+        </Route>
+        <Route path="/medical-facility-group/:id">
+          <MedicalFacilityGroup
             isMobile={isMobile}
             intl={intl}
             headerPage={headerPage}
