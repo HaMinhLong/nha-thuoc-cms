@@ -6,7 +6,7 @@ module.exports = {
   'app.specialist.create.header': 'Add new specialist',
 
   // Tiêu đề các cột
-  'app.specialist.list.col0': 'specialist name',
+  'app.specialist.list.col0': 'Specialist name',
   'app.specialist.list.col1': 'Description',
   'app.specialist.list.col2': 'Status',
 

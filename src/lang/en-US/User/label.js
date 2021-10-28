@@ -37,7 +37,7 @@ module.exports = {
   'app.user.list.province': 'Select province',
   'app.user.list.district': 'Select district',
   'app.user.list.ward': 'Select ward',
-  'app.user.list.address': 'Enter address',
+  'app.user.list.address': 'Enter house number, street,...',
   'app.user.list.password': 'Enter password',
   'app.user.list.fullName': 'Enter full name',
   'app.user.list.email': 'Enter email',

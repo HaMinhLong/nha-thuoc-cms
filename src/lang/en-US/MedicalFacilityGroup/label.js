@@ -6,7 +6,7 @@ module.exports = {
   'app.medicalFacilityGroup.create.header': 'Add new medical facility group',
 
   // Tiêu đề các cột
-  'app.medicalFacilityGroup.list.col0': 'medical facility group name',
+  'app.medicalFacilityGroup.list.col0': 'Medical facility group name',
   'app.medicalFacilityGroup.list.col1': 'Description',
   'app.medicalFacilityGroup.list.col2': 'Status',
 

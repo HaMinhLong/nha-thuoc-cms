@@ -10,7 +10,8 @@ const District = require('./vi-VN/District');
 const Ward = require('./vi-VN/Ward');
 const PaymentMethod = require('./vi-VN/PaymentMethod');
 const MedicalFacilityGroup = require('./vi-VN/MedicalFacilityGroup');
-const SpecialistSaga = require('./vi-VN/SpecialistSaga');
+const Specialist = require('./vi-VN/Specialist');
+const Place = require('./vi-VN/Place');
 
 module.exports = {
   'app.common.validate.max300':
@@ -99,5 +100,6 @@ module.exports = {
   ...Ward,
   ...PaymentMethod,
   ...MedicalFacilityGroup,
-  ...SpecialistSaga,
+  ...Specialist,
+  ...Place,
 };

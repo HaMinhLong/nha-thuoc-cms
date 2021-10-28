@@ -37,7 +37,7 @@ module.exports = {
   'app.user.list.province': 'Chọn Tỉnh/Thành phố',
   'app.user.list.district': 'Chọn Quận/Huyện',
   'app.user.list.ward': 'Chọn Xã/Phường',
-  'app.user.list.address': 'Nhập địa chỉ',
+  'app.user.list.address': 'Nhập số nhà, đường,...',
   'app.user.list.password': 'Nhập mật khẩu',
   'app.user.list.fullName': 'Nhập tên đầy đủ',
   'app.user.list.email': 'Nhập email',
