@@ -10,6 +10,7 @@ import { districtSaga } from '../features/district/districtSaga';
 import { wardSaga } from '../features/ward/wardSaga';
 import { paymentMethodSaga } from '../features/paymentMethod/paymentMethodSaga';
 import { medicalFacilityGroupSaga } from '../features/medicalFacilityGroup/medicalFacilityGroupSaga';
+import { specialistSaga } from '../features/specialist/specialistSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -24,5 +25,6 @@ export default function* rootSaga() {
     wardSaga(),
     paymentMethodSaga(),
     medicalFacilityGroupSaga(),
+    specialistSaga(),
   ]);
 }

@@ -13,6 +13,8 @@ import District from '../pages/District/District';
 import Ward from '../pages/Ward/Ward';
 import PaymentMethod from '../pages/PaymentMethod/PaymentMethod';
 import MedicalFacilityGroup from '../pages/MedicalFacilityGroup/MedicalFacilityGroup';
+import Specialist from '../pages/Specialist/Specialist';
+
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
 const AppRoutes = ({ headerPage }) => {
@@ -60,6 +62,10 @@ const AppRoutes = ({ headerPage }) => {
             headerPage={headerPage}
           />
         </Route>
+        <Route path="/specialist/:id">
+          <Specialist isMobile={isMobile} intl={intl} headerPage={headerPage} />
+        </Route>
+
         <Route path="/grant-permissions/:id">
           <UserGroupRole
             isMobile={isMobile}

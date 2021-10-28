@@ -9,6 +9,7 @@ import districtReducer from '../features/district/districtSlice';
 import wardReducer from '../features/ward/wardSlice';
 import paymentMethodReducer from '../features/paymentMethod/paymentMethodSlice';
 import medicalFacilityGroupReducer from '../features/medicalFacilityGroup/medicalFacilityGroupSlice';
+import specialistReducer from '../features/specialist/specialistSlice';
 
 export const rootReducer = {
   userGroup: userGroupReducer,
@@ -22,4 +23,5 @@ export const rootReducer = {
   ward: wardReducer,
   paymentMethod: paymentMethodReducer,
   medicalFacilityGroup: medicalFacilityGroupReducer,
+  specialist: specialistReducer,
 };
