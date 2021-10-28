@@ -8,6 +8,7 @@ const Account = require('./en-US/Account');
 const Province = require('./en-US/Province');
 const District = require('./en-US/District');
 const Ward = require('./en-US/Ward');
+const PaymentMethod = require('./en-US/PaymentMethod');
 
 module.exports = {
   'app.common.validate.max300':
@@ -42,6 +43,7 @@ module.exports = {
   'app.common.crudBtns.1': 'Refresh',
   'app.common.crudBtns.2': 'Save',
   'app.common.crudBtns.3': 'Export report',
+  'app.common.crudBtns.4': 'Save',
   'app.common.searchBtn': 'Search',
   'app.common.forgotBtn': 'Send email',
   'app.common.delete.success': 'Delete record successfully!',
@@ -92,4 +94,5 @@ module.exports = {
   ...Province,
   ...District,
   ...Ward,
+  ...PaymentMethod,
 };

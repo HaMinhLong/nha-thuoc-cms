@@ -7,6 +7,7 @@ import authReducer from '../features/auth/authSlice';
 import provinceReducer from '../features/province/provinceSlice';
 import districtReducer from '../features/district/districtSlice';
 import wardReducer from '../features/ward/wardSlice';
+import paymentMethodReducer from '../features/paymentMethod/paymentMethodSlice';
 
 export const rootReducer = {
   userGroup: userGroupReducer,
@@ -18,4 +19,5 @@ export const rootReducer = {
   province: provinceReducer,
   district: districtReducer,
   ward: wardReducer,
+  paymentMethod: paymentMethodReducer,
 };

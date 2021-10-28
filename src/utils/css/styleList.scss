@@ -153,11 +153,18 @@ $screen-xs: 576px;
 }
 
 .ant-btn.btn_edit {
-  color: #1890ff;
+  color: #1878bc;
   background-color: #fff !important;
-  border: 1px solid #1890ff !important;
+  border: 1px solid #1878bc !important;
   // -webkit-box-shadow: 0 1px 1px 0 rgba(197 197 197 / 50%);
   // box-shadow: 0 1px 1px 0 rgba(197 197 197 / 50%);
+  padding: 6px 10px !important;
+  font-weight: 500 !important;
+  min-width: 65px !important;
+  border-radius: 5px;
+}
+.ant-btn.btn_edit_v2 {
+  background-color: #fff !important;
   padding: 6px 10px !important;
   font-weight: 500 !important;
   min-width: 65px !important;
@@ -309,7 +316,7 @@ $screen-xs: 576px;
   background: #77d677 !important;
 }
 .footer {
-  background-color: #1890ff;
+  background-color: #1878bc;
 }
 @media screen and (max-width: $screen-lg) {
   .tableListForm {

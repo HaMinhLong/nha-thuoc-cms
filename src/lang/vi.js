@@ -8,6 +8,7 @@ const Account = require('./vi-VN/Account');
 const Province = require('./vi-VN/Province');
 const District = require('./vi-VN/District');
 const Ward = require('./vi-VN/Ward');
+const PaymentMethod = require('./vi-VN/PaymentMethod');
 
 module.exports = {
   'app.common.validate.max300':
@@ -42,6 +43,7 @@ module.exports = {
   'app.common.crudBtns.1': 'Làm mới',
   'app.common.crudBtns.2': 'Lưu lại',
   'app.common.crudBtns.3': 'Xuất báo cáo',
+  'app.common.crudBtns.4': 'Lưu',
   'app.common.searchBtn': 'Tìm kiếm',
   'app.common.forgotBtn': 'Gửi email',
   'app.common.delete.success': 'Xóa bản ghi thành công!',
@@ -93,4 +95,5 @@ module.exports = {
   ...Province,
   ...District,
   ...Ward,
+  ...PaymentMethod,
 };

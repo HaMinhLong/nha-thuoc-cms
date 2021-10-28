@@ -11,6 +11,7 @@ import Account from '../pages/Account/Account';
 import Province from '../pages/Province/Province';
 import District from '../pages/District/District';
 import Ward from '../pages/Ward/Ward';
+import PaymentMethod from '../pages/PaymentMethod/PaymentMethod';
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
 const AppRoutes = ({ headerPage }) => {
@@ -43,6 +44,13 @@ const AppRoutes = ({ headerPage }) => {
         </Route>
         <Route path="/ward/:id">
           <Ward isMobile={isMobile} intl={intl} headerPage={headerPage} />
+        </Route>
+        <Route path="/payment-method/:id">
+          <PaymentMethod
+            isMobile={isMobile}
+            intl={intl}
+            headerPage={headerPage}
+          />
         </Route>
         <Route path="/grant-permissions/:id">
           <UserGroupRole
