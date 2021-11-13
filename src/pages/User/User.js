@@ -83,7 +83,7 @@ const User = ({ isMobile, intl, headerPage }) => {
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
       attributes:
-        'id,username,fullName,email,mobile,userGroupId,status,createdAt',
+        'id,username,fullName,email,mobile,userGroupId,healthFacilityId,status,createdAt',
     };
     let values = {};
     if (query && query.filter && query.filter !== '{}') {
@@ -213,7 +213,7 @@ const User = ({ isMobile, intl, headerPage }) => {
       ]),
       sort: JSON.stringify(sort),
       attributes:
-        'id,username,fullName,email,mobile,userGroupId,status,createdAt',
+        'id,username,fullName,email,mobile,userGroupId,healthFacilityId,status,createdAt',
     };
     dispatch(filter(queryFilter));
     dispatch({
@@ -273,7 +273,7 @@ const User = ({ isMobile, intl, headerPage }) => {
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
       attributes:
-        'id,username,fullName,email,mobile,userGroupId,status,createdAt',
+        'id,username,fullName,email,mobile,userGroupId,healthFacilityId,status,createdAt',
     };
     dispatch(filter(values));
     dispatch({

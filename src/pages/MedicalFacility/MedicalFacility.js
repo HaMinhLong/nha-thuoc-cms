@@ -440,10 +440,6 @@ const MedicalFacility = ({ isMobile, intl, headerPage }) => {
         status: -1,
         name: intl.formatMessage({ id: 'app.common.statusTag.-1' }),
       },
-      {
-        status: -2,
-        name: intl.formatMessage({ id: 'app.common.statusTag.-2' }),
-      },
     ];
 
     const statusList = menuStatus.filter((x) => x.status !== cell);
@@ -484,17 +480,7 @@ const MedicalFacility = ({ isMobile, intl, headerPage }) => {
                   </Menu.Item>
                 )
               );
-            if (item.status === -2)
-              return (
-                permissions.isApprove && (
-                  <Menu.Item
-                    key={item.status}
-                    onClick={() => handleStatus(item.status, row)}
-                  >
-                    <div>{item.name}</div>
-                  </Menu.Item>
-                )
-              );
+
             return (
               <Menu.Item
                 key={item.status}
@@ -524,13 +510,6 @@ const MedicalFacility = ({ isMobile, intl, headerPage }) => {
       btn = (
         <Button className="btn_statusAn">
           {intl.formatMessage({ id: 'app.common.statusTag.-1' })}
-          <img src={dropdownBlack} alt="icon drop down" />
-        </Button>
-      );
-    } else if (cell === -2) {
-      btn = (
-        <Button className="btn_statusAn notActivated">
-          {intl.formatMessage({ id: 'app.common.statusTag.-2' })}
           <img src={dropdownBlack} alt="icon drop down" />
         </Button>
       );

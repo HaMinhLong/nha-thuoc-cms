@@ -16,7 +16,7 @@ import MedicalFacilityGroup from '../pages/MedicalFacilityGroup/MedicalFacilityG
 import Specialist from '../pages/Specialist/Specialist';
 import MedicalFacility from '../pages/MedicalFacility/MedicalFacility';
 import Place from '../pages/Place/Place';
-
+import HealthFacility from '../pages/HealthFacility/HealthFacility';
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
 const AppRoutes = ({ headerPage }) => {
@@ -66,6 +66,13 @@ const AppRoutes = ({ headerPage }) => {
         </Route>
         <Route path="/specialist/:id">
           <Specialist isMobile={isMobile} intl={intl} headerPage={headerPage} />
+        </Route>
+        <Route path="/health-facility/:id">
+          <HealthFacility
+            isMobile={isMobile}
+            intl={intl}
+            headerPage={headerPage}
+          />
         </Route>
         <Route path="/medical-facility/:id">
           <MedicalFacility

@@ -152,7 +152,7 @@ const PlaceDrawer = ({
           {data.id
             ? intl.formatMessage(
                 { id: 'app.title.update' },
-                { name: data.username }
+                { name: data.placeName }
               )
             : intl.formatMessage({ id: 'app.place.create.header' })}
         </h3>
@@ -286,12 +286,6 @@ const PlaceDrawer = ({
                 pattern: isPhone,
                 message: intl.formatMessage({
                   id: 'app.common.crud.validate.phone_email',
-                }),
-              },
-              {
-                required: true,
-                message: intl.formatMessage({
-                  id: 'app.common.crud.validate.input',
                 }),
               },
             ]}

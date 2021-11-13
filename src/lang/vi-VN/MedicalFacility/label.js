@@ -21,7 +21,7 @@ module.exports = {
   'app.medicalFacility.search.col2': 'Tìm kiếm theo Tỉnh/Thành phố',
 
   // placeholder
-  'app.medicalFacility.list.placeName': 'Nhập tên cơ sở khám bệnh',
+  'app.medicalFacility.list.medicalFacilityName': 'Nhập tên cơ sở khám bệnh',
   'app.medicalFacility.list.email': 'Nhập email',
   'app.medicalFacility.list.phone': 'Nhập số điện thoại',
   'app.medicalFacility.list.province': 'Chọn Tỉnh/Thành phố',

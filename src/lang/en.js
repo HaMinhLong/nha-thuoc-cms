@@ -13,6 +13,7 @@ const MedicalFacilityGroup = require('./en-US/MedicalFacilityGroup');
 const Specialist = require('./en-US/Specialist');
 const MedicalFacility = require('./en-US/MedicalFacility');
 const Place = require('./en-US/Place');
+const HealthFacility = require('./en-US/HealthFacility');
 
 module.exports = {
   'app.common.validate.max300':
@@ -103,4 +104,5 @@ module.exports = {
   ...Specialist,
   ...Place,
   ...MedicalFacility,
+  ...HealthFacility,
 };

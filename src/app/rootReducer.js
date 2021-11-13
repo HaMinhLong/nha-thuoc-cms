@@ -12,6 +12,7 @@ import medicalFacilityGroupReducer from '../features/medicalFacilityGroup/medica
 import specialistReducer from '../features/specialist/specialistSlice';
 import medicalFacilityReducer from '../features/medicalFacility/medicalFacilitySlice';
 import placeReducer from '../features/place/placeSlice';
+import healthFacilityReducer from '../features/healthFacility/healthFacilitySlice';
 
 export const rootReducer = {
   userGroup: userGroupReducer,
@@ -28,4 +29,5 @@ export const rootReducer = {
   specialist: specialistReducer,
   place: placeReducer,
   medicalFacility: medicalFacilityReducer,
+  healthFacility: healthFacilityReducer,
 };

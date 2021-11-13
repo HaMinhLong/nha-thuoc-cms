@@ -20,27 +20,33 @@ import HeaderContent from '../../layouts/HeaderContent';
 import Table from '../../components/Table';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
-import { place, filter } from '../../features/place/placeSlice';
+import {
+  healthFacility,
+  filter,
+} from '../../features/healthFacility/healthFacilitySlice';
 import '../../utils/css/styleList.scss';
 import moment from 'moment';
 import filterIcon from '../../static/web/images/filter.svg';
 import dropdownWhite from '../../static/web/images/dropDown_white.svg';
 import dropdownBlack from '../../static/web/images/dropDown_black.svg';
 import { formatNumber } from '../../utils/utils';
-import PlaceDrawer from '../../components/DrawerPage/PlaceDrawer';
+import HealthFacilityModal from '../../components/ModalPage/HealthFacilityModal';
 import { useParams } from 'react-router-dom';
+import MedicalFacilityGroupSelect from '../../components/Common/MedicalFacilityGroupSelect.js';
 import ProvinceSelect from '../../components/Common/ProvinceSelect';
+import DistrictSelect from '../../components/Common/DistrictSelect';
+import WardSelect from '../../components/Common/WardSelect';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const PAGE_SIZE = process.env.REACT_APP_PAGE_SIZE;
-const Place = ({ isMobile, intl, headerPage }) => {
+const HealthFacility = ({ isMobile, intl, headerPage }) => {
   let { id } = useParams();
   const userGroupId = localStorage.getItem('userGroupId');
   const dispatch = useDispatch();
-  const list = useSelector(place);
+  const list = useSelector(healthFacility);
   const [loading, setLoading] = useState(false);
-  const [visibleDrawer, setVisibleDrawer] = useState(false);
+  const [visibleModal, setVisibleModal] = useState(false);
   const [visibleFilter, setVisibleFilter] = useState(false);
   const [dataEdit, setDataEdit] = useState({});
   const [permissions, setPermissions] = useState({});
@@ -78,7 +84,8 @@ const Place = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify({}),
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
-      attributes: 'id,placeName,email,mobile,status,createdAt',
+      attributes:
+        'id,healthFacilityName,healthFacilityCode,taxCode,email,mobile,status,createdAt',
     };
     let values = {};
     if (query && query.filter && query.filter !== '{}') {
@@ -104,7 +111,7 @@ const Place = ({ isMobile, intl, headerPage }) => {
     }
     dispatch(filter(values));
     dispatch({
-      type: 'place/fetch',
+      type: 'healthFacility/fetch',
       payload: params,
       callback: (res) => {
         setLoading(false);
@@ -121,7 +128,7 @@ const Place = ({ isMobile, intl, headerPage }) => {
       status,
     };
     dispatch({
-      type: 'place/updateStatus',
+      type: 'healthFacility/updateStatus',
       payload: {
         id: row.id,
         params: item,
@@ -161,17 +168,43 @@ const Place = ({ isMobile, intl, headerPage }) => {
         ? rangeValue[1].set({ hour: 23, minute: 59, second: 59 })
         : '';
     const queryName = {
-      placeName: queryFilter.placeName && queryFilter.placeName.trim(),
+      healthFacilityName:
+        queryFilter.healthFacilityName && queryFilter.healthFacilityName.trim(),
+      healthFacilityCode:
+        queryFilter.healthFacilityCode && queryFilter.healthFacilityCode.trim(),
+      mobile: queryFilter && queryFilter.mobile,
       provinceId: queryFilter && queryFilter.provinceId,
+      districtId: queryFilter && queryFilter.districtId,
+      wardId: queryFilter && queryFilter.wardId,
+      medicalFacilityGroupId: queryFilter && queryFilter.medicalFacilityGroupId,
       status: queryFilter && queryFilter.status,
       fromDate: fromDate,
       toDate: toDate,
     };
-    if (!(queryFilter.placeName && queryFilter.placeName.trim())) {
-      delete queryName.placeName;
+    if (
+      !(queryFilter.healthFacilityName && queryFilter.healthFacilityName.trim())
+    ) {
+      delete queryName.healthFacilityName;
+    }
+    if (
+      !(queryFilter.healthFacilityCode && queryFilter.healthFacilityCode.trim())
+    ) {
+      delete queryName.healthFacilityCode;
+    }
+    if (!queryFilter.mobile) {
+      delete queryName.mobile;
     }
     if (!queryFilter.provinceId) {
       delete queryName.provinceId;
+    }
+    if (!queryFilter.districtId) {
+      delete queryName.districtId;
+    }
+    if (!queryFilter.wardId) {
+      delete queryName.wardId;
+    }
+    if (!queryFilter.medicalFacilityGroupId) {
+      delete queryName.medicalFacilityGroupId;
     }
     if (!queryFilter.status) {
       delete queryName.status;
@@ -191,11 +224,12 @@ const Place = ({ isMobile, intl, headerPage }) => {
         pagination.current * pagination.pageSize,
       ]),
       sort: JSON.stringify(sort),
-      attributes: 'id,placeName,email,mobile,status,createdAt',
+      attributes:
+        'id,healthFacilityName,healthFacilityCode,taxCode,email,mobile,status,createdAt',
     };
     dispatch(filter(queryFilter));
     dispatch({
-      type: 'place/fetch',
+      type: 'healthFacility/fetch',
       payload: query,
       callback: (res) => {
         setLoading(false);
@@ -215,17 +249,39 @@ const Place = ({ isMobile, intl, headerPage }) => {
         ? rangeValue[1].set({ hour: 23, minute: 59, second: 59 })
         : '';
     const queryName = {
-      placeName: values.placeName && values.placeName.trim(),
+      healthFacilityName:
+        values.healthFacilityName && values.healthFacilityName.trim(),
+      healthFacilityCode:
+        values.healthFacilityCode && values.healthFacilityCode.trim(),
+      mobile: values && values.mobile,
       provinceId: values && values.provinceId,
+      districtId: values && values.districtId,
+      wardId: values && values.wardId,
+      medicalFacilityGroupId: values && values.medicalFacilityGroupId,
       status: values && values.status,
       fromDate: fromDate,
       toDate: toDate,
     };
-    if (!(values.placeName && values.placeName.trim())) {
-      delete queryName.placeName;
+    if (!(values.healthFacilityName && values.healthFacilityName.trim())) {
+      delete queryName.healthFacilityName;
+    }
+    if (!(values.healthFacilityCode && values.healthFacilityCode.trim())) {
+      delete queryName.healthFacilityCode;
+    }
+    if (!values.mobile) {
+      delete queryName.mobile;
     }
     if (!values.provinceId) {
       delete queryName.provinceId;
+    }
+    if (!values.districtId) {
+      delete queryName.districtId;
+    }
+    if (!values.wardId) {
+      delete queryName.wardId;
+    }
+    if (!values.medicalFacilityGroupId) {
+      delete queryName.medicalFacilityGroupId;
     }
     if (!values.status) {
       delete queryName.status;
@@ -238,11 +294,12 @@ const Place = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify(queryName),
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
-      attributes: 'id,placeName,email,mobile,status,createdAt',
+      attributes:
+        'id,healthFacilityName,healthFacilityCode,taxCode,email,mobile,status,createdAt',
     };
     dispatch(filter(values));
     dispatch({
-      type: 'place/fetch',
+      type: 'healthFacility/fetch',
       payload: query,
       callback: (res) => {
         setLoading(false);
@@ -278,8 +335,13 @@ const Place = ({ isMobile, intl, headerPage }) => {
       <Form
         onFinish={handleSearch}
         initialValues={{
-          placeName: filter.placeName || '',
+          healthFacilityName: filter.healthFacilityName || '',
+          healthFacilityCode: filter.healthFacilityCode || '',
+          mobile: filter.mobile || '',
           provinceId: filter.provinceId || '',
+          districtId: filter.districtId || '',
+          wardId: filter.wardId || '',
+          medicalFacilityGroupId: filter.medicalFacilityGroupId || '',
           status: filter.status || undefined,
           dateCreated: filter.dateCreated || [],
         }}
@@ -287,13 +349,13 @@ const Place = ({ isMobile, intl, headerPage }) => {
         <Row gutter={{ md: 0, lg: 8, xl: 16 }}>
           <Col xs={24} md={12} xl={8}>
             <FormItem
-              name="placeName"
-              label={<FormattedMessage id="app.place.list.col1" />}
+              name="healthFacilityName"
+              label={<FormattedMessage id="app.healthFacility.list.col1" />}
               {...formItemLayout}
             >
               <Input
                 placeholder={intl.formatMessage({
-                  id: 'app.place.search.col0',
+                  id: 'app.healthFacility.search.col0',
                 })}
                 size="small"
               />
@@ -301,17 +363,112 @@ const Place = ({ isMobile, intl, headerPage }) => {
           </Col>
           <Col xs={24} md={12} xl={8}>
             <FormItem
-              name="provinceId"
-              label={<FormattedMessage id="app.place.list.col4" />}
+              name="healthFacilityCode"
+              label={<FormattedMessage id="app.healthFacility.list.col2" />}
               {...formItemLayout}
             >
-              <ProvinceSelect
+              <Input
                 placeholder={intl.formatMessage({
-                  id: 'app.place.search.col2',
+                  id: 'app.healthFacility.search.col0',
+                })}
+                size="small"
+              />
+            </FormItem>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <FormItem
+              name="mobile"
+              label={<FormattedMessage id="app.healthFacility.list.col4" />}
+              {...formItemLayout}
+            >
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'app.healthFacility.search.col2',
+                })}
+                size="small"
+              />
+            </FormItem>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <FormItem
+              name="medicalFacilityGroupId"
+              label={<FormattedMessage id="app.healthFacility.list.col10" />}
+              {...formItemLayout}
+            >
+              <MedicalFacilityGroupSelect
+                placeholder={intl.formatMessage({
+                  id: 'app.healthFacility.search.col6',
                 })}
                 allowClear
                 size="small"
               />
+            </FormItem>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <FormItem
+              name="provinceId"
+              label={<FormattedMessage id="app.healthFacility.list.col6" />}
+              {...formItemLayout}
+            >
+              <ProvinceSelect
+                placeholder={intl.formatMessage({
+                  id: 'app.healthFacility.search.col3',
+                })}
+                allowClear
+                size="small"
+              />
+            </FormItem>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <FormItem
+              shouldUpdate={(prevValues, currentValues) =>
+                prevValues.provinceId !== currentValues.provinceId
+              }
+              noStyle
+            >
+              {({ getFieldValue }) => (
+                <FormItem
+                  name="districtId"
+                  label={<FormattedMessage id="app.healthFacility.list.col7" />}
+                  {...formItemLayout}
+                >
+                  <DistrictSelect
+                    placeholder={intl.formatMessage({
+                      id: 'app.healthFacility.search.col4',
+                    })}
+                    filter
+                    filterField={getFieldValue('provinceId') || 'a'}
+                    allowClear
+                    size="small"
+                  />
+                </FormItem>
+              )}
+            </FormItem>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <FormItem
+              shouldUpdate={(prevValues, currentValues) =>
+                prevValues.districtId !== currentValues.districtId
+              }
+              noStyle
+            >
+              {({ getFieldValue }) => (
+                <FormItem
+                  name="wardId"
+                  label={<FormattedMessage id="app.healthFacility.list.col8" />}
+                  {...formItemLayout}
+                >
+                  <WardSelect
+                    placeholder={intl.formatMessage({
+                      id: 'app.healthFacility.search.col5',
+                    })}
+                    filter
+                    filterField={getFieldValue('districtId') || 'a'}
+                    allowClear
+                    size="small"
+                  />
+                </FormItem>
+              )}
             </FormItem>
           </Col>
           <Col xl={8} md={12} xs={24}>
@@ -339,7 +496,7 @@ const Place = ({ isMobile, intl, headerPage }) => {
               </Select>
             </FormItem>
           </Col>
-          <Col xl={8} md={12} xs={24}>
+          <Col xl={6} md={12} xs={24}>
             <FormItem
               name="dateCreated"
               label={
@@ -366,8 +523,8 @@ const Place = ({ isMobile, intl, headerPage }) => {
             </FormItem>
           </Col>
           <Col
-            xl={16}
-            md={24}
+            xl={2}
+            md={12}
             xs={24}
             style={
               isMobile
@@ -396,7 +553,7 @@ const Place = ({ isMobile, intl, headerPage }) => {
 
   const deleteRecord = (id) => {
     dispatch({
-      type: 'place/delete',
+      type: 'healthFacility/delete',
       payload: {
         id: id,
       },
@@ -503,6 +660,7 @@ const Place = ({ isMobile, intl, headerPage }) => {
         </Button>
       );
     }
+
     return (
       <Dropdown
         overlay={menu}
@@ -530,19 +688,19 @@ const Place = ({ isMobile, intl, headerPage }) => {
       fixed: isMobile,
     },
     {
-      dataIndex: 'placeName',
-      name: 'placeName',
-      width: isMobile ? 100 : '10%',
-      title: <FormattedMessage id="app.place.list.col1" />,
+      dataIndex: 'healthFacilityName',
+      name: 'healthFacilityName',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.healthFacility.list.col1" />,
       align: 'left',
       sorter: () => {},
       fixed: isMobile,
     },
     {
-      dataIndex: 'email',
-      name: 'email',
-      width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.place.list.col2" />,
+      dataIndex: 'healthFacilityCode',
+      name: 'healthFacilityCode',
+      width: isMobile ? 150 : '10%',
+      title: <FormattedMessage id="app.healthFacility.list.col2" />,
       align: 'center',
       sorter: () => {},
     },
@@ -550,7 +708,7 @@ const Place = ({ isMobile, intl, headerPage }) => {
       dataIndex: 'mobile',
       name: 'mobile',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.place.list.col3" />,
+      title: <FormattedMessage id="app.healthFacility.list.col4" />,
       align: 'center',
       sorter: () => {},
     },
@@ -558,27 +716,33 @@ const Place = ({ isMobile, intl, headerPage }) => {
       dataIndex: 'province',
       name: 'province',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.place.list.col4" />,
+      title: <FormattedMessage id="app.healthFacility.list.col6" />,
       align: 'center',
       sorter: () => {},
       render: (cell) => <span>{cell.provinceName}</span>,
     },
     {
-      dataIndex: 'createdAt',
-      title: intl.formatMessage({ id: 'app.common.placeholder.dateCreated' }),
+      dataIndex: 'district',
+      name: 'district',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.healthFacility.list.col7" />,
       align: 'center',
-      width: !isMobile && '9%',
       sorter: () => {},
-      render: (cell) => (
-        <React.Fragment>
-          {moment(cell && cell).format('HH:mm DD/MM/YYYY')}
-        </React.Fragment>
-      ),
+      render: (cell) => <span>{cell.districtName}</span>,
+    },
+    {
+      dataIndex: 'ward',
+      name: 'ward',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.healthFacility.list.col8" />,
+      align: 'center',
+      sorter: () => {},
+      render: (cell) => <span>{cell.wardName}</span>,
     },
     {
       dataIndex: 'status',
       name: 'status',
-      title: <FormattedMessage id="app.place.list.col8" />,
+      title: <FormattedMessage id="app.healthFacility.list.col13" />,
       align: 'center',
       width: !isMobile ? '12%' : 170,
       sorter: () => {},
@@ -602,7 +766,7 @@ const Place = ({ isMobile, intl, headerPage }) => {
               >
                 <Button
                   onClick={() => {
-                    setVisibleDrawer(!visibleDrawer);
+                    setVisibleModal(!visibleModal);
                     setDataEdit(row);
                   }}
                   icon={
@@ -644,6 +808,26 @@ const Place = ({ isMobile, intl, headerPage }) => {
                 </Popconfirm>
               </Tooltip>
             )}
+            <Dropdown
+              overlay={
+                <Menu className="menu_icon">
+                  <Menu.Item key="1">Cập nhật lịch làm việc</Menu.Item>
+                  <Menu.Item key="2">Cập nhật chuyên khoa</Menu.Item>
+                </Menu>
+              }
+              trigger={['click']}
+              placement="bottomCenter"
+              arrow
+              className="dropDownCustomV2"
+            >
+              <Button className="btn_edit" shape="circle">
+                Khác
+                <i
+                  className="fas fa-caret-down"
+                  style={{ marginLeft: '5px', fontSize: '16px' }}
+                />
+              </Button>
+            </Dropdown>
           </div>
         </React.Fragment>
       ),
@@ -656,7 +840,7 @@ const Place = ({ isMobile, intl, headerPage }) => {
         <>
           {headerPage}
           <HeaderContent
-            title={<FormattedMessage id="app.place.list.header" />}
+            title={<FormattedMessage id="app.healthFacility.list.header" />}
             action={
               <React.Fragment>
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -664,7 +848,9 @@ const Place = ({ isMobile, intl, headerPage }) => {
                     <Tooltip
                       title={
                         !isMobile &&
-                        intl.formatMessage({ id: 'app.place.create.header' })
+                        intl.formatMessage({
+                          id: 'app.healthFacility.create.header',
+                        })
                       }
                     >
                       <Button
@@ -676,7 +862,7 @@ const Place = ({ isMobile, intl, headerPage }) => {
                           />
                         }
                         onClick={() => {
-                          setVisibleDrawer(!visibleDrawer);
+                          setVisibleModal(!visibleModal);
                           setDataEdit({});
                         }}
                       >
@@ -737,11 +923,13 @@ const Place = ({ isMobile, intl, headerPage }) => {
           }
         />
       )}
-      <PlaceDrawer
+      <HealthFacilityModal
         intl={intl}
         isMobile={isMobile}
-        visible={visibleDrawer}
-        titleDrawer={intl.formatMessage({ id: 'app.place.list.title' })}
+        visible={visibleModal}
+        titleDrawer={intl.formatMessage({
+          id: 'app.healthFacility.list.title',
+        })}
         dataEdit={dataEdit}
         getList={getList}
       />
@@ -749,4 +937,4 @@ const Place = ({ isMobile, intl, headerPage }) => {
   );
 };
 
-export default Place;
+export default HealthFacility;

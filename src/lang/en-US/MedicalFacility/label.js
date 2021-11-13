@@ -21,7 +21,7 @@ module.exports = {
   'app.medicalFacility.search.col2': 'Search by province',
 
   // placeholder
-  'app.medicalFacility.list.placeName': 'Enter medical facility name',
+  'app.medicalFacility.list.medicalFacilityName': 'Enter medical facility name',
   'app.medicalFacility.list.email': 'Enter email',
   'app.medicalFacility.list.phone': 'Enter mobile',
   'app.medicalFacility.list.province': 'Select province',
