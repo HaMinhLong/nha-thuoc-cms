@@ -74,6 +74,35 @@ const HealthFacilitySpeciaListModal = ({
       setPagination([]);
     }
   };
+  const handleTableChange = (pagination, filters, sorter) => {
+    const sort = [
+      (sorter && sorter.column && sorter.column.name) || 'createdAt',
+      sorter && sorter.order === 'descend' ? 'ASC' : 'DESC',
+    ];
+    const query = {
+      filter: JSON.stringify({}),
+      range: JSON.stringify([
+        pagination.current * pagination.pageSize - pagination.pageSize,
+        pagination.current * pagination.pageSize,
+      ]),
+      sort: JSON.stringify(sort),
+    };
+    dispatch({
+      type: 'healthFacilitySpecialist/fetch',
+      payload: query,
+      callback: (res) => {
+        setLoading(false);
+        if (res?.success) {
+          const { list } = res?.results;
+          const { pagination } = res?.results;
+          setData(list);
+          setPagination(pagination);
+        } else {
+          openNotification('error', res.message, '#fff1f0');
+        }
+      },
+    });
+  };
   const deleteRecord = (id) => {
     dispatch({
       type: 'healthFacilitySpecialist/delete',
@@ -208,6 +237,7 @@ const HealthFacilitySpeciaListModal = ({
           pagination={pagination}
           scroll={{ x: isMobile ? 1200 : '100vh', y: '60vh' }}
           columns={columns}
+          onChange={handleTableChange}
         />
       </Modal>
       <HealthFacilitySpeciaListAddModal

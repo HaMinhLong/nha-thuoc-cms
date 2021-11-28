@@ -40,7 +40,7 @@ const HeaderPage = ({ localLanguage, setLocalLanguage }) => {
   return (
     <Header id="components-layout-demo-top">
       <div>
-        <Link to="/">
+        <Link to="/dashboard">
           <img width="40" height="40" className="logo" src={logo} alt="" />
         </Link>
         {/* defaultSelectedKeys={['1']} */}
@@ -51,7 +51,7 @@ const HeaderPage = ({ localLanguage, setLocalLanguage }) => {
               <i style={{ color: '#fff' }} className="fas fa-chart-line"></i>
             }
           >
-            <Link to="/">Dashboard</Link>
+            <Link to="/dashboard">Dashboard</Link>
           </Menu.Item>
           {menus &&
             menus.length > 0 &&

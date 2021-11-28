@@ -17,7 +17,6 @@ const HealthFacilityUserModal = ({
 }) => {
   const dispatch = useDispatch();
   const formRef = React.createRef();
-
   const [checkFirst, setCheckFirst] = useState(true);
   const [loading, setLoading] = useState(false);
   const [visibleModal, setVisibleModal] = useState(false);
@@ -50,7 +49,7 @@ const HealthFacilityUserModal = ({
   const getHealthFacilities = (id) => {
     if (id) {
       let params = {
-        filter: JSON.stringify({ healthFacilityId: id }),
+        filter: JSON.stringify({ userId: id }),
         range: JSON.stringify([0, PAGE_SIZE]),
         sort: JSON.stringify(['createdAt', 'DESC']),
       };
@@ -63,6 +62,8 @@ const HealthFacilityUserModal = ({
           if (res?.success) {
             const { list } = res?.results;
             setData(list);
+          } else {
+            openNotification('error', res.message, '#fff1f0');
           }
         },
       });

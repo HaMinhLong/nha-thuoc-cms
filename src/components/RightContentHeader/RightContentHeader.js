@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Tooltip, Menu, Avatar } from 'antd';
 import { Link } from 'react-router-dom';
 import vietnam from '../../assets/vietnam.svg';
 import english from '../../assets/english.svg';
 import user from '../../static/web/images/user.svg';
 import HeaderDropdown from '../HeaderDropdown/index';
+import HealthFacilityUserSelect from '../Common/HealthFacilityUserSelect';
 import './index.scss';
 
 const RightContentHeader = ({ localLanguage, changeLanguage, intl }) => {
+  const [visiblePlace, setVisiblePlace] = useState(false);
   const username = localStorage.getItem('username');
+  const placeId = localStorage.getItem('placeId');
 
   const logOut = () => {
     localStorage.removeItem('token');
@@ -17,7 +20,10 @@ const RightContentHeader = ({ localLanguage, changeLanguage, intl }) => {
     localStorage.removeItem('id');
     window.location = '/';
   };
-
+  const handleSelectHealthFacility = (id) => {
+    localStorage.setItem('placeId', id);
+    window.location = '/dashboard';
+  };
   const menu = (
     <Menu className="menu" selectedKeys={[]}>
       <div className="menuAvatar">
@@ -33,7 +39,7 @@ const RightContentHeader = ({ localLanguage, changeLanguage, intl }) => {
       <Menu.Item key="userinfo">
         <Link to="/account-config">
           <i className="fas fa-cog" />
-          &nbsp; Thiết lập tài khoản
+          &nbsp; {intl.formatMessage({ id: 'app.title.accountSettings' })}
         </Link>
       </Menu.Item>
       <Menu.Divider />
@@ -45,7 +51,30 @@ const RightContentHeader = ({ localLanguage, changeLanguage, intl }) => {
   );
 
   return (
-    <>
+    <React.Fragment>
+      {!visiblePlace ? (
+        <Tooltip title={intl.formatMessage({ id: 'app.title.changePlace' })}>
+          <i
+            className="fas fa-map-marker-alt"
+            onClick={() => setVisiblePlace(!visiblePlace)}
+            style={{ color: '#fff', fontSize: '16px', cursor: 'pointer' }}
+          />
+        </Tooltip>
+      ) : (
+        <i
+          className="fas fa-map-marker-alt"
+          onClick={() => setVisiblePlace(!visiblePlace)}
+          style={{ color: '#fff', fontSize: '16px', cursor: 'pointer' }}
+        />
+      )}
+      &nbsp;&nbsp;
+      <HealthFacilityUserSelect
+        status={visiblePlace}
+        placeholder={intl.formatMessage({ id: 'app.title.selectPlace' })}
+        onChange={(value) => handleSelectHealthFacility(value)}
+        value={Number(placeId)}
+      />
+      &nbsp;&nbsp;
       <Tooltip
         placement="bottomRight"
         title={intl.formatMessage({ id: 'app.common.switch.lang' })}
@@ -68,7 +97,7 @@ const RightContentHeader = ({ localLanguage, changeLanguage, intl }) => {
           </span>
         </HeaderDropdown>
       </Tooltip>
-    </>
+    </React.Fragment>
   );
 };
 
