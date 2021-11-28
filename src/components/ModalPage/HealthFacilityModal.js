@@ -25,7 +25,7 @@ const HealthFacilityModal = ({
   intl,
   visible,
   dataEdit,
-  titleDrawer,
+  titleModal,
   isMobile,
   getList,
 }) => {
@@ -41,7 +41,7 @@ const HealthFacilityModal = ({
       setCheckFirst(false);
     } else {
       changeModal('show');
-      getOne(dataEdit && dataEdit.id);
+      getOne(dataEdit?.id);
     }
   }, [visible]);
 
@@ -55,8 +55,8 @@ const HealthFacilityModal = ({
         },
         callback: (res) => {
           setLoading(false);
-          if (res && res.success) {
-            const { list } = res.results;
+          if (res?.success) {
+            const { list } = res?.results;
             setData(list);
           }
         },
@@ -123,7 +123,7 @@ const HealthFacilityModal = ({
                   'success',
                   intl.formatMessage(
                     { id: 'app.common.create.success' },
-                    { name: titleDrawer }
+                    { name: titleModal }
                   ),
                   '#f6ffed'
                 );

@@ -36,6 +36,7 @@ import MedicalFacilityGroupSelect from '../../components/Common/MedicalFacilityG
 import ProvinceSelect from '../../components/Common/ProvinceSelect';
 import DistrictSelect from '../../components/Common/DistrictSelect';
 import WardSelect from '../../components/Common/WardSelect';
+import HealthFacilitySpeciaListModal from '../../components/ModalPage/HealthFacilitySpeciaListModal';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -49,6 +50,8 @@ const HealthFacility = ({ isMobile, intl, headerPage }) => {
   const [visibleModal, setVisibleModal] = useState(false);
   const [visibleFilter, setVisibleFilter] = useState(false);
   const [dataEdit, setDataEdit] = useState({});
+  const [dataEditSpeciaList, setDataEditSpeciaList] = useState({});
+  const [visibleSpeciaList, setVisibleSpeciaList] = useState(false);
   const [permissions, setPermissions] = useState({});
 
   useEffect(() => {
@@ -754,7 +757,7 @@ const HealthFacility = ({ isMobile, intl, headerPage }) => {
       dataIndex: null,
       title: intl.formatMessage({ id: 'app.common.action' }),
       align: 'center',
-      width: !isMobile ? '15%' : 170,
+      width: !isMobile ? '20%' : 200,
       render: (cell, row) => (
         <React.Fragment>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -808,26 +811,42 @@ const HealthFacility = ({ isMobile, intl, headerPage }) => {
                 </Popconfirm>
               </Tooltip>
             )}
-            <Dropdown
-              overlay={
-                <Menu className="menu_icon">
-                  <Menu.Item key="1">Cập nhật lịch làm việc</Menu.Item>
-                  <Menu.Item key="2">Cập nhật chuyên khoa</Menu.Item>
-                </Menu>
-              }
-              trigger={['click']}
-              placement="bottomCenter"
-              arrow
-              className="dropDownCustomV2"
-            >
-              <Button className="btn_edit" shape="circle">
-                Khác
-                <i
-                  className="fas fa-caret-down"
-                  style={{ marginLeft: '5px', fontSize: '16px' }}
-                />
-              </Button>
-            </Dropdown>
+            {permissions.isUpdate && (
+              <Dropdown
+                overlay={
+                  <Menu className="menu_icon">
+                    <Menu.Item key="1">
+                      {intl.formatMessage({
+                        id: 'app.healthFacility.different.col1',
+                      })}
+                    </Menu.Item>
+                    <Menu.Item
+                      key="2"
+                      onClick={() => {
+                        setVisibleSpeciaList(!visibleSpeciaList);
+                        setDataEditSpeciaList(row);
+                      }}
+                    >
+                      {intl.formatMessage({
+                        id: 'app.healthFacility.different.col2',
+                      })}
+                    </Menu.Item>
+                  </Menu>
+                }
+                trigger={['click']}
+                placement="bottomCenter"
+                arrow
+                className="dropDownCustomV2"
+              >
+                <Button className="btn_edit" shape="circle">
+                  {intl.formatMessage({ id: 'app.common.different' })}
+                  <i
+                    className="fas fa-caret-down"
+                    style={{ marginLeft: '5px', fontSize: '16px' }}
+                  />
+                </Button>
+              </Dropdown>
+            )}
           </div>
         </React.Fragment>
       ),
@@ -927,10 +946,20 @@ const HealthFacility = ({ isMobile, intl, headerPage }) => {
         intl={intl}
         isMobile={isMobile}
         visible={visibleModal}
-        titleDrawer={intl.formatMessage({
+        titleModal={intl.formatMessage({
           id: 'app.healthFacility.list.title',
         })}
         dataEdit={dataEdit}
+        getList={getList}
+      />
+      <HealthFacilitySpeciaListModal
+        intl={intl}
+        isMobile={isMobile}
+        visible={visibleSpeciaList}
+        titleModal={intl.formatMessage({
+          id: 'app.healthFacility.list.col14',
+        })}
+        dataEdit={dataEditSpeciaList}
         getList={getList}
       />
     </>

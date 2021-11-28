@@ -50,6 +50,7 @@ module.exports = {
   'app.common.crudBtns.3': 'Xuất báo cáo',
   'app.common.crudBtns.4': 'Lưu',
   'app.common.searchBtn': 'Tìm kiếm',
+  'app.common.different': 'Khác',
   'app.common.forgotBtn': 'Gửi email',
   'app.common.delete.success': 'Xóa bản ghi thành công!',
   'app.common.login.success': 'Đăng nhập thành công!',

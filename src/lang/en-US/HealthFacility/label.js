@@ -19,6 +19,7 @@ module.exports = {
   'app.healthFacility.list.col11': 'Representative Full Name',
   'app.healthFacility.list.col12': 'Representative mobile',
   'app.healthFacility.list.col13': 'Status',
+  'app.healthFacility.list.col14': 'Specialist',
 
   // search
   'app.healthFacility.search.col0': 'Search by health facility name',
@@ -29,6 +30,8 @@ module.exports = {
   'app.healthFacility.search.col5': 'Search by ward',
   'app.healthFacility.search.col6': 'Search by medical facility',
 
+  'app.healthFacility.different.col1': 'Update work schedule',
+  'app.healthFacility.different.col2': 'Specialist update',
   // placeholder
   'app.healthFacility.list.healthFacilityName': 'Enter health facility name',
   'app.healthFacility.list.healthFacilityCode': 'Enter health facility code',

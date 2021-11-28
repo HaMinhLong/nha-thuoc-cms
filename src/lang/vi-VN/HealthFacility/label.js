@@ -19,6 +19,7 @@ module.exports = {
   'app.healthFacility.list.col11': 'Họ tên người đại diện',
   'app.healthFacility.list.col12': 'Số diện thoại người đại diện',
   'app.healthFacility.list.col13': 'Trạng thái',
+  'app.healthFacility.list.col14': 'Chuyên khoa',
 
   // search
   'app.healthFacility.search.col0': 'Tìm kiếm theo tên cơ sở y tế',
@@ -28,6 +29,9 @@ module.exports = {
   'app.healthFacility.search.col4': 'Tìm kiếm theo Quận/Huyện',
   'app.healthFacility.search.col5': 'Tìm kiếm theo Xã/Phường',
   'app.healthFacility.search.col6': 'Tìm kiếm theo nhóm cơ sở y tế',
+
+  'app.healthFacility.different.col1': 'Cập nhật lịch làm việc',
+  'app.healthFacility.different.col2': 'Cập nhật chuyên khoa',
 
   // placeholder
   'app.healthFacility.list.healthFacilityName': 'Nhập tên cơ sở y tế',

@@ -50,6 +50,7 @@ module.exports = {
   'app.common.crudBtns.3': 'Export report',
   'app.common.crudBtns.4': 'Save',
   'app.common.searchBtn': 'Search',
+  'app.common.different': 'Different',
   'app.common.forgotBtn': 'Send email',
   'app.common.delete.success': 'Delete record successfully!',
   'app.common.edit.success': 'Successfully updated!',

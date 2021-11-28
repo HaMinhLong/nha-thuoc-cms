@@ -14,6 +14,7 @@ import { specialistSaga } from '../features/specialist/specialistSaga';
 import { medicalFacilitySaga } from '../features/medicalFacility/medicalFacilitySaga';
 import { placeSaga } from '../features/place/placeSaga';
 import { healthFacilitySaga } from '../features/healthFacility/healthFacilitySaga';
+import { healthFacilitySpecialistSaga } from '../features/healthFacilitySpecialist/healthFacilitySpecialistSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -32,5 +33,6 @@ export default function* rootSaga() {
     medicalFacilitySaga(),
     placeSaga(),
     healthFacilitySaga(),
+    healthFacilitySpecialistSaga(),
   ]);
 }
