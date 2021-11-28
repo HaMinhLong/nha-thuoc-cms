@@ -16,6 +16,8 @@ import healthFacilityReducer from '../features/healthFacility/healthFacilitySlic
 import healthFacilitySpecialistReducer from '../features/healthFacilitySpecialist/healthFacilitySpecialistSlice';
 import healthFacilityUserReducer from '../features/healthFacilityUser/healthFacilityUserSlice';
 import supplierGroupReducer from '../features/supplierGroup/supplierGroupSlice';
+import producerGroupReducer from '../features/producerGroup/producerGroupSlice';
+import customerGroupReducer from '../features/customerGroup/customerGroupSlice';
 
 export const rootReducer = {
   userGroup: userGroupReducer,
@@ -36,4 +38,6 @@ export const rootReducer = {
   healthFacilitySpecialist: healthFacilitySpecialistReducer,
   healthFacilityUser: healthFacilityUserReducer,
   supplierGroup: supplierGroupReducer,
+  producerGroup: producerGroupReducer,
+  customerGroup: customerGroupReducer,
 };

@@ -1,7 +1,7 @@
 module.exports = {
   // Tiêu đề
   'app.supplierGroup.list.title': 'supplier group',
-  'app.supplierGroup.list.header': 'Manage provinces',
+  'app.supplierGroup.list.header': 'Manage supplier groups',
   'app.supplierGroup.update.header': 'Edit supplier group',
   'app.supplierGroup.create.header': 'Add new supplier group',
 
