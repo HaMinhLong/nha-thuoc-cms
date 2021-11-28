@@ -18,6 +18,7 @@ const RightContentHeader = ({ localLanguage, changeLanguage, intl }) => {
     localStorage.removeItem('username');
     localStorage.removeItem('userGroupId');
     localStorage.removeItem('id');
+    localStorage.removeItem('healthFacilityId');
     window.location = '/';
   };
   const handleSelectHealthFacility = (id) => {

@@ -21,36 +21,32 @@ import Table from '../../components/Table';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import {
-  producerGroup,
-  filter,
-} from '../../features/producerGroup/producerGroupSlice';
+import { supplier, filter } from '../../features/supplier/supplierSlice';
 import '../../utils/css/styleList.scss';
 import moment from 'moment';
 import filterIcon from '../../static/web/images/filter.svg';
 import dropdownWhite from '../../static/web/images/dropDown_white.svg';
 import dropdownBlack from '../../static/web/images/dropDown_black.svg';
 import { formatNumber } from '../../utils/utils';
+import SupplierDrawer from '../../components/DrawerPage/SupplierDrawer';
+import SupplierGroupSelect from '../../components/Common/SupplierGroupSelect';
 import { Redirect } from 'react-router-dom';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const PAGE_SIZE = process.env.REACT_APP_PAGE_SIZE;
-const ProducerGroup = ({ isMobile, intl, headerPage }) => {
-  const [index, setIndex] = useState(-9999);
+const Supplier = ({ isMobile, intl, headerPage }) => {
   let { id } = useParams();
   const userGroupId = localStorage.getItem('userGroupId');
   const healthFacilityId = localStorage.getItem('healthFacilityId');
   const dispatch = useDispatch();
-  const list = useSelector(producerGroup);
+  const list = useSelector(supplier);
   const [loading, setLoading] = useState(false);
+  const [visibleDrawer, setVisibleDrawer] = useState(false);
   const [visibleFilter, setVisibleFilter] = useState(false);
   const [dataEdit, setDataEdit] = useState({});
   const [redirect, setRedirect] = useState('');
   const [permissions, setPermissions] = useState({});
-  const [keyEdit, setKeyEdit] = useState('');
-  const [data, setData] = useState([]);
-  const [pagination, setPagination] = useState([]);
   useEffect(() => {
     getList();
     getPermission();
@@ -87,7 +83,7 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify({ healthFacilityId: healthFacilityId }),
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
-      attributes: 'id,producerGroupName,status,createdAt',
+      attributes: 'id,supplierName,supplierGroupId,status,createdAt',
     };
     let values = {};
     if (query && query.filter && query.filter !== '{}') {
@@ -113,18 +109,12 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
     }
     dispatch(filter(values));
     dispatch({
-      type: 'producerGroup/fetch',
+      type: 'supplier/fetch',
       payload: params,
       callback: (res) => {
         setLoading(false);
-
         if (res.success === false) {
           openNotification('error', res && res.message, '#fff1f0');
-        } else {
-          const { list } = res.results;
-          const { pagination } = res.results;
-          setData(list);
-          setPagination(pagination);
         }
       },
     });
@@ -136,7 +126,7 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
       status,
     };
     dispatch({
-      type: 'producerGroup/updateStatus',
+      type: 'supplier/updateStatus',
       payload: {
         id: row.id,
         params: item,
@@ -164,99 +154,6 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
     });
   };
 
-  const handleAdd = () => {
-    if (keyEdit > 0 || keyEdit === '') {
-      const dataNew = {
-        id: index,
-        producerGroupName: '',
-        dateCreated: moment(),
-        status: true,
-      };
-      setDataEdit(dataNew);
-      setKeyEdit(index);
-      setData([dataNew, ...data]);
-      setIndex(index + 1);
-    }
-  };
-
-  const saveRow = () => {
-    const addItem = {
-      ...dataEdit,
-      producerGroupName:
-        (dataEdit.producerGroupName && dataEdit.producerGroupName.trim()) || '',
-      producerGroupNameOld:
-        (dataEdit.producerGroupName && dataEdit.producerGroupName.trim()) || '',
-      healthFacilityId: healthFacilityId,
-    };
-    if (
-      !(addItem.producerGroupName && addItem.producerGroupName.trim()) ||
-      (addItem.producerGroupName &&
-        addItem.producerGroupName.trim() &&
-        addItem.producerGroupName.trim().length > 50)
-    ) {
-      openNotification(
-        'error',
-        intl.formatMessage({ id: 'app.producerGroup.noti.col0' }),
-        '#fff1f0'
-      );
-      return;
-    }
-    if (addItem.id > 0) {
-      dispatch({
-        type: 'producerGroup/update',
-        payload: {
-          id: addItem.id,
-          params: {
-            ...addItem,
-          },
-        },
-        callback: (res) => {
-          if (res && res.success) {
-            openNotification(
-              'success',
-              intl.formatMessage({ id: 'app.common.edit.success' }),
-              '#f6ffed'
-            );
-            getList();
-            setDataEdit({});
-            setKeyEdit('');
-          } else {
-            openNotification('error', res.message, '#fff1f0');
-          }
-          setLoading(false);
-        },
-      });
-    } else {
-      delete addItem.id;
-      dispatch({
-        type: 'producerGroup/add',
-        payload: addItem,
-        callback: (res) => {
-          if (res && res.success) {
-            openNotification(
-              'success',
-              intl.formatMessage(
-                { id: 'app.common.create.success' },
-                {
-                  name: intl.formatMessage({
-                    id: 'app.producerGroup.list.title',
-                  }),
-                }
-              ),
-              '#f6ffed'
-            );
-            getList();
-            setDataEdit({});
-            setKeyEdit('');
-          } else {
-            openNotification('error', res.message, '#fff1f0');
-          }
-          setLoading(false);
-        },
-      });
-    }
-  };
-
   const handleTableChange = (pagination, filters, sorter) => {
     const queryFilter = list.filter;
     const rangeValue = queryFilter.dateCreated || [];
@@ -269,17 +166,18 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
         ? rangeValue[1].set({ hour: 23, minute: 59, second: 59 })
         : '';
     const queryName = {
-      producerGroupName:
-        queryFilter.producerGroupName && queryFilter.producerGroupName.trim(),
+      supplierName: queryFilter.supplierName && queryFilter.supplierName.trim(),
+      supplierGroupId: queryFilter && queryFilter.supplierGroupId,
       status: queryFilter && queryFilter.status,
       fromDate: fromDate,
       toDate: toDate,
       healthFacilityId,
     };
-    if (
-      !(queryFilter.producerGroupName && queryFilter.producerGroupName.trim())
-    ) {
-      delete queryName.producerGroupName;
+    if (!(queryFilter.supplierName && queryFilter.supplierName.trim())) {
+      delete queryName.supplierName;
+    }
+    if (!queryFilter.supplierGroupId) {
+      delete queryName.supplierGroupId;
     }
     if (!queryFilter.status) {
       delete queryName.status;
@@ -299,11 +197,11 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
         pagination.current * pagination.pageSize,
       ]),
       sort: JSON.stringify(sort),
-      attributes: 'id,producerGroupName,status,createdAt',
+      attributes: 'id,supplierName,supplierGroupId,status,createdAt',
     };
     dispatch(filter(queryFilter));
     dispatch({
-      type: 'producerGroup/fetch',
+      type: 'supplier/fetch',
       payload: query,
       callback: (res) => {
         setLoading(false);
@@ -323,15 +221,18 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
         ? rangeValue[1].set({ hour: 23, minute: 59, second: 59 })
         : '';
     const queryName = {
-      producerGroupName:
-        values.producerGroupName && values.producerGroupName.trim(),
+      supplierName: values.supplierName && values.supplierName.trim(),
+      supplierGroupId: values && values.supplierGroupId,
       status: values && values.status,
       fromDate: fromDate,
       toDate: toDate,
       healthFacilityId,
     };
-    if (!(values.producerGroupName && values.producerGroupName.trim())) {
-      delete queryName.producerGroupName;
+    if (!(values.supplierName && values.supplierName.trim())) {
+      delete queryName.supplierName;
+    }
+    if (!values.supplierGroupId) {
+      delete queryName.supplierGroupId;
     }
     if (!values.status) {
       delete queryName.status;
@@ -344,11 +245,11 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify(queryName),
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
-      attributes: 'id,producerGroupName,status,createdAt',
+      attributes: 'id,supplierName,supplierGroupId,status,createdAt',
     };
     dispatch(filter(values));
     dispatch({
-      type: 'producerGroup/fetch',
+      type: 'supplier/fetch',
       payload: query,
       callback: (res) => {
         setLoading(false);
@@ -384,7 +285,8 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
       <Form
         onFinish={handleSearch}
         initialValues={{
-          producerGroupName: filter.producerGroupName || '',
+          supplierName: filter.supplierName || '',
+          supplierGroupId: filter.supplierGroupId || '',
           status: filter.status || undefined,
           dateCreated: filter.dateCreated || [],
         }}
@@ -392,14 +294,29 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
         <Row gutter={{ md: 0, lg: 8, xl: 16 }}>
           <Col xs={24} md={12} xl={8}>
             <FormItem
-              name="producerGroupName"
-              label={<FormattedMessage id="app.producerGroup.list.col0" />}
+              name="supplierName"
+              label={<FormattedMessage id="app.supplier.list.col0" />}
               {...formItemLayout}
             >
               <Input
                 placeholder={intl.formatMessage({
-                  id: 'app.producerGroup.search.col0',
+                  id: 'app.supplier.search.col0',
                 })}
+                size="small"
+              />
+            </FormItem>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <FormItem
+              name="supplierGroupId"
+              label={<FormattedMessage id="app.supplier.list.col1" />}
+              {...formItemLayout}
+            >
+              <SupplierGroupSelect
+                placeholder={intl.formatMessage({
+                  id: 'app.supplier.search.col1',
+                })}
+                allowClear
                 size="small"
               />
             </FormItem>
@@ -407,7 +324,7 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
           <Col xl={8} md={12} xs={24}>
             <FormItem
               name="status"
-              label={<FormattedMessage id="app.producerGroup.list.col2" />}
+              label={<FormattedMessage id="app.supplier.list.col2" />}
               {...formItemLayout}
             >
               <Select
@@ -429,7 +346,7 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
               </Select>
             </FormItem>
           </Col>
-          <Col xl={6} md={12} xs={24}>
+          <Col xl={8} md={12} xs={24}>
             <FormItem
               name="dateCreated"
               label={
@@ -456,7 +373,7 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
             </FormItem>
           </Col>
           <Col
-            xl={2}
+            xl={16}
             md={24}
             xs={24}
             style={
@@ -486,7 +403,7 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
 
   const deleteRecord = (id) => {
     dispatch({
-      type: 'producerGroup/delete',
+      type: 'supplier/delete',
       payload: {
         id: id,
       },
@@ -608,6 +525,8 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
       </Dropdown>
     );
   };
+  const data = (list.data && list.data.list) || [];
+  const pagination = (list.data && list.data.pagination) || [];
   const columns = [
     {
       dataIndex: null,
@@ -621,30 +540,22 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
       fixed: isMobile,
     },
     {
-      dataIndex: 'producerGroupName',
-      name: 'producerGroupName',
+      dataIndex: 'supplierName',
+      name: 'supplierName',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.producerGroup.list.col0" />,
+      title: <FormattedMessage id="app.supplier.list.col0" />,
       align: 'left',
       sorter: () => {},
       fixed: isMobile,
-      render: (text, record) => {
-        if (record.id === keyEdit) {
-          return (
-            <Input
-              placeholder={intl.formatMessage({
-                id: 'app.producerGroup.list.name',
-              })}
-              value={dataEdit.producerGroupName}
-              onChange={(e) =>
-                setDataEdit({ ...dataEdit, producerGroupName: e.target.value })
-              }
-              onPressEnter={() => saveRow()}
-            />
-          );
-        }
-        return text;
-      },
+    },
+    {
+      dataIndex: 'supplierGroup',
+      name: 'supplierGroup',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.supplier.list.col1" />,
+      align: 'center',
+      sorter: () => {},
+      render: (cell) => <span>{cell.supplierGroupName}</span>,
     },
     {
       dataIndex: 'createdAt',
@@ -661,7 +572,7 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
     {
       dataIndex: 'status',
       name: 'status',
-      title: <FormattedMessage id="app.producerGroup.list.col2" />,
+      title: <FormattedMessage id="app.supplier.list.col2" />,
       align: 'center',
       width: !isMobile ? '9%' : 170,
       sorter: () => {},
@@ -677,140 +588,55 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
       render: (cell, row) => (
         <React.Fragment>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            {keyEdit === row.id ? (
-              <>
-                <Tooltip
-                  title={
-                    !isMobile &&
-                    intl.formatMessage({ id: 'app.common.crudBtns.4' })
+            {permissions.isUpdate && (
+              <Tooltip
+                title={
+                  !isMobile && intl.formatMessage({ id: 'app.tooltip.edit' })
+                }
+              >
+                <Button
+                  onClick={() => {
+                    setVisibleDrawer(!visibleDrawer);
+                    setDataEdit(row);
+                  }}
+                  icon={
+                    <i className="fas fa-pen" style={{ marginRight: '5px' }} />
                   }
+                  className="btn_edit"
+                  type="ghost"
+                  shape="circle"
+                >
+                  <FormattedMessage id="app.tooltip.edit" />
+                </Button>
+              </Tooltip>
+            )}
+            {permissions.isDelete && (
+              <Tooltip
+                title={
+                  !isMobile && intl.formatMessage({ id: 'app.tooltip.remove' })
+                }
+              >
+                <Popconfirm
+                  placement="bottom"
+                  title={<FormattedMessage id="app.confirm.remove" />}
+                  onConfirm={() => deleteRecord(row.id)}
                 >
                   <Button
-                    style={{
-                      border: '1px solid #34c38f',
-                      color: '#34c38f',
-                      marginRight: 5,
-                    }}
                     icon={
                       <i
-                        className="fas fa-check"
-                        style={{ color: '#34c38f', marginRight: '5px' }}
+                        className="fas fa-trash"
+                        style={{ marginRight: '5px' }}
                       />
                     }
+                    className="btn_edit"
+                    type="ghost"
                     shape="circle"
-                    className="btn_edit_v2"
-                    onClick={() => saveRow()}
+                    style={{ marginLeft: '5px' }}
                   >
-                    {intl.formatMessage({ id: 'app.common.crudBtns.4' })}
+                    <FormattedMessage id="app.tooltip.remove" />
                   </Button>
-                </Tooltip>
-                <Tooltip
-                  title={
-                    !isMobile &&
-                    intl.formatMessage({
-                      id: 'app.common.deleteBtn.cancelText',
-                    })
-                  }
-                >
-                  <Button
-                    className="btn_edit_v2"
-                    style={{
-                      border: '1px solid red',
-                      color: 'red',
-                    }}
-                    onClick={() => {
-                      Modal.confirm({
-                        title: intl.formatMessage({
-                          id: 'app.confirm.reset',
-                        }),
-                        okText: 'Ok',
-                        cancelText: 'Cancel',
-                        onOk: () => {
-                          if (row.id > 0) {
-                            setDataEdit({});
-                            setKeyEdit('');
-                          } else {
-                            setData(data.filter((item) => item.id !== row.id));
-                            setDataEdit({});
-                            setKeyEdit('');
-                          }
-                        },
-                        onCancel() {},
-                      });
-                    }}
-                    icon={
-                      <i
-                        className="fas fa-times"
-                        style={{ color: 'red', marginRight: '5px' }}
-                      />
-                    }
-                    shape="circle"
-                  >
-                    {intl.formatMessage({
-                      id: 'app.common.deleteBtn.cancelText',
-                    })}
-                  </Button>
-                </Tooltip>
-              </>
-            ) : (
-              <>
-                {permissions.isUpdate && (
-                  <Tooltip
-                    title={
-                      !isMobile &&
-                      intl.formatMessage({ id: 'app.tooltip.edit' })
-                    }
-                  >
-                    <Button
-                      onClick={() => {
-                        setDataEdit(row);
-                        setKeyEdit(row.id);
-                        setData(data.filter((item) => item.id > 0));
-                      }}
-                      icon={
-                        <i
-                          className="fas fa-pen"
-                          style={{ marginRight: '5px' }}
-                        />
-                      }
-                      className="btn_edit"
-                      type="ghost"
-                      shape="circle"
-                    >
-                      <FormattedMessage id="app.tooltip.edit" />
-                    </Button>
-                  </Tooltip>
-                )}
-                {permissions.isDelete && (
-                  <Tooltip
-                    title={
-                      !isMobile &&
-                      intl.formatMessage({ id: 'app.tooltip.remove' })
-                    }
-                  >
-                    <Popconfirm
-                      placement="bottom"
-                      title={<FormattedMessage id="app.confirm.remove" />}
-                      onConfirm={() => deleteRecord(row.id)}
-                    >
-                      <Button
-                        icon={
-                          <i
-                            className="fas fa-trash"
-                            style={{ marginRight: '5px' }}
-                          />
-                        }
-                        className="btn_edit"
-                        type="ghost"
-                        shape="circle"
-                        style={{ marginLeft: '5px' }}
-                      >
-                        <FormattedMessage id="app.tooltip.remove" />
-                      </Button>
-                    </Popconfirm>
-                  </Tooltip>
-                )}
-              </>
+                </Popconfirm>
+              </Tooltip>
             )}
           </div>
         </React.Fragment>
@@ -823,16 +649,14 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
         <>
           {headerPage}
           <HeaderContent
-            title={<FormattedMessage id="app.producerGroup.list.header" />}
+            title={<FormattedMessage id="app.supplier.list.header" />}
             action={
               <React.Fragment>
                 {permissions.isAdd && (
                   <Tooltip
                     title={
                       !isMobile &&
-                      intl.formatMessage({
-                        id: 'app.producerGroup.create.header',
-                      })
+                      intl.formatMessage({ id: 'app.supplier.create.header' })
                     }
                   >
                     <Button
@@ -842,7 +666,10 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
                           style={{ marginRight: '5px' }}
                         />
                       }
-                      onClick={() => handleAdd()}
+                      onClick={() => {
+                        setVisibleDrawer(!visibleDrawer);
+                        setDataEdit({});
+                      }}
                     >
                       {intl.formatMessage(
                         { id: 'app.title.create' },
@@ -899,8 +726,16 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
           }
         />
       )}
+      <SupplierDrawer
+        intl={intl}
+        isMobile={isMobile}
+        visible={visibleDrawer}
+        titleDrawer={intl.formatMessage({ id: 'app.supplier.list.title' })}
+        dataEdit={dataEdit}
+        getList={getList}
+      />
     </>
   );
 };
 
-export default ProducerGroup;
+export default Supplier;

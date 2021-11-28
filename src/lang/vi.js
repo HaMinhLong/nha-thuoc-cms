@@ -15,6 +15,7 @@ const MedicalFacility = require('./vi-VN/MedicalFacility');
 const Place = require('./vi-VN/Place');
 const HealthFacility = require('./vi-VN/HealthFacility');
 const SupplierGroup = require('./vi-VN/SupplierGroup');
+const Supplier = require('./vi-VN/Supplier');
 const ProducerGroup = require('./vi-VN/ProducerGroup');
 const CustomerGroup = require('./vi-VN/CustomerGroup');
 
@@ -114,6 +115,7 @@ module.exports = {
   ...MedicalFacility,
   ...HealthFacility,
   ...SupplierGroup,
+  ...Supplier,
   ...ProducerGroup,
   ...CustomerGroup,
 };

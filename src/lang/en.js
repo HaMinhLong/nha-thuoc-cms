@@ -15,6 +15,7 @@ const MedicalFacility = require('./en-US/MedicalFacility');
 const Place = require('./en-US/Place');
 const HealthFacility = require('./en-US/HealthFacility');
 const SupplierGroup = require('./en-US/SupplierGroup');
+const Supplier = require('./en-US/Supplier');
 const ProducerGroup = require('./en-US/ProducerGroup');
 const CustomerGroup = require('./en-US/CustomerGroup');
 
@@ -113,6 +114,7 @@ module.exports = {
   ...MedicalFacility,
   ...HealthFacility,
   ...SupplierGroup,
+  ...Supplier,
   ...ProducerGroup,
   ...CustomerGroup,
 };

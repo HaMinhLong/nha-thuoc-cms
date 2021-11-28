@@ -274,6 +274,7 @@ const SupplierGroup = ({ isMobile, intl, headerPage }) => {
       status: queryFilter && queryFilter.status,
       fromDate: fromDate,
       toDate: toDate,
+      healthFacilityId,
     };
     if (
       !(queryFilter.supplierGroupName && queryFilter.supplierGroupName.trim())
@@ -327,6 +328,7 @@ const SupplierGroup = ({ isMobile, intl, headerPage }) => {
       status: values && values.status,
       fromDate: fromDate,
       toDate: toDate,
+      healthFacilityId,
     };
     if (!(values.supplierGroupName && values.supplierGroupName.trim())) {
       delete queryName.supplierGroupName;

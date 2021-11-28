@@ -274,6 +274,7 @@ const CustomerGroup = ({ isMobile, intl, headerPage }) => {
       status: queryFilter && queryFilter.status,
       fromDate: fromDate,
       toDate: toDate,
+      healthFacilityId,
     };
     if (
       !(queryFilter.customerGroupName && queryFilter.customerGroupName.trim())
@@ -327,6 +328,7 @@ const CustomerGroup = ({ isMobile, intl, headerPage }) => {
       status: values && values.status,
       fromDate: fromDate,
       toDate: toDate,
+      healthFacilityId,
     };
     if (!(values.customerGroupName && values.customerGroupName.trim())) {
       delete queryName.customerGroupName;

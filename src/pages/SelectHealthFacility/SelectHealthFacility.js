@@ -14,7 +14,11 @@ const SelectHealthFacility = ({ isMobile, intl }) => {
   const [data, setData] = useState([]);
   const [pagination, setPagination] = useState([]);
   const userId = localStorage.getItem('id');
+  const healthFacilityId = localStorage.getItem('healthFacilityId');
   useEffect(() => {
+    if (healthFacilityId) {
+      window.location = '/dashboard';
+    }
     getHealthFacilities(userId);
   }, []);
 
