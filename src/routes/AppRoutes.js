@@ -18,6 +18,7 @@ import MedicalFacility from '../pages/MedicalFacility/MedicalFacility';
 import Place from '../pages/Place/Place';
 import HealthFacility from '../pages/HealthFacility/HealthFacility';
 import SelectHealthFacility from '../pages/SelectHealthFacility/SelectHealthFacility';
+import SupplierGroup from '../pages/SupplierGroup/SupplierGroup';
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
 const AppRoutes = ({ headerPage }) => {
@@ -99,6 +100,14 @@ const AppRoutes = ({ headerPage }) => {
             headerPage={headerPage}
           />
         </Route>
+        <Route path="/supplier-group/:id">
+          <SupplierGroup
+            isMobile={isMobile}
+            intl={intl}
+            headerPage={headerPage}
+          />
+        </Route>
+
         <Route path="/account-config">
           <Account isMobile={isMobile} intl={intl} headerPage={headerPage} />
         </Route>

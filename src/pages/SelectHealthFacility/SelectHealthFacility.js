@@ -83,7 +83,7 @@ const SelectHealthFacility = ({ isMobile, intl }) => {
     });
   };
   const handleSelectHealthFacility = (id) => {
-    localStorage.setItem('placeId', id);
+    localStorage.setItem('healthFacilityId', id);
     window.location = '/dashboard';
   };
   const stylesName = {

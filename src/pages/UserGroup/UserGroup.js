@@ -717,7 +717,7 @@ const UserGroup = ({ isMobile, intl, headerPage }) => {
           subTitle="Sorry, you are not authorized to access this page."
           extra={
             <Button type="primary">
-              <Link to="/">Back Home</Link>
+              <Link to="/dashboard">Back Home</Link>
             </Button>
           }
         />

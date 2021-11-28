@@ -11,7 +11,7 @@ import './index.scss';
 const RightContentHeader = ({ localLanguage, changeLanguage, intl }) => {
   const [visiblePlace, setVisiblePlace] = useState(false);
   const username = localStorage.getItem('username');
-  const placeId = localStorage.getItem('placeId');
+  const healthFacilityId = localStorage.getItem('healthFacilityId');
 
   const logOut = () => {
     localStorage.removeItem('token');
@@ -21,7 +21,7 @@ const RightContentHeader = ({ localLanguage, changeLanguage, intl }) => {
     window.location = '/';
   };
   const handleSelectHealthFacility = (id) => {
-    localStorage.setItem('placeId', id);
+    localStorage.setItem('healthFacilityId', id);
     window.location = '/dashboard';
   };
   const menu = (
@@ -72,7 +72,7 @@ const RightContentHeader = ({ localLanguage, changeLanguage, intl }) => {
         status={visiblePlace}
         placeholder={intl.formatMessage({ id: 'app.title.selectPlace' })}
         onChange={(value) => handleSelectHealthFacility(value)}
-        value={Number(placeId)}
+        value={Number(healthFacilityId)}
       />
       &nbsp;&nbsp;
       <Tooltip

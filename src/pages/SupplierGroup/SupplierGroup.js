@@ -19,37 +19,46 @@ import { Link } from 'react-router-dom';
 import HeaderContent from '../../layouts/HeaderContent';
 import Table from '../../components/Table';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { place, filter } from '../../features/place/placeSlice';
+import {
+  supplierGroup,
+  filter,
+} from '../../features/supplierGroup/supplierGroupSlice';
 import '../../utils/css/styleList.scss';
 import moment from 'moment';
 import filterIcon from '../../static/web/images/filter.svg';
 import dropdownWhite from '../../static/web/images/dropDown_white.svg';
 import dropdownBlack from '../../static/web/images/dropDown_black.svg';
 import { formatNumber } from '../../utils/utils';
-import PlaceDrawer from '../../components/DrawerPage/PlaceDrawer';
-import { useParams } from 'react-router-dom';
-import ProvinceSelect from '../../components/Common/ProvinceSelect';
+import { Redirect } from 'react-router-dom';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const PAGE_SIZE = process.env.REACT_APP_PAGE_SIZE;
-const Place = ({ isMobile, intl, headerPage }) => {
+const SupplierGroup = ({ isMobile, intl, headerPage }) => {
+  const [index, setIndex] = useState(-9999);
   let { id } = useParams();
   const userGroupId = localStorage.getItem('userGroupId');
+  const healthFacilityId = localStorage.getItem('healthFacilityId');
   const dispatch = useDispatch();
-  const list = useSelector(place);
+  const list = useSelector(supplierGroup);
   const [loading, setLoading] = useState(false);
-  const [visibleDrawer, setVisibleDrawer] = useState(false);
   const [visibleFilter, setVisibleFilter] = useState(false);
   const [dataEdit, setDataEdit] = useState({});
+  const [redirect, setRedirect] = useState('');
   const [permissions, setPermissions] = useState({});
-
+  const [keyEdit, setKeyEdit] = useState('');
+  const [data, setData] = useState([]);
+  const [pagination, setPagination] = useState([]);
   useEffect(() => {
     getList();
     getPermission();
   }, []);
 
+  if (redirect) {
+    return <Redirect to={redirect} />;
+  }
   const getPermission = () => {
     const params = {
       filter: JSON.stringify({ userGroupId: userGroupId }),
@@ -75,10 +84,10 @@ const Place = ({ isMobile, intl, headerPage }) => {
     const queryFilter = list.filter;
     setLoading(true);
     let params = {
-      filter: JSON.stringify({}),
+      filter: JSON.stringify({ healthFacilityId: healthFacilityId }),
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
-      attributes: 'id,placeName,email,mobile,status,createdAt',
+      attributes: 'id,supplierGroupName,status,createdAt',
     };
     let values = {};
     if (query && query.filter && query.filter !== '{}') {
@@ -104,12 +113,18 @@ const Place = ({ isMobile, intl, headerPage }) => {
     }
     dispatch(filter(values));
     dispatch({
-      type: 'place/fetch',
+      type: 'supplierGroup/fetch',
       payload: params,
       callback: (res) => {
         setLoading(false);
+
         if (res.success === false) {
           openNotification('error', res && res.message, '#fff1f0');
+        } else {
+          const { list } = res.results;
+          const { pagination } = res.results;
+          setData(list);
+          setPagination(pagination);
         }
       },
     });
@@ -121,7 +136,7 @@ const Place = ({ isMobile, intl, headerPage }) => {
       status,
     };
     dispatch({
-      type: 'place/updateStatus',
+      type: 'supplierGroup/updateStatus',
       payload: {
         id: row.id,
         params: item,
@@ -149,6 +164,99 @@ const Place = ({ isMobile, intl, headerPage }) => {
     });
   };
 
+  const handleAdd = () => {
+    if (keyEdit > 0 || keyEdit === '') {
+      const dataNew = {
+        id: index,
+        supplierGroupName: '',
+        dateCreated: moment(),
+        status: true,
+      };
+      setDataEdit(dataNew);
+      setKeyEdit(index);
+      setData([dataNew, ...data]);
+      setIndex(index + 1);
+    }
+  };
+
+  const saveRow = () => {
+    const addItem = {
+      ...dataEdit,
+      supplierGroupName:
+        (dataEdit.supplierGroupName && dataEdit.supplierGroupName.trim()) || '',
+      supplierGroupNameOld:
+        (dataEdit.supplierGroupName && dataEdit.supplierGroupName.trim()) || '',
+      healthFacilityId: healthFacilityId,
+    };
+    if (
+      !(addItem.supplierGroupName && addItem.supplierGroupName.trim()) ||
+      (addItem.supplierGroupName &&
+        addItem.supplierGroupName.trim() &&
+        addItem.supplierGroupName.trim().length > 50)
+    ) {
+      openNotification(
+        'error',
+        intl.formatMessage({ id: 'app.supplierGroup.noti.col0' }),
+        '#fff1f0'
+      );
+      return;
+    }
+    if (addItem.id > 0) {
+      dispatch({
+        type: 'supplierGroup/update',
+        payload: {
+          id: addItem.id,
+          params: {
+            ...addItem,
+          },
+        },
+        callback: (res) => {
+          if (res && res.success) {
+            openNotification(
+              'success',
+              intl.formatMessage({ id: 'app.common.edit.success' }),
+              '#f6ffed'
+            );
+            getList();
+            setDataEdit({});
+            setKeyEdit('');
+          } else {
+            openNotification('error', res.message, '#fff1f0');
+          }
+          setLoading(false);
+        },
+      });
+    } else {
+      delete addItem.id;
+      dispatch({
+        type: 'supplierGroup/add',
+        payload: addItem,
+        callback: (res) => {
+          if (res && res.success) {
+            openNotification(
+              'success',
+              intl.formatMessage(
+                { id: 'app.common.create.success' },
+                {
+                  name: intl.formatMessage({
+                    id: 'app.supplierGroup.list.title',
+                  }),
+                }
+              ),
+              '#f6ffed'
+            );
+            getList();
+            setDataEdit({});
+            setKeyEdit('');
+          } else {
+            openNotification('error', res.message, '#fff1f0');
+          }
+          setLoading(false);
+        },
+      });
+    }
+  };
+
   const handleTableChange = (pagination, filters, sorter) => {
     const queryFilter = list.filter;
     const rangeValue = queryFilter.dateCreated || [];
@@ -161,17 +269,16 @@ const Place = ({ isMobile, intl, headerPage }) => {
         ? rangeValue[1].set({ hour: 23, minute: 59, second: 59 })
         : '';
     const queryName = {
-      placeName: queryFilter.placeName && queryFilter.placeName.trim(),
-      provinceId: queryFilter && queryFilter.provinceId,
+      supplierGroupName:
+        queryFilter.supplierGroupName && queryFilter.supplierGroupName.trim(),
       status: queryFilter && queryFilter.status,
       fromDate: fromDate,
       toDate: toDate,
     };
-    if (!(queryFilter.placeName && queryFilter.placeName.trim())) {
-      delete queryName.placeName;
-    }
-    if (!queryFilter.provinceId) {
-      delete queryName.provinceId;
+    if (
+      !(queryFilter.supplierGroupName && queryFilter.supplierGroupName.trim())
+    ) {
+      delete queryName.supplierGroupName;
     }
     if (!queryFilter.status) {
       delete queryName.status;
@@ -191,11 +298,11 @@ const Place = ({ isMobile, intl, headerPage }) => {
         pagination.current * pagination.pageSize,
       ]),
       sort: JSON.stringify(sort),
-      attributes: 'id,placeName,email,mobile,status,createdAt',
+      attributes: 'id,supplierGroupName,status,createdAt',
     };
     dispatch(filter(queryFilter));
     dispatch({
-      type: 'place/fetch',
+      type: 'supplierGroup/fetch',
       payload: query,
       callback: (res) => {
         setLoading(false);
@@ -215,17 +322,14 @@ const Place = ({ isMobile, intl, headerPage }) => {
         ? rangeValue[1].set({ hour: 23, minute: 59, second: 59 })
         : '';
     const queryName = {
-      placeName: values.placeName && values.placeName.trim(),
-      provinceId: values && values.provinceId,
+      supplierGroupName:
+        values.supplierGroupName && values.supplierGroupName.trim(),
       status: values && values.status,
       fromDate: fromDate,
       toDate: toDate,
     };
-    if (!(values.placeName && values.placeName.trim())) {
-      delete queryName.placeName;
-    }
-    if (!values.provinceId) {
-      delete queryName.provinceId;
+    if (!(values.supplierGroupName && values.supplierGroupName.trim())) {
+      delete queryName.supplierGroupName;
     }
     if (!values.status) {
       delete queryName.status;
@@ -238,11 +342,11 @@ const Place = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify(queryName),
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
-      attributes: 'id,placeName,email,mobile,status,createdAt',
+      attributes: 'id,supplierGroupName,status,createdAt',
     };
     dispatch(filter(values));
     dispatch({
-      type: 'place/fetch',
+      type: 'supplierGroup/fetch',
       payload: query,
       callback: (res) => {
         setLoading(false);
@@ -278,8 +382,7 @@ const Place = ({ isMobile, intl, headerPage }) => {
       <Form
         onFinish={handleSearch}
         initialValues={{
-          placeName: filter.placeName || '',
-          provinceId: filter.provinceId || '',
+          supplierGroupName: filter.supplierGroupName || '',
           status: filter.status || undefined,
           dateCreated: filter.dateCreated || [],
         }}
@@ -287,29 +390,14 @@ const Place = ({ isMobile, intl, headerPage }) => {
         <Row gutter={{ md: 0, lg: 8, xl: 16 }}>
           <Col xs={24} md={12} xl={8}>
             <FormItem
-              name="placeName"
-              label={<FormattedMessage id="app.place.list.col1" />}
+              name="supplierGroupName"
+              label={<FormattedMessage id="app.supplierGroup.list.col0" />}
               {...formItemLayout}
             >
               <Input
                 placeholder={intl.formatMessage({
-                  id: 'app.place.search.col0',
+                  id: 'app.supplierGroup.search.col0',
                 })}
-                size="small"
-              />
-            </FormItem>
-          </Col>
-          <Col xs={24} md={12} xl={8}>
-            <FormItem
-              name="provinceId"
-              label={<FormattedMessage id="app.place.list.col4" />}
-              {...formItemLayout}
-            >
-              <ProvinceSelect
-                placeholder={intl.formatMessage({
-                  id: 'app.place.search.col2',
-                })}
-                allowClear
                 size="small"
               />
             </FormItem>
@@ -317,7 +405,7 @@ const Place = ({ isMobile, intl, headerPage }) => {
           <Col xl={8} md={12} xs={24}>
             <FormItem
               name="status"
-              label={<FormattedMessage id="app.search.status" />}
+              label={<FormattedMessage id="app.supplierGroup.list.col2" />}
               {...formItemLayout}
             >
               <Select
@@ -339,7 +427,7 @@ const Place = ({ isMobile, intl, headerPage }) => {
               </Select>
             </FormItem>
           </Col>
-          <Col xl={8} md={12} xs={24}>
+          <Col xl={6} md={12} xs={24}>
             <FormItem
               name="dateCreated"
               label={
@@ -366,7 +454,7 @@ const Place = ({ isMobile, intl, headerPage }) => {
             </FormItem>
           </Col>
           <Col
-            xl={16}
+            xl={2}
             md={24}
             xs={24}
             style={
@@ -396,7 +484,7 @@ const Place = ({ isMobile, intl, headerPage }) => {
 
   const deleteRecord = (id) => {
     dispatch({
-      type: 'place/delete',
+      type: 'supplierGroup/delete',
       payload: {
         id: id,
       },
@@ -447,6 +535,7 @@ const Place = ({ isMobile, intl, headerPage }) => {
                   <div>{item.name}</div>
                 </Menu.Item>
               );
+
             if (item.status === 0)
               return (
                 permissions.isBlock && (
@@ -458,6 +547,7 @@ const Place = ({ isMobile, intl, headerPage }) => {
                   </Menu.Item>
                 )
               );
+
             if (item.status === -1)
               return (
                 permissions.isDelete && (
@@ -503,6 +593,7 @@ const Place = ({ isMobile, intl, headerPage }) => {
         </Button>
       );
     }
+
     return (
       <Dropdown
         overlay={menu}
@@ -515,8 +606,6 @@ const Place = ({ isMobile, intl, headerPage }) => {
       </Dropdown>
     );
   };
-  const data = (list.data && list.data.list) || [];
-  const pagination = (list.data && list.data.pagination) || [];
   const columns = [
     {
       dataIndex: null,
@@ -530,38 +619,30 @@ const Place = ({ isMobile, intl, headerPage }) => {
       fixed: isMobile,
     },
     {
-      dataIndex: 'placeName',
-      name: 'placeName',
-      width: isMobile ? 100 : '10%',
-      title: <FormattedMessage id="app.place.list.col1" />,
+      dataIndex: 'supplierGroupName',
+      name: 'supplierGroupName',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.supplierGroup.list.col0" />,
       align: 'left',
       sorter: () => {},
       fixed: isMobile,
-    },
-    {
-      dataIndex: 'email',
-      name: 'email',
-      width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.place.list.col2" />,
-      align: 'center',
-      sorter: () => {},
-    },
-    {
-      dataIndex: 'mobile',
-      name: 'mobile',
-      width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.place.list.col3" />,
-      align: 'center',
-      sorter: () => {},
-    },
-    {
-      dataIndex: 'province',
-      name: 'province',
-      width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.place.list.col4" />,
-      align: 'center',
-      sorter: () => {},
-      render: (cell) => <span>{cell.provinceName}</span>,
+      render: (text, record) => {
+        if (record.id === keyEdit) {
+          return (
+            <Input
+              placeholder={intl.formatMessage({
+                id: 'app.supplierGroup.list.name',
+              })}
+              value={dataEdit.supplierGroupName}
+              onChange={(e) =>
+                setDataEdit({ ...dataEdit, supplierGroupName: e.target.value })
+              }
+              onPressEnter={() => saveRow()}
+            />
+          );
+        }
+        return text;
+      },
     },
     {
       dataIndex: 'createdAt',
@@ -578,9 +659,9 @@ const Place = ({ isMobile, intl, headerPage }) => {
     {
       dataIndex: 'status',
       name: 'status',
-      title: <FormattedMessage id="app.place.list.col8" />,
+      title: <FormattedMessage id="app.supplierGroup.list.col2" />,
       align: 'center',
-      width: !isMobile ? '12%' : 170,
+      width: !isMobile ? '9%' : 170,
       sorter: () => {},
       render: (cell, row) => (
         <React.Fragment>{renderStatusButton(cell, row)}</React.Fragment>
@@ -594,100 +675,180 @@ const Place = ({ isMobile, intl, headerPage }) => {
       render: (cell, row) => (
         <React.Fragment>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            {permissions.isUpdate && (
-              <Tooltip
-                title={
-                  !isMobile && intl.formatMessage({ id: 'app.tooltip.edit' })
-                }
-              >
-                <Button
-                  onClick={() => {
-                    setVisibleDrawer(!visibleDrawer);
-                    setDataEdit(row);
-                  }}
-                  icon={
-                    <i className="fas fa-pen" style={{ marginRight: '5px' }} />
+            {keyEdit === row.id ? (
+              <>
+                <Tooltip
+                  title={
+                    !isMobile &&
+                    intl.formatMessage({ id: 'app.common.crudBtns.4' })
                   }
-                  className="btn_edit"
-                  type="ghost"
-                  shape="circle"
-                >
-                  <FormattedMessage id="app.tooltip.edit" />
-                </Button>
-              </Tooltip>
-            )}
-            {permissions.isDelete && (
-              <Tooltip
-                title={
-                  !isMobile && intl.formatMessage({ id: 'app.tooltip.remove' })
-                }
-              >
-                <Popconfirm
-                  placement="bottom"
-                  title={<FormattedMessage id="app.confirm.remove" />}
-                  onConfirm={() => deleteRecord(row.id)}
                 >
                   <Button
+                    style={{
+                      border: '1px solid #34c38f',
+                      color: '#34c38f',
+                      marginRight: 5,
+                    }}
                     icon={
                       <i
-                        className="fas fa-trash"
-                        style={{ marginRight: '5px' }}
+                        className="fas fa-check"
+                        style={{ color: '#34c38f', marginRight: '5px' }}
                       />
                     }
-                    className="btn_edit"
-                    type="ghost"
                     shape="circle"
-                    style={{ marginLeft: '5px' }}
+                    className="btn_edit_v2"
+                    onClick={() => saveRow()}
                   >
-                    <FormattedMessage id="app.tooltip.remove" />
+                    {intl.formatMessage({ id: 'app.common.crudBtns.4' })}
                   </Button>
-                </Popconfirm>
-              </Tooltip>
+                </Tooltip>
+                <Tooltip
+                  title={
+                    !isMobile &&
+                    intl.formatMessage({
+                      id: 'app.common.deleteBtn.cancelText',
+                    })
+                  }
+                >
+                  <Button
+                    className="btn_edit_v2"
+                    style={{
+                      border: '1px solid red',
+                      color: 'red',
+                    }}
+                    onClick={() => {
+                      Modal.confirm({
+                        title: intl.formatMessage({
+                          id: 'app.confirm.reset',
+                        }),
+                        okText: 'Ok',
+                        cancelText: 'Cancel',
+                        onOk: () => {
+                          if (row.id > 0) {
+                            setDataEdit({});
+                            setKeyEdit('');
+                          } else {
+                            setData(data.filter((item) => item.id !== row.id));
+                            setDataEdit({});
+                            setKeyEdit('');
+                          }
+                        },
+                        onCancel() {},
+                      });
+                    }}
+                    icon={
+                      <i
+                        className="fas fa-times"
+                        style={{ color: 'red', marginRight: '5px' }}
+                      />
+                    }
+                    shape="circle"
+                  >
+                    {intl.formatMessage({
+                      id: 'app.common.deleteBtn.cancelText',
+                    })}
+                  </Button>
+                </Tooltip>
+              </>
+            ) : (
+              <>
+                {permissions.isUpdate && (
+                  <Tooltip
+                    title={
+                      !isMobile &&
+                      intl.formatMessage({ id: 'app.tooltip.edit' })
+                    }
+                  >
+                    <Button
+                      onClick={() => {
+                        setDataEdit(row);
+                        setKeyEdit(row.id);
+                        setData(data.filter((item) => item.id > 0));
+                      }}
+                      icon={
+                        <i
+                          className="fas fa-pen"
+                          style={{ marginRight: '5px' }}
+                        />
+                      }
+                      className="btn_edit"
+                      type="ghost"
+                      shape="circle"
+                    >
+                      <FormattedMessage id="app.tooltip.edit" />
+                    </Button>
+                  </Tooltip>
+                )}
+                {permissions.isDelete && (
+                  <Tooltip
+                    title={
+                      !isMobile &&
+                      intl.formatMessage({ id: 'app.tooltip.remove' })
+                    }
+                  >
+                    <Popconfirm
+                      placement="bottom"
+                      title={<FormattedMessage id="app.confirm.remove" />}
+                      onConfirm={() => deleteRecord(row.id)}
+                    >
+                      <Button
+                        icon={
+                          <i
+                            className="fas fa-trash"
+                            style={{ marginRight: '5px' }}
+                          />
+                        }
+                        className="btn_edit"
+                        type="ghost"
+                        shape="circle"
+                        style={{ marginLeft: '5px' }}
+                      >
+                        <FormattedMessage id="app.tooltip.remove" />
+                      </Button>
+                    </Popconfirm>
+                  </Tooltip>
+                )}
+              </>
             )}
           </div>
         </React.Fragment>
       ),
     },
   ];
-
   return (
     <>
       {permissions ? (
         <>
           {headerPage}
           <HeaderContent
-            title={<FormattedMessage id="app.place.list.header" />}
+            title={<FormattedMessage id="app.supplierGroup.list.header" />}
             action={
               <React.Fragment>
-                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  {permissions.isAdd && (
-                    <Tooltip
-                      title={
-                        !isMobile &&
-                        intl.formatMessage({ id: 'app.place.create.header' })
+                {permissions.isAdd && (
+                  <Tooltip
+                    title={
+                      !isMobile &&
+                      intl.formatMessage({
+                        id: 'app.supplierGroup.create.header',
+                      })
+                    }
+                  >
+                    <Button
+                      icon={
+                        <i
+                          className="fas fa-plus"
+                          style={{ marginRight: '5px' }}
+                        />
                       }
+                      onClick={() => handleAdd()}
                     >
-                      <Button
-                        style={{ marginLeft: 10 }}
-                        icon={
-                          <i
-                            className="fas fa-plus"
-                            style={{ marginRight: '5px' }}
-                          />
-                        }
-                        onClick={() => {
-                          setVisibleDrawer(!visibleDrawer);
-                          setDataEdit({});
-                        }}
-                      >
-                        {intl.formatMessage(
-                          { id: 'app.title.create' },
-                          { name: '(F2)' }
-                        )}
-                      </Button>
-                    </Tooltip>
-                  )}
-                </div>
+                      {intl.formatMessage(
+                        { id: 'app.title.create' },
+                        { name: '(F2)' }
+                      )}
+                    </Button>
+                  </Tooltip>
+                )}
               </React.Fragment>
             }
           >
@@ -713,7 +874,6 @@ const Place = ({ isMobile, intl, headerPage }) => {
             >
               {renderForm()}
             </Modal>
-
             <Table
               loading={loading}
               rowKey="id"
@@ -737,16 +897,8 @@ const Place = ({ isMobile, intl, headerPage }) => {
           }
         />
       )}
-      <PlaceDrawer
-        intl={intl}
-        isMobile={isMobile}
-        visible={visibleDrawer}
-        titleDrawer={intl.formatMessage({ id: 'app.place.list.title' })}
-        dataEdit={dataEdit}
-        getList={getList}
-      />
     </>
   );
 };
 
-export default Place;
+export default SupplierGroup;
