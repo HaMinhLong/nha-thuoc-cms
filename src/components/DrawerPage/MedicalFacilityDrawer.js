@@ -206,7 +206,7 @@ const PlaceDrawer = ({
             districtId: data.districtId || '',
             wardId: data.wardId || '',
             address: data.address || '',
-            status: data.id ? data.status : -2,
+            status: data.id ? data.status : 1,
           }}
           ref={formRef}
           layout="vertical"

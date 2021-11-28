@@ -757,7 +757,7 @@ const HealthFacility = ({ isMobile, intl, headerPage }) => {
       dataIndex: null,
       title: intl.formatMessage({ id: 'app.common.action' }),
       align: 'center',
-      width: !isMobile ? '20%' : 200,
+      width: !isMobile ? '20%' : 250,
       render: (cell, row) => (
         <React.Fragment>
           <div style={{ display: 'flex', justifyContent: 'center' }}>

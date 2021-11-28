@@ -32,6 +32,8 @@ module.exports = {
   'app.user.upload.import': 'Import from Excel file',
   'app.user.upload.download': 'Download the sample file',
 
+  //different
+  'app.user.different.col1': 'Admin settings CSYT',
   // placeholder
   'app.user.list.username': 'Enter username',
   'app.user.list.province': 'Select province',
@@ -44,4 +46,5 @@ module.exports = {
   'app.user.list.phone': 'Enter mobile',
   'app.user.list.userGroup': 'Select user group',
   'app.user.list.status': 'Select status',
+  'app.user.list.healthFacility': 'Select health facility',
 };

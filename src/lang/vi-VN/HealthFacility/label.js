@@ -47,4 +47,5 @@ module.exports = {
   'app.healthFacility.list.phone2': 'Nhập số điện thoại người đại diện',
   'app.healthFacility.list.medicalFacilityGroup': 'Chọn nhóm cơ sở y tế',
   'app.healthFacility.list.status': 'Chọn trạng thái',
+  'app.healthFacility.list.specialist': 'Chọn chuyên khoa',
 };

@@ -219,7 +219,7 @@ const HealthFacilityModal = ({
             representativeName: data.representativeName || '',
             representativeMobile: data.representativeMobile || '',
             medicalFacilityGroupId: data.medicalFacilityGroupId || '',
-            status: data.id ? data.status : -2,
+            status: data.id ? data.status : 1,
           }}
           ref={formRef}
           layout="vertical"

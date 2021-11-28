@@ -47,4 +47,5 @@ module.exports = {
   'app.healthFacility.list.medicalFacilityGroup':
     'Select health facility group',
   'app.healthFacility.list.status': 'Select status',
+  'app.healthFacility.list.specialist': 'Select specialist',
 };

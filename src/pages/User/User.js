@@ -32,6 +32,7 @@ import UserGroupSelect from '../../components/Common/UserGroupSelect';
 import { useParams } from 'react-router-dom';
 import UploadMultipleUser from '../../components/ModalPage/UploadMultipleUser';
 import ProvinceSelect from '../../components/Common/ProvinceSelect';
+import HealthFacilityUserModal from '../../components/ModalPage/HealthFacilityUserModal';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -47,6 +48,8 @@ const User = ({ isMobile, intl, headerPage }) => {
   const [dataEdit, setDataEdit] = useState({});
   const [permissions, setPermissions] = useState({});
   const [fileList, setFileList] = useState([]);
+  const [visibleCSYT, setVisibleCSYT] = useState(false);
+  const [dataCSYT, setDataCSYT] = useState({});
   const [visibleUpload, setVisibleUpload] = useState(false);
 
   useEffect(() => {
@@ -83,7 +86,7 @@ const User = ({ isMobile, intl, headerPage }) => {
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
       attributes:
-        'id,username,fullName,email,mobile,userGroupId,healthFacilityId,status,createdAt',
+        'id,username,fullName,email,mobile,userGroupId,status,createdAt',
     };
     let values = {};
     if (query && query.filter && query.filter !== '{}') {
@@ -213,7 +216,7 @@ const User = ({ isMobile, intl, headerPage }) => {
       ]),
       sort: JSON.stringify(sort),
       attributes:
-        'id,username,fullName,email,mobile,userGroupId,healthFacilityId,status,createdAt',
+        'id,username,fullName,email,mobile,userGroupId,status,createdAt',
     };
     dispatch(filter(queryFilter));
     dispatch({
@@ -273,7 +276,7 @@ const User = ({ isMobile, intl, headerPage }) => {
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
       attributes:
-        'id,username,fullName,email,mobile,userGroupId,healthFacilityId,status,createdAt',
+        'id,username,fullName,email,mobile,userGroupId,status,createdAt',
     };
     dispatch(filter(values));
     dispatch({
@@ -688,18 +691,18 @@ const User = ({ isMobile, intl, headerPage }) => {
       sorter: () => {},
       render: (cell) => <span>{cell.provinceName}</span>,
     },
-    {
-      dataIndex: 'createdAt',
-      title: intl.formatMessage({ id: 'app.common.placeholder.dateCreated' }),
-      align: 'center',
-      width: !isMobile && '9%',
-      sorter: () => {},
-      render: (cell) => (
-        <React.Fragment>
-          {moment(cell && cell).format('HH:mm DD/MM/YYYY')}
-        </React.Fragment>
-      ),
-    },
+    // {
+    //   dataIndex: 'createdAt',
+    //   title: intl.formatMessage({ id: 'app.common.placeholder.dateCreated' }),
+    //   align: 'center',
+    //   width: !isMobile && '9%',
+    //   sorter: () => {},
+    //   render: (cell) => (
+    //     <React.Fragment>
+    //       {moment(cell && cell).format('HH:mm DD/MM/YYYY')}
+    //     </React.Fragment>
+    //   ),
+    // },
     {
       dataIndex: 'status',
       name: 'status',
@@ -715,7 +718,7 @@ const User = ({ isMobile, intl, headerPage }) => {
       dataIndex: null,
       title: intl.formatMessage({ id: 'app.common.action' }),
       align: 'center',
-      width: !isMobile ? '15%' : 170,
+      width: !isMobile ? '20%' : 250,
       render: (cell, row) => (
         <React.Fragment>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -768,6 +771,37 @@ const User = ({ isMobile, intl, headerPage }) => {
                   </Button>
                 </Popconfirm>
               </Tooltip>
+            )}
+            {permissions.isUpdate && (
+              <Dropdown
+                overlay={
+                  <Menu className="menu_icon">
+                    <Menu.Item
+                      key="1"
+                      onClick={() => {
+                        setVisibleCSYT(!visibleCSYT);
+                        setDataCSYT(row);
+                      }}
+                    >
+                      {intl.formatMessage({
+                        id: 'app.user.different.col1',
+                      })}
+                    </Menu.Item>
+                  </Menu>
+                }
+                trigger={['click']}
+                placement="bottomCenter"
+                arrow
+                className="dropDownCustomV2"
+              >
+                <Button className="btn_edit" shape="circle">
+                  {intl.formatMessage({ id: 'app.common.different' })}
+                  <i
+                    className="fas fa-caret-down"
+                    style={{ marginLeft: '5px', fontSize: '16px' }}
+                  />
+                </Button>
+              </Dropdown>
             )}
           </div>
         </React.Fragment>
@@ -916,6 +950,13 @@ const User = ({ isMobile, intl, headerPage }) => {
         isMobile={isMobile}
         visible={visibleUpload}
         getList={getList}
+      />
+      <HealthFacilityUserModal
+        intl={intl}
+        isMobile={isMobile}
+        visible={visibleCSYT}
+        titleModal={intl.formatMessage({ id: 'app.user.different.col1' })}
+        dataEdit={dataCSYT}
       />
     </>
   );

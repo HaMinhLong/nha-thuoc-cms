@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Popconfirm, Form, Modal, Tooltip, notification } from 'antd';
+import { Button, Popconfirm, Form, Modal, notification } from 'antd';
 import { useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
-import { formatNumber } from '../../utils/utils';
 import SpecialistSelect from '../Common/SpecialistSelect';
 
 const FormItem = Form.Item;
@@ -49,6 +48,7 @@ const HealthFacilitySpeciaListAddModal = ({
     formRef.current
       .validateFields()
       .then((values) => {
+        setLoading(true);
         const addItem = [];
         for (let index = 0; index < values?.specialists?.length; index++) {
           addItem.push({
@@ -93,6 +93,7 @@ const HealthFacilitySpeciaListAddModal = ({
           {intl.formatMessage({ id: 'app.specialist.create.header' })}
         </h3>
       }
+      width={isMobile ? '100%' : 520}
       onCancel={() => changeModal('close')}
       visible={visibleModal}
       footer={
@@ -153,7 +154,13 @@ const HealthFacilitySpeciaListAddModal = ({
             },
           ]}
         >
-          <SpecialistSelect data={specialistData} mode={'multiple'} />
+          <SpecialistSelect
+            placeholder={intl.formatMessage({
+              id: 'app.healthFacility.list.specialist',
+            })}
+            data={specialistData}
+            mode={'multiple'}
+          />
         </FormItem>
       </Form>
     </Modal>

@@ -32,6 +32,9 @@ module.exports = {
   'app.user.upload.import': 'Nhập từ tệp Excel',
   'app.user.upload.download': 'Tải xuống tệp mẫu',
 
+  //different
+  'app.user.different.col1': 'Thiết lập quản trị CSYT',
+
   // placeholder
   'app.user.list.username': 'Nhập tên tài khoản',
   'app.user.list.province': 'Chọn Tỉnh/Thành phố',
@@ -44,4 +47,5 @@ module.exports = {
   'app.user.list.phone': 'Nhập số điện thoại',
   'app.user.list.userGroup': 'Chọn nhóm tài khoản',
   'app.user.list.status': 'Chọn trạng thái',
+  'app.user.list.healthFacility': 'Chọn cơ sở y tế',
 };
