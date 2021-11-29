@@ -4,6 +4,7 @@ module.exports = {
   'app.supplierGroup.list.header': 'Quản lý nhóm nhà cung cấp',
   'app.supplierGroup.update.header': 'Sửa nhóm nhà cung cấp',
   'app.supplierGroup.create.header': 'Thêm mới nhóm nhà cung cấp',
+  'app.supplierGroup.quickCreate.header': 'Thêm nhanh nhóm nhà cung cấp',
 
   // Tiêu đề các cột
   'app.supplierGroup.list.col0': 'Tên nhóm nhà cung cấp',

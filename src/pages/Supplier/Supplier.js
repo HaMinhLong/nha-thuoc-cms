@@ -28,7 +28,7 @@ import filterIcon from '../../static/web/images/filter.svg';
 import dropdownWhite from '../../static/web/images/dropDown_white.svg';
 import dropdownBlack from '../../static/web/images/dropDown_black.svg';
 import { formatNumber } from '../../utils/utils';
-import SupplierDrawer from '../../components/DrawerPage/SupplierDrawer';
+import SupplierModal from '../../components/ModalPage/SupplierModal';
 import SupplierGroupSelect from '../../components/Common/SupplierGroupSelect';
 import { Redirect } from 'react-router-dom';
 
@@ -42,7 +42,7 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
   const dispatch = useDispatch();
   const list = useSelector(supplier);
   const [loading, setLoading] = useState(false);
-  const [visibleDrawer, setVisibleDrawer] = useState(false);
+  const [visibleModal, setVisibleModal] = useState(false);
   const [visibleFilter, setVisibleFilter] = useState(false);
   const [dataEdit, setDataEdit] = useState({});
   const [redirect, setRedirect] = useState('');
@@ -83,7 +83,8 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify({ healthFacilityId: healthFacilityId }),
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
-      attributes: 'id,supplierName,supplierGroupId,status,createdAt',
+      attributes:
+        'id,supplierName,supplierGroupId,mobile,email,status,createdAt',
     };
     let values = {};
     if (query && query.filter && query.filter !== '{}') {
@@ -197,7 +198,8 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
         pagination.current * pagination.pageSize,
       ]),
       sort: JSON.stringify(sort),
-      attributes: 'id,supplierName,supplierGroupId,status,createdAt',
+      attributes:
+        'id,supplierName,supplierGroupId,mobile,email,status,createdAt',
     };
     dispatch(filter(queryFilter));
     dispatch({
@@ -245,7 +247,8 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify(queryName),
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
-      attributes: 'id,supplierName,supplierGroupId,status,createdAt',
+      attributes:
+        'id,supplierName,supplierGroupId,mobile,email,status,createdAt',
     };
     dispatch(filter(values));
     dispatch({
@@ -558,6 +561,22 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
       render: (cell) => <span>{cell.supplierGroupName}</span>,
     },
     {
+      dataIndex: 'mobile',
+      name: 'mobile',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.supplier.list.col2" />,
+      align: 'center',
+      sorter: () => {},
+    },
+    {
+      dataIndex: 'email',
+      name: 'email',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.supplier.list.col4" />,
+      align: 'center',
+      sorter: () => {},
+    },
+    {
       dataIndex: 'createdAt',
       title: intl.formatMessage({ id: 'app.common.placeholder.dateCreated' }),
       align: 'center',
@@ -596,7 +615,7 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
               >
                 <Button
                   onClick={() => {
-                    setVisibleDrawer(!visibleDrawer);
+                    setVisibleModal(!visibleModal);
                     setDataEdit(row);
                   }}
                   icon={
@@ -667,7 +686,7 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
                         />
                       }
                       onClick={() => {
-                        setVisibleDrawer(!visibleDrawer);
+                        setVisibleModal(!visibleModal);
                         setDataEdit({});
                       }}
                     >
@@ -726,11 +745,11 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
           }
         />
       )}
-      <SupplierDrawer
+      <SupplierModal
         intl={intl}
         isMobile={isMobile}
-        visible={visibleDrawer}
-        titleDrawer={intl.formatMessage({ id: 'app.supplier.list.title' })}
+        visible={visibleModal}
+        titleModal={intl.formatMessage({ id: 'app.supplier.list.title' })}
         dataEdit={dataEdit}
         getList={getList}
       />

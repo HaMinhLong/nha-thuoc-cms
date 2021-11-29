@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Tooltip, notification, Form } from 'antd';
+import { Button, Modal, Tooltip, notification, Form, Spin } from 'antd';
 import { useDispatch } from 'react-redux';
 import HealthFacilitySelect from '../Common/HealthFacilitySelect';
 import '../../utils/css/styleList.scss';
@@ -138,7 +138,7 @@ const HealthFacilityUserModal = ({
     <React.Fragment>
       <Modal
         title={
-          <h3 style={{ color: '#196CA6', marginBottom: '0px' }}>
+          <h3 style={{ marginBottom: '0px' }}>
             {titleModal} - {dataEdit?.username}
           </h3>
         }
@@ -147,76 +147,78 @@ const HealthFacilityUserModal = ({
         visible={visibleModal}
         footer={null}
       >
-        <Form
-          initialValues={{
-            healthFacilityId: '',
-          }}
-          ref={formRef}
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-          key={Math.random()}
-        >
-          <FormItem
-            name="healthFacilityId"
-            style={{ width: '90%' }}
-            rules={[
-              {
-                required: true,
-                message: intl.formatMessage({
-                  id: 'app.common.crud.validate.select',
-                }),
-              },
-            ]}
+        <Spin spinning={loading}>
+          <Form
+            initialValues={{
+              healthFacilityId: '',
+            }}
+            ref={formRef}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+            key={Math.random()}
           >
-            <HealthFacilitySelect
-              placeholder={intl.formatMessage({
-                id: 'app.user.list.healthFacility',
+            <FormItem
+              name="healthFacilityId"
+              style={{ width: '90%' }}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({
+                    id: 'app.common.crud.validate.select',
+                  }),
+                },
+              ]}
+            >
+              <HealthFacilitySelect
+                placeholder={intl.formatMessage({
+                  id: 'app.user.list.healthFacility',
+                })}
+                data={data}
+                allowClear
+              />
+            </FormItem>
+            <Tooltip
+              title={intl.formatMessage({
+                id: 'app.healthFacility.create.header',
               })}
-              data={data}
-              allowClear
-            />
-          </FormItem>
-          <Tooltip
-            title={intl.formatMessage({
-              id: 'app.healthFacility.create.header',
-            })}
-          >
-            <Button
-              icon={<i className="fas fa-check" />}
-              type="primary"
-              style={{ paddingBottom: '1px' }}
-              loading={loading}
-              onClick={handleAdd}
-            />
-          </Tooltip>
-        </Form>
-        <div className="listPlace">
-          {data?.map((item, index) => (
-            <div key={item.id} className="listItemPlace">
-              Cơ sở {index + 1}: {item.healthFacilityName}
-              <span className="listItemPlaceIcon">
-                <div
-                  className="expand-row-icon"
-                  style={{ color: '#1175BB', cursor: 'pointer' }}
-                  onClick={() =>
-                    deleteRecord(item?.users?.[0]?.healthFacilityUsers?.id)
-                  }
-                >
-                  <Tooltip
-                    title={
-                      !isMobile &&
-                      intl.formatMessage({ id: 'app.tooltip.remove' })
+            >
+              <Button
+                icon={<i className="fas fa-check" />}
+                type="primary"
+                style={{ paddingBottom: '1px' }}
+                loading={loading}
+                onClick={handleAdd}
+              />
+            </Tooltip>
+          </Form>
+          <div className="listPlace">
+            {data?.map((item, index) => (
+              <div key={item.id} className="listItemPlace">
+                Cơ sở {index + 1}: {item.healthFacilityName}
+                <span className="listItemPlaceIcon">
+                  <div
+                    className="expand-row-icon"
+                    style={{ color: '#1175BB', cursor: 'pointer' }}
+                    onClick={() =>
+                      deleteRecord(item?.users?.[0]?.healthFacilityUsers?.id)
                     }
                   >
-                    <i className="fas fa-times" />
-                  </Tooltip>
-                </div>
-              </span>
-            </div>
-          ))}
-        </div>
+                    <Tooltip
+                      title={
+                        !isMobile &&
+                        intl.formatMessage({ id: 'app.tooltip.remove' })
+                      }
+                    >
+                      <i className="fas fa-times" />
+                    </Tooltip>
+                  </div>
+                </span>
+              </div>
+            ))}
+          </div>
+        </Spin>
       </Modal>
     </React.Fragment>
   );

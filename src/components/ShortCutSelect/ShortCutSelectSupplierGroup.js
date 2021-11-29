@@ -1,19 +1,34 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect } from 'react';
-import '@ant-design/compatible/assets/index.css';
+import { PlusOutlined } from '@ant-design/icons';
+import {
+  Select,
+  Tooltip,
+  Input,
+  Button,
+  Spin,
+  Modal,
+  Form,
+  notification,
+} from 'antd';
 import { useDispatch } from 'react-redux';
+import regexHelper from '../../utils/regexHelper';
+import '@ant-design/compatible/assets/index.css';
 import { fnKhongDau } from '../../utils/utils';
-import { Select, Spin } from 'antd';
 import _ from 'lodash';
 
 let timer = null;
+const { isGroupName } = regexHelper;
 
-const UserGroupSelect = ({
+const FormItem = Form.Item;
+const ShortCutSelectSupplierGroup = ({
+  intl,
+  isMobile,
+  placeholder,
   value,
   textProps,
   filter,
   key,
-  placeholder,
   disabled,
   allowClear,
   size,
@@ -23,7 +38,6 @@ const UserGroupSelect = ({
 }) => {
   const dispatch = useDispatch();
   const [valueState, setValueState] = useState(value);
-  const [loading, setLoading] = useState(false);
   const [dataArr, setDataArr] = useState([]);
   const [icon, setIcon] = useState(null);
   const [numOfScroll, setNumOfScroll] = useState(2);
@@ -32,9 +46,54 @@ const UserGroupSelect = ({
   const [totalItems, setTotalItems] = useState(0);
   const [dataStore, setDataStore] = useState([]);
   const [text, setText] = useState(textProps || '');
+  const healthFacilityId = localStorage.getItem('healthFacilityId');
+  const [visibleAddSupplierGroup, setVisibleAddSupplierGroup] = useState(false);
+  const [supplierGroupName, setSupplierGroupName] = useState('');
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     fetch(1, undefined, valueState, false, false, false);
   }, []);
+  const handleSubmit = () => {
+    setLoading(true);
+    const addItem = {
+      supplierGroupName: (supplierGroupName && supplierGroupName.trim()) || '',
+      status: 1,
+      healthFacilityId: healthFacilityId,
+    };
+    dispatch({
+      type: 'supplierGroup/add',
+      payload: addItem,
+      callback: (res) => {
+        setLoading(true);
+        if (res?.success) {
+          openNotification(
+            'success',
+            intl.formatMessage(
+              { id: 'app.common.create.success' },
+              {
+                name: intl.formatMessage({
+                  id: 'app.supplierGroup.list.title',
+                }),
+              }
+            ),
+            '#f6ffed'
+          );
+          setVisibleAddSupplierGroup(false);
+          fetch(1, undefined, valueState, false, false, false);
+        } else {
+          openNotification('error', res?.message, '#fff1f0');
+        }
+        setLoading(false);
+      },
+    });
+  };
+  const openNotification = (type, message, color) => {
+    notification[type]({
+      message: message,
+      placement: 'bottomRight',
+      style: { background: color },
+    });
+  };
 
   const onFocus = () => {
     setIcon(<i className="fa fa-search" />);
@@ -206,33 +265,109 @@ const UserGroupSelect = ({
       </Select.Option>
     ));
   const dataRender = renderData(dataArr);
+
   return (
     <React.Fragment>
-      <Select
-        key={key}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        suffixIcon={icon}
-        showArrow
-        showSearch
-        defaultValue={valueState || undefined}
-        notFoundContent={loading ? <Spin size="small" /> : null}
-        onChange={onChangeFun}
-        onSearch={search}
-        filterOption={false}
-        disabled={disabled}
-        placeholder={placeholder}
-        size={size}
-        allowClear={allowClear}
-        loading={loading}
-        onPopupScroll={handleScroll}
-        onDropdownVisibleChange={handleMouseLeave}
-        style={style}
-      >
-        {dataRender}
-      </Select>
+      <div style={{ display: 'inline-flex', width: '100%' }}>
+        <Select
+          key={key}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          suffixIcon={icon}
+          showArrow
+          showSearch
+          defaultValue={valueState || undefined}
+          notFoundContent={loading ? <Spin size="small" /> : null}
+          onChange={onChangeFun}
+          onSearch={search}
+          filterOption={false}
+          disabled={disabled}
+          placeholder={placeholder}
+          size={size}
+          allowClear={allowClear}
+          loading={loading}
+          onPopupScroll={handleScroll}
+          onDropdownVisibleChange={handleMouseLeave}
+          style={style}
+        >
+          {dataRender}
+        </Select>
+        <Tooltip
+          title={
+            !isMobile &&
+            intl.formatMessage({ id: 'app.supplierGroup.quickCreate.header' })
+          }
+        >
+          <Button
+            style={{
+              color: '#495057',
+              borderRadius: 'unset !important',
+              border: '1px solid #d9d9d9',
+            }}
+            type="ghost"
+            icon={<PlusOutlined />}
+            onClick={() => setVisibleAddSupplierGroup(!visibleAddSupplierGroup)}
+          />
+        </Tooltip>
+      </div>
+      <Spin spinning={loading}>
+        <Modal
+          destroyOnClose
+          title={intl.formatMessage({
+            id: 'app.supplierGroup.quickCreate.header',
+          })}
+          visible={visibleAddSupplierGroup}
+          onOk={handleSubmit}
+          width={isMobile ? '100%' : '520px'}
+          onCancel={() => setVisibleAddSupplierGroup(false)}
+          cancelText={
+            <React.Fragment>
+              <i className="fas fa-sync" /> &nbsp;
+              {intl.formatMessage({ id: 'app.common.deleteBtn.cancelText' })}
+            </React.Fragment>
+          }
+          okText={
+            <React.Fragment>
+              <i className="fa fa-save" /> &nbsp;
+              {intl.formatMessage({ id: 'app.common.crudBtns.4' })}
+            </React.Fragment>
+          }
+        >
+          <FormItem
+            labelCol={{ span: 24 }}
+            wrapperCol={{ span: 24 }}
+            labelAlign="left"
+            label={
+              <span>
+                {intl.formatMessage({ id: 'app.supplierGroup.list.col0' })}
+              </span>
+            }
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'app.common.crud.validate.input',
+                }),
+              },
+              {
+                pattern: isGroupName,
+                message: intl.formatMessage({
+                  id: 'app.common.crud.validate.fomatNew',
+                }),
+              },
+            ]}
+          >
+            <Input
+              placeholder={intl.formatMessage({
+                id: 'app.supplierGroup.list.name',
+              })}
+              onChange={(e) => setSupplierGroupName(e.target.value)}
+            />
+          </FormItem>
+        </Modal>
+      </Spin>
     </React.Fragment>
   );
 };
 
-export default UserGroupSelect;
+export default ShortCutSelectSupplierGroup;

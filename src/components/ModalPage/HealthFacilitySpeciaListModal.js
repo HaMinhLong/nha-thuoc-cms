@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Popconfirm, Modal, Tooltip, notification } from 'antd';
+import {
+  Button,
+  Popconfirm,
+  Modal,
+  Tooltip,
+  notification,
+  PageHeader,
+  Card,
+  Spin,
+} from 'antd';
 import { useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { formatNumber } from '../../utils/utils';
@@ -191,18 +200,24 @@ const HealthFacilitySpeciaListModal = ({
   return (
     <React.Fragment>
       <Modal
-        title={
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingRight: 30,
-            }}
-          >
-            <h3 style={{ color: '#196CA6', marginBottom: '0px' }}>
-              {titleModal}
-            </h3>
+        width={isMobile ? '100%' : '70%'}
+        style={{
+          top: isMobile ? 0 : 30,
+          margin: '0 auto',
+        }}
+        bodyStyle={{
+          minHeight: '70vh',
+          padding: '0px 0px 10px',
+          background: '#F4F4F4',
+        }}
+        confirmLoading={loading}
+        onCancel={() => changeModal('close')}
+        visible={visibleModal}
+        footer={null}
+      >
+        <PageHeader
+          title={titleModal}
+          extra={[
             <Tooltip
               title={
                 !isMobile &&
@@ -213,6 +228,7 @@ const HealthFacilitySpeciaListModal = ({
             >
               <Button
                 onClick={() => setVisibleAddSpecialist(!visibleAddSpecialist)}
+                style={{ marginRight: 30 }}
                 icon={
                   <i className="fas fa-plus" style={{ marginRight: '5px' }} />
                 }
@@ -220,25 +236,27 @@ const HealthFacilitySpeciaListModal = ({
               >
                 Thêm mới
               </Button>
-            </Tooltip>
-          </div>
-        }
-        style={{ top: isMobile ? 0 : 30 }}
-        width={isMobile ? '100%' : '70%'}
-        bodyStyle={{ minHeight: '85vh' }}
-        onCancel={() => changeModal('close')}
-        visible={visibleModal}
-        footer={null}
-      >
-        <Table
-          loading={loading}
-          rowKey="id"
-          dataSource={data}
-          pagination={pagination}
-          scroll={{ x: isMobile ? 1200 : '100vh', y: '60vh' }}
-          columns={columns}
-          onChange={handleTableChange}
-        />
+            </Tooltip>,
+          ]}
+        >
+          <Spin spinning={loading}>
+            <Card
+              bordered={false}
+              style={{ boxShadow: '0px 0px 5px #00000029' }}
+              bodyStyle={{ padding: '10px 10px 20px 10px', minHeight: '70vh' }}
+            >
+              <Table
+                loading={loading}
+                rowKey="id"
+                dataSource={data}
+                pagination={pagination}
+                scroll={{ x: isMobile ? 1200 : '100vh', y: '60vh' }}
+                columns={columns}
+                onChange={handleTableChange}
+              />
+            </Card>
+          </Spin>
+        </PageHeader>
       </Modal>
       <HealthFacilitySpeciaListAddModal
         intl={intl}
