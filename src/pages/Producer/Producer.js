@@ -21,15 +21,15 @@ import Table from '../../components/Table';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { supplier, filter } from '../../features/supplier/supplierSlice';
+import { producer, filter } from '../../features/producer/producerSlice';
 import '../../utils/css/styleList.scss';
 import moment from 'moment';
 import filterIcon from '../../static/web/images/filter.svg';
 import dropdownWhite from '../../static/web/images/dropDown_white.svg';
 import dropdownBlack from '../../static/web/images/dropDown_black.svg';
 import { formatNumber } from '../../utils/utils';
-import SupplierModal from '../../components/ModalPage/SupplierModal';
-import SupplierGroupSelect from '../../components/Common/SupplierGroupSelect';
+import ProducerDrawer from '../../components/DrawerPage/ProducerDrawer';
+import ProducerGroupSelect from '../../components/Common/ProducerGroupSelect';
 import { Redirect } from 'react-router-dom';
 
 const FormItem = Form.Item;
@@ -40,9 +40,9 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
   const userGroupId = localStorage.getItem('userGroupId');
   const healthFacilityId = localStorage.getItem('healthFacilityId');
   const dispatch = useDispatch();
-  const list = useSelector(supplier);
+  const list = useSelector(producer);
   const [loading, setLoading] = useState(false);
-  const [visibleModal, setVisibleModal] = useState(false);
+  const [visibleDrawer, setVisibleDrawer] = useState(false);
   const [visibleFilter, setVisibleFilter] = useState(false);
   const [dataEdit, setDataEdit] = useState({});
   const [redirect, setRedirect] = useState('');
@@ -84,7 +84,7 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
       attributes:
-        'id,supplierName,supplierGroupId,mobile,email,status,createdAt',
+        'id,producerName,producerGroupId,mobile,email,status,createdAt',
     };
     let values = {};
     if (query && query.filter && query.filter !== '{}') {
@@ -110,7 +110,7 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
     }
     dispatch(filter(values));
     dispatch({
-      type: 'supplier/fetch',
+      type: 'producer/fetch',
       payload: params,
       callback: (res) => {
         setLoading(false);
@@ -127,7 +127,7 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
       status,
     };
     dispatch({
-      type: 'supplier/updateStatus',
+      type: 'producer/updateStatus',
       payload: {
         id: row.id,
         params: item,
@@ -167,18 +167,18 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
         ? rangeValue[1].set({ hour: 23, minute: 59, second: 59 })
         : '';
     const queryName = {
-      supplierName: queryFilter.supplierName && queryFilter.supplierName.trim(),
-      supplierGroupId: queryFilter && queryFilter.supplierGroupId,
+      producerName: queryFilter.producerName && queryFilter.producerName.trim(),
+      producerGroupId: queryFilter && queryFilter.producerGroupId,
       status: queryFilter && queryFilter.status,
       fromDate: fromDate,
       toDate: toDate,
       healthFacilityId,
     };
-    if (!(queryFilter.supplierName && queryFilter.supplierName.trim())) {
-      delete queryName.supplierName;
+    if (!(queryFilter.producerName && queryFilter.producerName.trim())) {
+      delete queryName.producerName;
     }
-    if (!queryFilter.supplierGroupId) {
-      delete queryName.supplierGroupId;
+    if (!queryFilter.producerGroupId) {
+      delete queryName.producerGroupId;
     }
     if (!queryFilter.status) {
       delete queryName.status;
@@ -199,11 +199,11 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
       ]),
       sort: JSON.stringify(sort),
       attributes:
-        'id,supplierName,supplierGroupId,mobile,email,status,createdAt',
+        'id,producerName,producerGroupId,mobile,email,status,createdAt',
     };
     dispatch(filter(queryFilter));
     dispatch({
-      type: 'supplier/fetch',
+      type: 'producer/fetch',
       payload: query,
       callback: (res) => {
         setLoading(false);
@@ -223,18 +223,18 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
         ? rangeValue[1].set({ hour: 23, minute: 59, second: 59 })
         : '';
     const queryName = {
-      supplierName: values.supplierName && values.supplierName.trim(),
-      supplierGroupId: values && values.supplierGroupId,
+      producerName: values.producerName && values.producerName.trim(),
+      producerGroupId: values && values.producerGroupId,
       status: values && values.status,
       fromDate: fromDate,
       toDate: toDate,
       healthFacilityId,
     };
-    if (!(values.supplierName && values.supplierName.trim())) {
-      delete queryName.supplierName;
+    if (!(values.producerName && values.producerName.trim())) {
+      delete queryName.producerName;
     }
-    if (!values.supplierGroupId) {
-      delete queryName.supplierGroupId;
+    if (!values.producerGroupId) {
+      delete queryName.producerGroupId;
     }
     if (!values.status) {
       delete queryName.status;
@@ -248,11 +248,11 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
       attributes:
-        'id,supplierName,supplierGroupId,mobile,email,status,createdAt',
+        'id,producerName,producerGroupId,mobile,email,status,createdAt',
     };
     dispatch(filter(values));
     dispatch({
-      type: 'supplier/fetch',
+      type: 'producer/fetch',
       payload: query,
       callback: (res) => {
         setLoading(false);
@@ -288,8 +288,8 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
       <Form
         onFinish={handleSearch}
         initialValues={{
-          supplierName: filter.supplierName || '',
-          supplierGroupId: filter.supplierGroupId || '',
+          producerName: filter.producerName || '',
+          producerGroupId: filter.producerGroupId || '',
           status: filter.status || undefined,
           dateCreated: filter.dateCreated || [],
         }}
@@ -297,13 +297,13 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
         <Row gutter={{ md: 0, lg: 8, xl: 16 }}>
           <Col xs={24} md={12} xl={8}>
             <FormItem
-              name="supplierName"
-              label={<FormattedMessage id="app.supplier.list.col0" />}
+              name="producerName"
+              label={<FormattedMessage id="app.producer.list.col0" />}
               {...formItemLayout}
             >
               <Input
                 placeholder={intl.formatMessage({
-                  id: 'app.supplier.search.col0',
+                  id: 'app.producer.search.col0',
                 })}
                 size="small"
               />
@@ -311,13 +311,13 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
           </Col>
           <Col xs={24} md={12} xl={8}>
             <FormItem
-              name="supplierGroupId"
-              label={<FormattedMessage id="app.supplier.list.col1" />}
+              name="producerGroupId"
+              label={<FormattedMessage id="app.producer.list.col1" />}
               {...formItemLayout}
             >
-              <SupplierGroupSelect
+              <ProducerGroupSelect
                 placeholder={intl.formatMessage({
-                  id: 'app.supplier.search.col1',
+                  id: 'app.producer.search.col1',
                 })}
                 allowClear
                 size="small"
@@ -327,7 +327,7 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
           <Col xl={8} md={12} xs={24}>
             <FormItem
               name="status"
-              label={<FormattedMessage id="app.supplier.list.col9" />}
+              label={<FormattedMessage id="app.producer.list.col5" />}
               {...formItemLayout}
             >
               <Select
@@ -406,7 +406,7 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
 
   const deleteRecord = (id) => {
     dispatch({
-      type: 'supplier/delete',
+      type: 'producer/delete',
       payload: {
         id: id,
       },
@@ -543,28 +543,28 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
       fixed: isMobile,
     },
     {
-      dataIndex: 'supplierName',
-      name: 'supplierName',
+      dataIndex: 'producerName',
+      name: 'producerName',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.supplier.list.col0" />,
+      title: <FormattedMessage id="app.producer.list.col0" />,
       align: 'left',
       sorter: () => {},
       fixed: isMobile,
     },
     {
-      dataIndex: 'supplierGroup',
-      name: 'supplierGroup',
+      dataIndex: 'producerGroup',
+      name: 'producerGroup',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.supplier.list.col1" />,
+      title: <FormattedMessage id="app.producer.list.col1" />,
       align: 'center',
       sorter: () => {},
-      render: (cell) => <span>{cell.supplierGroupName}</span>,
+      render: (cell) => <span>{cell.producerGroupName}</span>,
     },
     {
       dataIndex: 'mobile',
       name: 'mobile',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.supplier.list.col2" />,
+      title: <FormattedMessage id="app.producer.list.col2" />,
       align: 'center',
       sorter: () => {},
     },
@@ -572,7 +572,7 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
       dataIndex: 'email',
       name: 'email',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.supplier.list.col4" />,
+      title: <FormattedMessage id="app.producer.list.col3" />,
       align: 'center',
       sorter: () => {},
     },
@@ -591,7 +591,7 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
     {
       dataIndex: 'status',
       name: 'status',
-      title: <FormattedMessage id="app.supplier.list.col9" />,
+      title: <FormattedMessage id="app.producer.list.col5" />,
       align: 'center',
       width: !isMobile ? '9%' : 170,
       sorter: () => {},
@@ -615,7 +615,7 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
               >
                 <Button
                   onClick={() => {
-                    setVisibleModal(!visibleModal);
+                    setVisibleDrawer(!visibleDrawer);
                     setDataEdit(row);
                   }}
                   icon={
@@ -668,14 +668,14 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
         <>
           {headerPage}
           <HeaderContent
-            title={<FormattedMessage id="app.supplier.list.header" />}
+            title={<FormattedMessage id="app.producer.list.header" />}
             action={
               <React.Fragment>
                 {permissions.isAdd && (
                   <Tooltip
                     title={
                       !isMobile &&
-                      intl.formatMessage({ id: 'app.supplier.create.header' })
+                      intl.formatMessage({ id: 'app.producer.create.header' })
                     }
                   >
                     <Button
@@ -686,7 +686,7 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
                         />
                       }
                       onClick={() => {
-                        setVisibleModal(!visibleModal);
+                        setVisibleDrawer(!visibleDrawer);
                         setDataEdit({});
                       }}
                     >
@@ -745,11 +745,11 @@ const Supplier = ({ isMobile, intl, headerPage }) => {
           }
         />
       )}
-      <SupplierModal
+      <ProducerDrawer
         intl={intl}
         isMobile={isMobile}
-        visible={visibleModal}
-        titleModal={intl.formatMessage({ id: 'app.supplier.list.title' })}
+        visible={visibleDrawer}
+        titleDrawer={intl.formatMessage({ id: 'app.producer.list.title' })}
         dataEdit={dataEdit}
         getList={getList}
       />

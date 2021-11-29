@@ -4,6 +4,7 @@ module.exports = {
   'app.producerGroup.list.header': 'Quản lý nhóm nhà sản xuất',
   'app.producerGroup.update.header': 'Sửa nhóm nhà sản xuất',
   'app.producerGroup.create.header': 'Thêm mới nhóm nhà sản xuất',
+  'app.producerGroup.quickCreate.header': 'Thêm nhanh nhóm nhà sản xuất',
 
   // Tiêu đề các cột
   'app.producerGroup.list.col0': 'Tên nhóm nhà sản xuất',

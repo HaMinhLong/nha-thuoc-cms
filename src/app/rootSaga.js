@@ -19,6 +19,7 @@ import { healthFacilityUserSaga } from '../features/healthFacilityUser/healthFac
 import { supplierGroupSaga } from '../features/supplierGroup/supplierGroupSaga';
 import { supplierSaga } from '../features/supplier/supplierSaga';
 import { producerGroupSaga } from '../features/producerGroup/producerGroupSaga';
+import { producerSaga } from '../features/producer/producerSaga';
 import { customerGroupSaga } from '../features/customerGroup/customerGroupSaga';
 
 export default function* rootSaga() {
@@ -43,6 +44,7 @@ export default function* rootSaga() {
     supplierGroupSaga(),
     supplierSaga(),
     producerGroupSaga(),
+    producerSaga(),
     customerGroupSaga(),
   ]);
 }

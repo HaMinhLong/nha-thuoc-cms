@@ -16,7 +16,7 @@ import regexHelper from '../../utils/regexHelper';
 import { useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import ShortCutSelectSupplierGroup from '../ShortCutSelect/ShortCutSelectSupplierGroup';
-const { isFullNameNnumber, isPhone, isEmail, isNumber, isUrl } = regexHelper;
+const { isFullNameNnumber2, isPhone, isEmail, isNumber, isUrl } = regexHelper;
 const FormItem = Form.Item;
 
 const SupplierModal = ({
@@ -211,6 +211,12 @@ const SupplierModal = ({
               initialValues={{
                 supplierName: data.supplierName || '',
                 supplierGroupId: data.supplierGroupId || '',
+                mobile: data.mobile || '',
+                taxCode: data.taxCode || '',
+                email: data.email || '',
+                website: data.website || '',
+                address: data.address || '',
+                description: data.description || '',
                 status: data.id ? data.status : 1,
               }}
               ref={formRef}
@@ -218,6 +224,39 @@ const SupplierModal = ({
               key={`${data.id}_${key}` || '0'}
             >
               <Row gutter={20}>
+                <Col xs={24} md={8}>
+                  <FormItem
+                    label={
+                      <span>
+                        <span style={{ color: 'red' }}>*</span>&nbsp;
+                        {intl.formatMessage({
+                          id: 'app.supplier.list.col0',
+                        })}
+                      </span>
+                    }
+                    name="supplierName"
+                    rules={[
+                      {
+                        pattern: isFullNameNnumber2,
+                        message: intl.formatMessage({
+                          id: 'app.common.crud.validate.fomat',
+                        }),
+                      },
+                      {
+                        required: true,
+                        message: intl.formatMessage({
+                          id: 'app.common.crud.validate.input',
+                        }),
+                      },
+                    ]}
+                  >
+                    <Input
+                      placeholder={intl.formatMessage({
+                        id: 'app.supplier.list.name',
+                      })}
+                    />
+                  </FormItem>
+                </Col>
                 <Col xs={24} md={8}>
                   <FormItem
                     name="supplierGroupId"
@@ -243,39 +282,6 @@ const SupplierModal = ({
                         id: 'app.supplier.list.supplierGroup',
                       })}
                       allowClear
-                    />
-                  </FormItem>
-                </Col>
-                <Col xs={24} md={8}>
-                  <FormItem
-                    label={
-                      <span>
-                        <span style={{ color: 'red' }}>*</span>&nbsp;
-                        {intl.formatMessage({
-                          id: 'app.supplier.list.col0',
-                        })}
-                      </span>
-                    }
-                    name="supplierName"
-                    rules={[
-                      {
-                        pattern: isFullNameNnumber,
-                        message: intl.formatMessage({
-                          id: 'app.common.crud.validate.fomat',
-                        }),
-                      },
-                      {
-                        required: true,
-                        message: intl.formatMessage({
-                          id: 'app.common.crud.validate.input',
-                        }),
-                      },
-                    ]}
-                  >
-                    <Input
-                      placeholder={intl.formatMessage({
-                        id: 'app.supplier.list.name',
-                      })}
                     />
                   </FormItem>
                 </Col>

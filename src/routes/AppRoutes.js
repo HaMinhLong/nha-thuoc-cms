@@ -21,6 +21,7 @@ import SelectHealthFacility from '../pages/SelectHealthFacility/SelectHealthFaci
 import SupplierGroup from '../pages/SupplierGroup/SupplierGroup';
 import Supplier from '../pages/Supplier/Supplier';
 import ProducerGroup from '../pages/ProducerGroup/ProducerGroup';
+import Producer from '../pages/Producer/Producer';
 import CustomerGroup from '../pages/CustomerGroup/CustomerGroup';
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
@@ -119,6 +120,9 @@ const AppRoutes = ({ headerPage }) => {
             intl={intl}
             headerPage={headerPage}
           />
+        </Route>
+        <Route path="/producer/:id">
+          <Producer isMobile={isMobile} intl={intl} headerPage={headerPage} />
         </Route>
         <Route path="/customer-group/:id">
           <CustomerGroup
