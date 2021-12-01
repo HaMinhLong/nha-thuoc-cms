@@ -24,6 +24,7 @@ import ProducerGroup from '../pages/ProducerGroup/ProducerGroup';
 import Producer from '../pages/Producer/Producer';
 import CustomerGroup from '../pages/CustomerGroup/CustomerGroup';
 import Customer from '../pages/Customer/Customer';
+import Apothecary from '../pages/Apothecary/Apothecary';
 import Packages from '../pages/Packages/Packages';
 import Unit from '../pages/Unit/Unit';
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
@@ -137,11 +138,14 @@ const AppRoutes = ({ headerPage }) => {
         <Route path="/customer/:id">
           <Customer isMobile={isMobile} intl={intl} headerPage={headerPage} />
         </Route>
-        <Route path="/nt-unit/:id">
-          <Unit isMobile={isMobile} intl={intl} headerPage={headerPage} />
+        <Route path="/nt-apothecary/:id">
+          <Apothecary isMobile={isMobile} intl={intl} headerPage={headerPage} />
         </Route>
         <Route path="/nt-package/:id">
           <Packages isMobile={isMobile} intl={intl} headerPage={headerPage} />
+        </Route>
+        <Route path="/nt-unit/:id">
+          <Unit isMobile={isMobile} intl={intl} headerPage={headerPage} />
         </Route>
         <Route path="/account-config">
           <Account isMobile={isMobile} intl={intl} headerPage={headerPage} />
