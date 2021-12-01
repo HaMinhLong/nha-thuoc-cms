@@ -19,6 +19,7 @@ const Supplier = require('./vi-VN/Supplier');
 const ProducerGroup = require('./vi-VN/ProducerGroup');
 const Producer = require('./vi-VN/Producer');
 const CustomerGroup = require('./vi-VN/CustomerGroup');
+const Customer = require('./vi-VN/Customer');
 
 module.exports = {
   'app.common.validate.max300':
@@ -120,4 +121,5 @@ module.exports = {
   ...ProducerGroup,
   ...Producer,
   ...CustomerGroup,
+  ...Customer,
 };

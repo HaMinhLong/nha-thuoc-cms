@@ -20,6 +20,7 @@ import supplierReducer from '../features/supplier/supplierSlice';
 import producerGroupReducer from '../features/producerGroup/producerGroupSlice';
 import producerReducer from '../features/producer/producerSlice';
 import customerGroupReducer from '../features/customerGroup/customerGroupSlice';
+import customerReducer from '../features/customer/customerSlice';
 
 export const rootReducer = {
   userGroup: userGroupReducer,
@@ -44,4 +45,5 @@ export const rootReducer = {
   producerGroup: producerGroupReducer,
   producer: producerReducer,
   customerGroup: customerGroupReducer,
+  customer: customerReducer,
 };

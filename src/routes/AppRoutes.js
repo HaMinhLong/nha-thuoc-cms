@@ -23,6 +23,7 @@ import Supplier from '../pages/Supplier/Supplier';
 import ProducerGroup from '../pages/ProducerGroup/ProducerGroup';
 import Producer from '../pages/Producer/Producer';
 import CustomerGroup from '../pages/CustomerGroup/CustomerGroup';
+import Customer from '../pages/Customer/Customer';
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
 const AppRoutes = ({ headerPage }) => {
@@ -130,6 +131,9 @@ const AppRoutes = ({ headerPage }) => {
             intl={intl}
             headerPage={headerPage}
           />
+        </Route>
+        <Route path="/customer/:id">
+          <Customer isMobile={isMobile} intl={intl} headerPage={headerPage} />
         </Route>
 
         <Route path="/account-config">

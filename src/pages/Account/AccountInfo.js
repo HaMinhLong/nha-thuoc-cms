@@ -232,6 +232,10 @@ const AccountInfo = ({ isMobile, intl, currentUser, getCurrentUser }) => {
                     id: 'app.user.list.province',
                   })}
                   allowClear
+                  onChange={(value) => {
+                    formRef.current.resetFields(['districtId']);
+                    formRef.current.resetFields(['wardId']);
+                  }}
                 />
               </FormItem>
               <FormItem
@@ -265,6 +269,9 @@ const AccountInfo = ({ isMobile, intl, currentUser, getCurrentUser }) => {
                       filter
                       filterField={getFieldValue('provinceId') || 'a'}
                       allowClear
+                      onChange={(value) => {
+                        formRef.current.resetFields(['wardId']);
+                      }}
                     />
                   </FormItem>
                 )}

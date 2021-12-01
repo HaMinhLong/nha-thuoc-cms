@@ -446,6 +446,10 @@ const HealthFacilityModal = ({
                             id: 'app.healthFacility.list.province',
                           })}
                           allowClear
+                          onChange={(value) => {
+                            formRef.current.resetFields(['districtId']);
+                            formRef.current.resetFields(['wardId']);
+                          }}
                         />
                       </FormItem>
                     </Col>
@@ -481,6 +485,9 @@ const HealthFacilityModal = ({
                               filter
                               filterField={getFieldValue('provinceId') || 'a'}
                               allowClear
+                              onChange={(value) => {
+                                formRef.current.resetFields(['wardId']);
+                              }}
                             />
                           </FormItem>
                         )}

@@ -13,7 +13,9 @@ module.exports = {
 
   // search
   'app.producerGroup.search.col0': 'Search by producer group name',
-
+  // notification
+  'app.producerGroup.noti.col0':
+    'Please enter your producer group name and be less than 50 characters in length',
   // placeholder
   'app.producerGroup.list.name': 'Enter producer group name',
   'app.producerGroup.list.description': 'Enter a description',

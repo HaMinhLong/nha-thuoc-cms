@@ -4,6 +4,7 @@ module.exports = {
   'app.customerGroup.list.header': 'Manage customer groups',
   'app.customerGroup.update.header': 'Edit customer group',
   'app.customerGroup.create.header': 'Add new customer group',
+  'app.customerGroup.quickCreate.header': 'Quick add customer group',
 
   // Tiêu đề các cột
   'app.customerGroup.list.col0': 'Customer group name',
@@ -12,6 +13,9 @@ module.exports = {
 
   // search
   'app.customerGroup.search.col0': 'Search by customer group name',
+  // notification
+  'app.customerGroup.noti.col0':
+    'Please enter your customer group name and be less than 50 characters in length',
 
   // placeholder
   'app.customerGroup.list.name': 'Enter customer group name',

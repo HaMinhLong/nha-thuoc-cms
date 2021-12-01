@@ -227,6 +227,9 @@ const UserGroupDrawer = ({
                 id: 'app.ward.list.province',
               })}
               allowClear
+              onChange={(value) => {
+                formRef.current.resetFields(['districtId']);
+              }}
             />
           </FormItem>
           <FormItem

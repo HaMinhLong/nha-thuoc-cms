@@ -13,7 +13,9 @@ module.exports = {
 
   // search
   'app.supplierGroup.search.col0': 'Search by supplier group name',
-
+  // notification
+  'app.supplierGroup.noti.col0':
+    'Please enter your supplier group name and be less than 50 characters in length',
   // placeholder
   'app.supplierGroup.list.name': 'Enter supplier group name',
   'app.supplierGroup.list.description': 'Enter a description',

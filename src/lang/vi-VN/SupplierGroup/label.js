@@ -14,6 +14,10 @@ module.exports = {
   // search
   'app.supplierGroup.search.col0': 'Tìm kiếm theo tên nhóm nhà cung cấp',
 
+  // notification
+  'app.supplierGroup.noti.col0':
+    'Vui lòng nhập tên nhóm nhà sản xuất và có độ dài nhỏ hơn 50 ký tự',
+
   // placeholder
   'app.supplierGroup.list.name': 'Nhập tên nhóm nhà cung cấp',
   'app.supplierGroup.list.description': 'Nhập mô tả',

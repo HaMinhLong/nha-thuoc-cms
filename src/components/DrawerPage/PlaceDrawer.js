@@ -319,6 +319,10 @@ const PlaceDrawer = ({
                 id: 'app.place.list.province',
               })}
               allowClear
+              onChange={(value) => {
+                formRef.current.resetFields(['districtId']);
+                formRef.current.resetFields(['wardId']);
+              }}
             />
           </FormItem>
           <FormItem
@@ -352,6 +356,9 @@ const PlaceDrawer = ({
                   filter
                   filterField={getFieldValue('provinceId') || 'a'}
                   allowClear
+                  onChange={(value) => {
+                    formRef.current.resetFields(['wardId']);
+                  }}
                 />
               </FormItem>
             )}

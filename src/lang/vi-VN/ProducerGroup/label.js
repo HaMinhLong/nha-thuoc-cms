@@ -14,6 +14,9 @@ module.exports = {
   // search
   'app.producerGroup.search.col0': 'Tìm kiếm theo tên nhóm nhà sản xuất',
 
+  // notification
+  'app.producerGroup.noti.col0':
+    'Vui lòng nhập tên nhóm nhà cung cấp và có độ dài nhỏ hơn 50 ký tự',
   // placeholder
   'app.producerGroup.list.name': 'Nhập tên nhóm nhà sản xuất',
   'app.producerGroup.list.description': 'Nhập mô tả',

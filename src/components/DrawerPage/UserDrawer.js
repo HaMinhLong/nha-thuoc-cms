@@ -426,6 +426,10 @@ const UserGroupDrawer = ({
                     id: 'app.user.list.province',
                   })}
                   allowClear
+                  onChange={(value) => {
+                    formRef.current.resetFields(['districtId']);
+                    formRef.current.resetFields(['wardId']);
+                  }}
                 />
               </FormItem>
               <FormItem
@@ -459,6 +463,9 @@ const UserGroupDrawer = ({
                       filter
                       filterField={getFieldValue('provinceId') || 'a'}
                       allowClear
+                      onChange={(value) => {
+                        formRef.current.resetFields(['wardId']);
+                      }}
                     />
                   </FormItem>
                 )}

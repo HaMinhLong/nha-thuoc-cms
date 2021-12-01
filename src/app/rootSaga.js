@@ -21,6 +21,7 @@ import { supplierSaga } from '../features/supplier/supplierSaga';
 import { producerGroupSaga } from '../features/producerGroup/producerGroupSaga';
 import { producerSaga } from '../features/producer/producerSaga';
 import { customerGroupSaga } from '../features/customerGroup/customerGroupSaga';
+import { customerSaga } from '../features/customer/customerSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -46,5 +47,6 @@ export default function* rootSaga() {
     producerGroupSaga(),
     producerSaga(),
     customerGroupSaga(),
+    customerSaga(),
   ]);
 }
