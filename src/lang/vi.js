@@ -20,6 +20,7 @@ const ProducerGroup = require('./vi-VN/ProducerGroup');
 const Producer = require('./vi-VN/Producer');
 const CustomerGroup = require('./vi-VN/CustomerGroup');
 const Customer = require('./vi-VN/Customer');
+const Package = require('./vi-VN/Package');
 const Unit = require('./vi-VN/Unit');
 
 module.exports = {
@@ -123,5 +124,6 @@ module.exports = {
   ...Producer,
   ...CustomerGroup,
   ...Customer,
+  ...Package,
   ...Unit,
 };

@@ -20,6 +20,7 @@ const ProducerGroup = require('./en-US/ProducerGroup');
 const Producer = require('./en-US/Producer');
 const CustomerGroup = require('./en-US/CustomerGroup');
 const Customer = require('./en-US/Customer');
+const Package = require('./en-US/Package');
 const Unit = require('./en-US/Unit');
 
 module.exports = {
@@ -122,5 +123,6 @@ module.exports = {
   ...Producer,
   ...CustomerGroup,
   ...Customer,
+  ...Package,
   ...Unit,
 };
