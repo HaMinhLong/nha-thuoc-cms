@@ -20,6 +20,7 @@ const ProducerGroup = require('./en-US/ProducerGroup');
 const Producer = require('./en-US/Producer');
 const CustomerGroup = require('./en-US/CustomerGroup');
 const Customer = require('./en-US/Customer');
+const Unit = require('./en-US/Unit');
 
 module.exports = {
   'app.common.validate.max300':
@@ -121,4 +122,5 @@ module.exports = {
   ...Producer,
   ...CustomerGroup,
   ...Customer,
+  ...Unit,
 };

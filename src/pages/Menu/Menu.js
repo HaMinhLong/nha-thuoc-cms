@@ -33,7 +33,7 @@ import { useParams } from 'react-router-dom';
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 
-const PAGE_SIZE = process.env.REACT_APP_PAGE_SIZE;
+const PAGE_SIZE = 100;
 
 const Menu = ({ isMobile, intl, headerPage }) => {
   let { id } = useParams();

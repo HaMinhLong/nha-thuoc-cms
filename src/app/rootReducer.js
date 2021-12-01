@@ -21,6 +21,7 @@ import producerGroupReducer from '../features/producerGroup/producerGroupSlice';
 import producerReducer from '../features/producer/producerSlice';
 import customerGroupReducer from '../features/customerGroup/customerGroupSlice';
 import customerReducer from '../features/customer/customerSlice';
+import unitReducer from '../features/unit/unitSlice';
 
 export const rootReducer = {
   userGroup: userGroupReducer,
@@ -46,4 +47,5 @@ export const rootReducer = {
   producer: producerReducer,
   customerGroup: customerGroupReducer,
   customer: customerReducer,
+  unit: unitReducer,
 };

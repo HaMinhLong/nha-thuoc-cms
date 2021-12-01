@@ -24,6 +24,7 @@ import ProducerGroup from '../pages/ProducerGroup/ProducerGroup';
 import Producer from '../pages/Producer/Producer';
 import CustomerGroup from '../pages/CustomerGroup/CustomerGroup';
 import Customer from '../pages/Customer/Customer';
+import Unit from '../pages/Unit/Unit';
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
 const AppRoutes = ({ headerPage }) => {
@@ -135,7 +136,9 @@ const AppRoutes = ({ headerPage }) => {
         <Route path="/customer/:id">
           <Customer isMobile={isMobile} intl={intl} headerPage={headerPage} />
         </Route>
-
+        <Route path="/nt-unit/:id">
+          <Unit isMobile={isMobile} intl={intl} headerPage={headerPage} />
+        </Route>
         <Route path="/account-config">
           <Account isMobile={isMobile} intl={intl} headerPage={headerPage} />
         </Route>
