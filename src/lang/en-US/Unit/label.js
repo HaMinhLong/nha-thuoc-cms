@@ -4,6 +4,7 @@ module.exports = {
   'app.unit.list.header': 'Manage units',
   'app.unit.update.header': 'Edit unit',
   'app.unit.create.header': 'Add new unit',
+  'app.unit.quickCreate.header': 'Quick add unit',
 
   // Tiêu đề các cột
   'app.unit.list.col0': 'Unit name',

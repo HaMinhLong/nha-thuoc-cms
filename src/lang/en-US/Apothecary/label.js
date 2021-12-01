@@ -4,6 +4,7 @@ module.exports = {
   'app.apothecary.list.header': 'Manage apothecaries',
   'app.apothecary.update.header': 'Edit apothecary',
   'app.apothecary.create.header': 'Add new apothecary',
+  'app.apothecary.quickCreate.header': 'Quick add apothecary',
 
   // Tiêu đề các cột
   'app.apothecary.list.col0': 'Apothecary name',

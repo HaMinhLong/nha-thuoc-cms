@@ -4,6 +4,7 @@ module.exports = {
   'app.packages.list.header': 'Quản lý quy cách đóng gói',
   'app.packages.update.header': 'Sửa quy cách đóng gói',
   'app.packages.create.header': 'Thêm mới quy cách đóng gói',
+  'app.packages.quickCreate.header': 'Thêm nhanh quy cách đóng gói',
 
   // Tiêu đề các cột
   'app.packages.list.col0': 'Tên quy cách đóng gói',

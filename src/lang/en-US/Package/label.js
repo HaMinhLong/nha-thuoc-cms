@@ -4,6 +4,7 @@ module.exports = {
   'app.packages.list.header': 'Manage units',
   'app.packages.update.header': 'Edit package',
   'app.packages.create.header': 'Add new package',
+  'app.packages.quickCreate.header': 'Quick add package',
 
   // Tiêu đề các cột
   'app.packages.list.col0': 'Package name',

@@ -24,6 +24,7 @@ import ProducerGroup from '../pages/ProducerGroup/ProducerGroup';
 import Producer from '../pages/Producer/Producer';
 import CustomerGroup from '../pages/CustomerGroup/CustomerGroup';
 import Customer from '../pages/Customer/Customer';
+import MedicineType from '../pages/MedicineType/MedicineType';
 import Apothecary from '../pages/Apothecary/Apothecary';
 import Packages from '../pages/Packages/Packages';
 import Unit from '../pages/Unit/Unit';
@@ -137,6 +138,13 @@ const AppRoutes = ({ headerPage }) => {
         </Route>
         <Route path="/customer/:id">
           <Customer isMobile={isMobile} intl={intl} headerPage={headerPage} />
+        </Route>
+        <Route path="/nt-medicine-type/:id">
+          <MedicineType
+            isMobile={isMobile}
+            intl={intl}
+            headerPage={headerPage}
+          />
         </Route>
         <Route path="/nt-apothecary/:id">
           <Apothecary isMobile={isMobile} intl={intl} headerPage={headerPage} />

@@ -4,6 +4,7 @@ module.exports = {
   'app.apothecary.list.header': 'Quản lý quy cách bào chế',
   'app.apothecary.update.header': 'Sửa quy cách bào chế',
   'app.apothecary.create.header': 'Thêm mới quy cách bào chế',
+  'app.apothecary.quickCreate.header': 'Thêm nhanh quy cách bào chế',
 
   // Tiêu đề các cột
   'app.apothecary.list.col0': 'Tên quy cách bào chế',

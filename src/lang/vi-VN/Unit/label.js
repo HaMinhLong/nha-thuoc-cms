@@ -4,6 +4,7 @@ module.exports = {
   'app.unit.list.header': 'Quản lý đơn vị tính',
   'app.unit.update.header': 'Sửa đơn vị tính',
   'app.unit.create.header': 'Thêm mới đơn vị tính',
+  'app.unit.quickCreate.header': 'Thêm nhanh đơn vị tính',
 
   // Tiêu đề các cột
   'app.unit.list.col0': 'Tên đơn vị tính',
