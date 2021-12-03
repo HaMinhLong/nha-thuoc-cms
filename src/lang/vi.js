@@ -27,6 +27,7 @@ const Apothecary = require('./vi-VN/Apothecary');
 const Package = require('./vi-VN/Package');
 const Unit = require('./vi-VN/Unit');
 const Warehouse = require('./vi-VN/Warehouse');
+const PrintForm = require('./vi-VN/PrintForm');
 
 module.exports = {
   'app.common.validate.max300':
@@ -136,4 +137,5 @@ module.exports = {
   ...Package,
   ...Unit,
   ...Warehouse,
+  ...PrintForm,
 };

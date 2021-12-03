@@ -116,8 +116,7 @@ const PaymentMethod = ({ isMobile, intl, headerPage }) => {
       payload: params,
       callback: (res) => {
         setLoading(false);
-
-        if (res.success === false) {
+        if (res?.success === false) {
           openNotification('error', res && res.message, '#fff1f0');
         } else {
           const { list } = res.results;
@@ -304,6 +303,12 @@ const PaymentMethod = ({ isMobile, intl, headerPage }) => {
       payload: query,
       callback: (res) => {
         setLoading(false);
+        if (res?.success) {
+          const { list } = res.results;
+          const { pagination } = res.results;
+          setData(list);
+          setPagination(pagination);
+        }
       },
     });
   };
@@ -348,6 +353,12 @@ const PaymentMethod = ({ isMobile, intl, headerPage }) => {
       payload: query,
       callback: (res) => {
         setLoading(false);
+        if (res?.success) {
+          const { list } = res.results;
+          const { pagination } = res.results;
+          setData(list);
+          setPagination(pagination);
+        }
       },
     });
   };

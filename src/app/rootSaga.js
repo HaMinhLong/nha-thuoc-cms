@@ -29,6 +29,8 @@ import { apothecarySaga } from '../features/apothecary/apothecarySaga';
 import { packagesSaga } from '../features/packages/packagesSaga';
 import { unitSaga } from '../features/unit/unitSaga';
 import { warehouseSaga } from '../features/warehouse/warehouseSaga';
+import { printFormSaga } from '../features/printForm/printFormSaga';
+import { paperSizeTypeSaga } from '../features/paperSizeType/paperSizeTypeSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -62,5 +64,7 @@ export default function* rootSaga() {
     packagesSaga(),
     unitSaga(),
     warehouseSaga(),
+    printFormSaga(),
+    paperSizeTypeSaga(),
   ]);
 }

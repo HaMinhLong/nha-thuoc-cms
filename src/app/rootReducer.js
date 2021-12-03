@@ -28,6 +28,8 @@ import apothecaryReducer from '../features/apothecary/apothecarySlice';
 import packagesReducer from '../features/packages/packagesSlice';
 import unitReducer from '../features/unit/unitSlice';
 import warehouseReducer from '../features/warehouse/warehouseSlice';
+import printFormReducer from '../features/printForm/printFormSlice';
+import paperSizeTypeReducer from '../features/paperSizeType/paperSizeTypeSlice';
 
 export const rootReducer = {
   userGroup: userGroupReducer,
@@ -60,4 +62,6 @@ export const rootReducer = {
   packages: packagesReducer,
   unit: unitReducer,
   warehouse: warehouseReducer,
+  printForm: printFormReducer,
+  paperSizeType: paperSizeTypeReducer,
 };

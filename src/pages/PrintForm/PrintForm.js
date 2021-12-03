@@ -21,32 +21,31 @@ import Table from '../../components/Table';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { apothecary, filter } from '../../features/apothecary/apothecarySlice';
+import { printForm, filter } from '../../features/printForm/printFormSlice';
 import '../../utils/css/styleList.scss';
 import moment from 'moment';
 import filterIcon from '../../static/web/images/filter.svg';
 import dropdownWhite from '../../static/web/images/dropDown_white.svg';
 import dropdownBlack from '../../static/web/images/dropDown_black.svg';
 import { formatNumber } from '../../utils/utils';
+import PrintFormDrawer from '../../components/DrawerPage/PrintFormDrawer';
+import PaperSizeTypeSelect from '../../components/Common/PaperSizeTypeSelect';
 import { Redirect } from 'react-router-dom';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const PAGE_SIZE = process.env.REACT_APP_PAGE_SIZE;
-const Apothecary = ({ isMobile, intl, headerPage }) => {
-  const [index, setIndex] = useState(-9999);
+const PrintForm = ({ isMobile, intl, headerPage }) => {
   let { id } = useParams();
   const userGroupId = localStorage.getItem('userGroupId');
   const dispatch = useDispatch();
-  const list = useSelector(apothecary);
+  const list = useSelector(printForm);
   const [loading, setLoading] = useState(false);
+  const [visibleDrawer, setVisibleDrawer] = useState(false);
   const [visibleFilter, setVisibleFilter] = useState(false);
   const [dataEdit, setDataEdit] = useState({});
   const [redirect, setRedirect] = useState('');
   const [permissions, setPermissions] = useState({});
-  const [keyEdit, setKeyEdit] = useState('');
-  const [data, setData] = useState([]);
-  const [pagination, setPagination] = useState([]);
   useEffect(() => {
     getList();
     getPermission();
@@ -83,7 +82,7 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify({}),
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
-      attributes: 'id,apothecaryName,status,createdAt',
+      attributes: 'id,printFormName,paperSizeTypeId,status,createdAt',
     };
     let values = {};
     if (query && query.filter && query.filter !== '{}') {
@@ -109,18 +108,12 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
     }
     dispatch(filter(values));
     dispatch({
-      type: 'apothecary/fetch',
+      type: 'printForm/fetch',
       payload: params,
       callback: (res) => {
         setLoading(false);
-
-        if (res.success === false) {
+        if (res?.success === false) {
           openNotification('error', res && res.message, '#fff1f0');
-        } else {
-          const { list } = res.results;
-          const { pagination } = res.results;
-          setData(list);
-          setPagination(pagination);
         }
       },
     });
@@ -132,7 +125,7 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
       status,
     };
     dispatch({
-      type: 'apothecary/updateStatus',
+      type: 'printForm/updateStatus',
       payload: {
         id: row.id,
         params: item,
@@ -160,98 +153,6 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
     });
   };
 
-  const handleAdd = () => {
-    if (keyEdit > 0 || keyEdit === '') {
-      const dataNew = {
-        id: index,
-        apothecaryName: '',
-        dateCreated: moment(),
-        status: true,
-      };
-      setDataEdit(dataNew);
-      setKeyEdit(index);
-      setData([dataNew, ...data]);
-      setIndex(index + 1);
-    }
-  };
-
-  const saveRow = () => {
-    const addItem = {
-      ...dataEdit,
-      apothecaryName:
-        (dataEdit.apothecaryName && dataEdit.apothecaryName.trim()) || '',
-      apothecaryNameOld:
-        (dataEdit.apothecaryName && dataEdit.apothecaryName.trim()) || '',
-    };
-    if (
-      !(addItem.apothecaryName && addItem.apothecaryName.trim()) ||
-      (addItem.apothecaryName &&
-        addItem.apothecaryName.trim() &&
-        addItem.apothecaryName.trim().length > 50)
-    ) {
-      openNotification(
-        'error',
-        intl.formatMessage({ id: 'app.apothecary.noti.col0' }),
-        '#fff1f0'
-      );
-      return;
-    }
-    if (addItem.id > 0) {
-      dispatch({
-        type: 'apothecary/update',
-        payload: {
-          id: addItem.id,
-          params: {
-            ...addItem,
-          },
-        },
-        callback: (res) => {
-          if (res?.success) {
-            openNotification(
-              'success',
-              intl.formatMessage({ id: 'app.common.edit.success' }),
-              '#f6ffed'
-            );
-            getList();
-            setDataEdit({});
-            setKeyEdit('');
-          } else {
-            openNotification('error', res.message, '#fff1f0');
-          }
-          setLoading(false);
-        },
-      });
-    } else {
-      delete addItem.id;
-      dispatch({
-        type: 'apothecary/add',
-        payload: addItem,
-        callback: (res) => {
-          if (res?.success) {
-            openNotification(
-              'success',
-              intl.formatMessage(
-                { id: 'app.common.create.success' },
-                {
-                  name: intl.formatMessage({
-                    id: 'app.apothecary.list.title',
-                  }),
-                }
-              ),
-              '#f6ffed'
-            );
-            getList();
-            setDataEdit({});
-            setKeyEdit('');
-          } else {
-            openNotification('error', res.message, '#fff1f0');
-          }
-          setLoading(false);
-        },
-      });
-    }
-  };
-
   const handleTableChange = (pagination, filters, sorter) => {
     const queryFilter = list.filter;
     const rangeValue = queryFilter.dateCreated || [];
@@ -264,14 +165,18 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
         ? rangeValue[1].set({ hour: 23, minute: 59, second: 59 })
         : '';
     const queryName = {
-      apothecaryName:
-        queryFilter.apothecaryName && queryFilter.apothecaryName.trim(),
+      printFormName:
+        queryFilter.printFormName && queryFilter.printFormName.trim(),
+      paperSizeTypeId: queryFilter && queryFilter.paperSizeTypeId,
       status: queryFilter && queryFilter.status,
       fromDate: fromDate,
       toDate: toDate,
     };
-    if (!(queryFilter.apothecaryName && queryFilter.apothecaryName.trim())) {
-      delete queryName.apothecaryName;
+    if (!(queryFilter.printFormName && queryFilter.printFormName.trim())) {
+      delete queryName.printFormName;
+    }
+    if (!queryFilter.paperSizeTypeId) {
+      delete queryName.paperSizeTypeId;
     }
     if (!queryFilter.status) {
       delete queryName.status;
@@ -291,20 +196,14 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
         pagination.current * pagination.pageSize,
       ]),
       sort: JSON.stringify(sort),
-      attributes: 'id,apothecaryName,status,createdAt',
+      attributes: 'id,printFormName,paperSizeTypeId,status,createdAt',
     };
     dispatch(filter(queryFilter));
     dispatch({
-      type: 'apothecary/fetch',
+      type: 'printForm/fetch',
       payload: query,
       callback: (res) => {
         setLoading(false);
-        if (res?.success) {
-          const { list } = res.results;
-          const { pagination } = res.results;
-          setData(list);
-          setPagination(pagination);
-        }
       },
     });
   };
@@ -321,13 +220,17 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
         ? rangeValue[1].set({ hour: 23, minute: 59, second: 59 })
         : '';
     const queryName = {
-      apothecaryName: values.apothecaryName && values.apothecaryName.trim(),
+      printFormName: values.printFormName && values.printFormName.trim(),
+      paperSizeTypeId: values && values.paperSizeTypeId,
       status: values && values.status,
       fromDate: fromDate,
       toDate: toDate,
     };
-    if (!(values.apothecaryName && values.apothecaryName.trim())) {
-      delete queryName.apothecaryName;
+    if (!(values.printFormName && values.printFormName.trim())) {
+      delete queryName.printFormName;
+    }
+    if (!values.paperSizeTypeId) {
+      delete queryName.paperSizeTypeId;
     }
     if (!values.status) {
       delete queryName.status;
@@ -340,20 +243,14 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify(queryName),
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
-      attributes: 'id,apothecaryName,status,createdAt',
+      attributes: 'id,printFormName,paperSizeTypeId,status,createdAt',
     };
     dispatch(filter(values));
     dispatch({
-      type: 'apothecary/fetch',
+      type: 'printForm/fetch',
       payload: query,
       callback: (res) => {
         setLoading(false);
-        if (res?.success) {
-          const { list } = res.results;
-          const { pagination } = res.results;
-          setData(list);
-          setPagination(pagination);
-        }
       },
     });
   };
@@ -386,7 +283,8 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
       <Form
         onFinish={handleSearch}
         initialValues={{
-          apothecaryName: filter.apothecaryName || '',
+          printFormName: filter.printFormName || '',
+          paperSizeTypeId: filter.paperSizeTypeId || '',
           status: filter.status || undefined,
           dateCreated: filter.dateCreated || [],
         }}
@@ -394,14 +292,29 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
         <Row gutter={{ md: 0, lg: 8, xl: 16 }}>
           <Col xs={24} md={12} xl={8}>
             <FormItem
-              name="apothecaryName"
-              label={<FormattedMessage id="app.apothecary.list.col0" />}
+              name="printFormName"
+              label={<FormattedMessage id="app.printForm.list.col0" />}
               {...formItemLayout}
             >
               <Input
                 placeholder={intl.formatMessage({
-                  id: 'app.apothecary.search.col0',
+                  id: 'app.printForm.search.col0',
                 })}
+                size="small"
+              />
+            </FormItem>
+          </Col>
+          <Col xs={24} md={12} xl={8}>
+            <FormItem
+              name="paperSizeTypeId"
+              label={<FormattedMessage id="app.printForm.list.col1" />}
+              {...formItemLayout}
+            >
+              <PaperSizeTypeSelect
+                placeholder={intl.formatMessage({
+                  id: 'app.printForm.search.col1',
+                })}
+                allowClear
                 size="small"
               />
             </FormItem>
@@ -409,7 +322,7 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
           <Col xl={8} md={12} xs={24}>
             <FormItem
               name="status"
-              label={<FormattedMessage id="app.apothecary.list.col2" />}
+              label={<FormattedMessage id="app.printForm.list.col2" />}
               {...formItemLayout}
             >
               <Select
@@ -431,7 +344,7 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
               </Select>
             </FormItem>
           </Col>
-          <Col xl={6} md={12} xs={24}>
+          <Col xl={8} md={12} xs={24}>
             <FormItem
               name="dateCreated"
               label={
@@ -458,7 +371,7 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
             </FormItem>
           </Col>
           <Col
-            xl={2}
+            xl={16}
             md={24}
             xs={24}
             style={
@@ -488,7 +401,7 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
 
   const deleteRecord = (id) => {
     dispatch({
-      type: 'apothecary/delete',
+      type: 'printForm/delete',
       payload: {
         id: id,
       },
@@ -610,6 +523,8 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
       </Dropdown>
     );
   };
+  const data = (list.data && list.data.list) || [];
+  const pagination = (list.data && list.data.pagination) || [];
   const columns = [
     {
       dataIndex: null,
@@ -623,30 +538,22 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
       fixed: isMobile,
     },
     {
-      dataIndex: 'apothecaryName',
-      name: 'apothecaryName',
+      dataIndex: 'printFormName',
+      name: 'printFormName',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.apothecary.list.col0" />,
+      title: <FormattedMessage id="app.printForm.list.col0" />,
       align: 'left',
       sorter: () => {},
       fixed: isMobile,
-      render: (text, record) => {
-        if (record.id === keyEdit) {
-          return (
-            <Input
-              placeholder={intl.formatMessage({
-                id: 'app.apothecary.list.name',
-              })}
-              value={dataEdit.apothecaryName}
-              onChange={(e) =>
-                setDataEdit({ ...dataEdit, apothecaryName: e.target.value })
-              }
-              onPressEnter={() => saveRow()}
-            />
-          );
-        }
-        return text;
-      },
+    },
+    {
+      dataIndex: 'paperSizeType',
+      name: 'paperSizeType',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.printForm.list.col1" />,
+      align: 'center',
+      sorter: () => {},
+      render: (cell) => <span>{cell?.paperSizeTypeName}</span>,
     },
     {
       dataIndex: 'createdAt',
@@ -663,7 +570,7 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
     {
       dataIndex: 'status',
       name: 'status',
-      title: <FormattedMessage id="app.apothecary.list.col2" />,
+      title: <FormattedMessage id="app.printForm.list.col2" />,
       align: 'center',
       width: !isMobile ? '9%' : 170,
       sorter: () => {},
@@ -679,140 +586,55 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
       render: (cell, row) => (
         <React.Fragment>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            {keyEdit === row.id ? (
-              <>
-                <Tooltip
-                  title={
-                    !isMobile &&
-                    intl.formatMessage({ id: 'app.common.crudBtns.4' })
+            {permissions.isUpdate && (
+              <Tooltip
+                title={
+                  !isMobile && intl.formatMessage({ id: 'app.tooltip.edit' })
+                }
+              >
+                <Button
+                  onClick={() => {
+                    setVisibleDrawer(!visibleDrawer);
+                    setDataEdit(row);
+                  }}
+                  icon={
+                    <i className="fas fa-pen" style={{ marginRight: '5px' }} />
                   }
+                  className="btn_edit"
+                  type="ghost"
+                  shape="circle"
+                >
+                  <FormattedMessage id="app.tooltip.edit" />
+                </Button>
+              </Tooltip>
+            )}
+            {permissions.isDelete && (
+              <Tooltip
+                title={
+                  !isMobile && intl.formatMessage({ id: 'app.tooltip.remove' })
+                }
+              >
+                <Popconfirm
+                  placement="bottom"
+                  title={<FormattedMessage id="app.confirm.remove" />}
+                  onConfirm={() => deleteRecord(row.id)}
                 >
                   <Button
-                    style={{
-                      border: '1px solid #34c38f',
-                      color: '#34c38f',
-                      marginRight: 5,
-                    }}
                     icon={
                       <i
-                        className="fas fa-check"
-                        style={{ color: '#34c38f', marginRight: '5px' }}
+                        className="fas fa-trash"
+                        style={{ marginRight: '5px' }}
                       />
                     }
+                    className="btn_edit"
+                    type="ghost"
                     shape="circle"
-                    className="btn_edit_v2"
-                    onClick={() => saveRow()}
+                    style={{ marginLeft: '5px' }}
                   >
-                    {intl.formatMessage({ id: 'app.common.crudBtns.4' })}
+                    <FormattedMessage id="app.tooltip.remove" />
                   </Button>
-                </Tooltip>
-                <Tooltip
-                  title={
-                    !isMobile &&
-                    intl.formatMessage({
-                      id: 'app.common.deleteBtn.cancelText',
-                    })
-                  }
-                >
-                  <Button
-                    className="btn_edit_v2"
-                    style={{
-                      border: '1px solid red',
-                      color: 'red',
-                    }}
-                    onClick={() => {
-                      Modal.confirm({
-                        title: intl.formatMessage({
-                          id: 'app.confirm.reset',
-                        }),
-                        okText: 'Ok',
-                        cancelText: 'Cancel',
-                        onOk: () => {
-                          if (row.id > 0) {
-                            setDataEdit({});
-                            setKeyEdit('');
-                          } else {
-                            setData(data.filter((item) => item.id !== row.id));
-                            setDataEdit({});
-                            setKeyEdit('');
-                          }
-                        },
-                        onCancel() {},
-                      });
-                    }}
-                    icon={
-                      <i
-                        className="fas fa-times"
-                        style={{ color: 'red', marginRight: '5px' }}
-                      />
-                    }
-                    shape="circle"
-                  >
-                    {intl.formatMessage({
-                      id: 'app.common.deleteBtn.cancelText',
-                    })}
-                  </Button>
-                </Tooltip>
-              </>
-            ) : (
-              <>
-                {permissions.isUpdate && (
-                  <Tooltip
-                    title={
-                      !isMobile &&
-                      intl.formatMessage({ id: 'app.tooltip.edit' })
-                    }
-                  >
-                    <Button
-                      onClick={() => {
-                        setDataEdit(row);
-                        setKeyEdit(row.id);
-                        setData(data.filter((item) => item.id > 0));
-                      }}
-                      icon={
-                        <i
-                          className="fas fa-pen"
-                          style={{ marginRight: '5px' }}
-                        />
-                      }
-                      className="btn_edit"
-                      type="ghost"
-                      shape="circle"
-                    >
-                      <FormattedMessage id="app.tooltip.edit" />
-                    </Button>
-                  </Tooltip>
-                )}
-                {permissions.isDelete && (
-                  <Tooltip
-                    title={
-                      !isMobile &&
-                      intl.formatMessage({ id: 'app.tooltip.remove' })
-                    }
-                  >
-                    <Popconfirm
-                      placement="bottom"
-                      title={<FormattedMessage id="app.confirm.remove" />}
-                      onConfirm={() => deleteRecord(row.id)}
-                    >
-                      <Button
-                        icon={
-                          <i
-                            className="fas fa-trash"
-                            style={{ marginRight: '5px' }}
-                          />
-                        }
-                        className="btn_edit"
-                        type="ghost"
-                        shape="circle"
-                        style={{ marginLeft: '5px' }}
-                      >
-                        <FormattedMessage id="app.tooltip.remove" />
-                      </Button>
-                    </Popconfirm>
-                  </Tooltip>
-                )}
-              </>
+                </Popconfirm>
+              </Tooltip>
             )}
           </div>
         </React.Fragment>
@@ -825,16 +647,14 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
         <>
           {headerPage}
           <HeaderContent
-            title={<FormattedMessage id="app.apothecary.list.header" />}
+            title={<FormattedMessage id="app.printForm.list.header" />}
             action={
               <React.Fragment>
                 {permissions.isAdd && (
                   <Tooltip
                     title={
                       !isMobile &&
-                      intl.formatMessage({
-                        id: 'app.apothecary.create.header',
-                      })
+                      intl.formatMessage({ id: 'app.printForm.create.header' })
                     }
                   >
                     <Button
@@ -844,7 +664,10 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
                           style={{ marginRight: '5px' }}
                         />
                       }
-                      onClick={() => handleAdd()}
+                      onClick={() => {
+                        setVisibleDrawer(!visibleDrawer);
+                        setDataEdit({});
+                      }}
                     >
                       {intl.formatMessage(
                         { id: 'app.title.create' },
@@ -901,8 +724,16 @@ const Apothecary = ({ isMobile, intl, headerPage }) => {
           }
         />
       )}
+      <PrintFormDrawer
+        intl={intl}
+        isMobile={isMobile}
+        visible={visibleDrawer}
+        titleDrawer={intl.formatMessage({ id: 'app.printForm.list.title' })}
+        dataEdit={dataEdit}
+        getList={getList}
+      />
     </>
   );
 };
 
-export default Apothecary;
+export default PrintForm;

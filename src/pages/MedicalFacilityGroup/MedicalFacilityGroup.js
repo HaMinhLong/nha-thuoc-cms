@@ -315,6 +315,12 @@ const MedicalFacilityGroup = ({ isMobile, intl, headerPage }) => {
       payload: query,
       callback: (res) => {
         setLoading(false);
+        if (res?.success) {
+          const { list } = res.results;
+          const { pagination } = res.results;
+          setData(list);
+          setPagination(pagination);
+        }
       },
     });
   };
@@ -365,6 +371,12 @@ const MedicalFacilityGroup = ({ isMobile, intl, headerPage }) => {
       payload: query,
       callback: (res) => {
         setLoading(false);
+        if (res?.success) {
+          const { list } = res.results;
+          const { pagination } = res.results;
+          setData(list);
+          setPagination(pagination);
+        }
       },
     });
   };
