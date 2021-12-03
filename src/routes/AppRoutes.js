@@ -29,6 +29,7 @@ import MedicineType from '../pages/MedicineType/MedicineType';
 import Apothecary from '../pages/Apothecary/Apothecary';
 import Packages from '../pages/Packages/Packages';
 import Unit from '../pages/Unit/Unit';
+import Warehouse from '../pages/Warehouse/Warehouse';
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
 const AppRoutes = ({ headerPage }) => {
@@ -158,6 +159,9 @@ const AppRoutes = ({ headerPage }) => {
         </Route>
         <Route path="/nt-unit/:id">
           <Unit isMobile={isMobile} intl={intl} headerPage={headerPage} />
+        </Route>
+        <Route path="/warehouse/:id">
+          <Warehouse isMobile={isMobile} intl={intl} headerPage={headerPage} />
         </Route>
         <Route path="/account-config">
           <Account isMobile={isMobile} intl={intl} headerPage={headerPage} />

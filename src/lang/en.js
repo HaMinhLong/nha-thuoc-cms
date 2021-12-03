@@ -26,6 +26,7 @@ const MedicineType = require('./en-US/MedicineType');
 const Apothecary = require('./en-US/Apothecary');
 const Package = require('./en-US/Package');
 const Unit = require('./en-US/Unit');
+const Warehouse = require('./en-US/Warehouse');
 
 module.exports = {
   'app.common.validate.max300':
@@ -133,4 +134,5 @@ module.exports = {
   ...Apothecary,
   ...Package,
   ...Unit,
+  ...Warehouse,
 };

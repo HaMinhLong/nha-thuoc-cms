@@ -206,7 +206,7 @@ const MedicineModal = ({
   return (
     <Modal
       title={
-        <p style={{ fontWeight: '600' }}>
+        <p style={{ fontWeight: '600', fontSize: 18 }}>
           {data.id
             ? intl.formatMessage(
                 { id: 'app.title.update' },

@@ -27,6 +27,7 @@ import medicineTypeReducer from '../features/medicineType/medicineTypeSlice';
 import apothecaryReducer from '../features/apothecary/apothecarySlice';
 import packagesReducer from '../features/packages/packagesSlice';
 import unitReducer from '../features/unit/unitSlice';
+import warehouseReducer from '../features/warehouse/warehouseSlice';
 
 export const rootReducer = {
   userGroup: userGroupReducer,
@@ -58,4 +59,5 @@ export const rootReducer = {
   apothecary: apothecaryReducer,
   packages: packagesReducer,
   unit: unitReducer,
+  warehouse: warehouseReducer,
 };

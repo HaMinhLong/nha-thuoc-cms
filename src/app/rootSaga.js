@@ -28,6 +28,7 @@ import { medicineTypeSaga } from '../features/medicineType/medicineTypeSaga';
 import { apothecarySaga } from '../features/apothecary/apothecarySaga';
 import { packagesSaga } from '../features/packages/packagesSaga';
 import { unitSaga } from '../features/unit/unitSaga';
+import { warehouseSaga } from '../features/warehouse/warehouseSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -60,5 +61,6 @@ export default function* rootSaga() {
     apothecarySaga(),
     packagesSaga(),
     unitSaga(),
+    warehouseSaga(),
   ]);
 }
