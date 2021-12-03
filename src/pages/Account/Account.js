@@ -23,7 +23,7 @@ const Account = ({ isMobile, intl, headerPage }) => {
       payload: token,
       callback: (res) => {
         setLoading(false);
-        if (res && res.success) {
+        if (res?.success) {
           const { list } = res.results;
           setCurrentUser(list);
         } else {

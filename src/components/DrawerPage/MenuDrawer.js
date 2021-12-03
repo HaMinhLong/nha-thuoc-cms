@@ -42,7 +42,7 @@ const MenuDrawer = ({
       setCheckFirst(false);
     } else if (visible) {
       changeDrawer('show');
-      getOne(dataEdit && dataEdit.id);
+      getOne(dataEdit?.id);
     }
   }, [visible]);
 
@@ -56,7 +56,7 @@ const MenuDrawer = ({
         },
         callback: (res) => {
           setLoading(false);
-          if (res && res.success) {
+          if (res?.success) {
             const { list } = res.results;
             setData(list);
           }
@@ -114,7 +114,7 @@ const MenuDrawer = ({
             payload: addItem,
             callback: (res) => {
               setLoading(false);
-              if (res && res.success) {
+              if (res?.success) {
                 openNotification(
                   'success',
                   intl.formatMessage(

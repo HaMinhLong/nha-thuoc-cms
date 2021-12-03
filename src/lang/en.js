@@ -20,6 +20,8 @@ const ProducerGroup = require('./en-US/ProducerGroup');
 const Producer = require('./en-US/Producer');
 const CustomerGroup = require('./en-US/CustomerGroup');
 const Customer = require('./en-US/Customer');
+const Medicine = require('./en-US/Medicine');
+const MedicineUnit = require('./en-US/MedicineUnit');
 const MedicineType = require('./en-US/MedicineType');
 const Apothecary = require('./en-US/Apothecary');
 const Package = require('./en-US/Package');
@@ -125,6 +127,8 @@ module.exports = {
   ...Producer,
   ...CustomerGroup,
   ...Customer,
+  ...Medicine,
+  ...MedicineUnit,
   ...MedicineType,
   ...Apothecary,
   ...Package,

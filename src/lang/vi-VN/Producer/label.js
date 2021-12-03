@@ -4,6 +4,7 @@ module.exports = {
   'app.producer.list.header': 'Quản lý nhà sản xuất',
   'app.producer.update.header': 'Sửa nhà sản xuất',
   'app.producer.create.header': 'Thêm mới nhà sản xuất',
+  'app.producer.quickCreate.header': 'Thêm nhanh nhà sản xuất',
 
   // Tiêu đề các cột
   'app.producer.list.col0': 'Tên nhà sản xuất',

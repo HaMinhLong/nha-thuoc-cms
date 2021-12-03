@@ -339,6 +339,7 @@ const ShortCutSelectSupplierGroup = ({
             labelAlign="left"
             label={
               <span>
+                <span style={{ color: 'red' }}>*</span>&nbsp;
                 {intl.formatMessage({ id: 'app.supplierGroup.list.col0' })}
               </span>
             }

@@ -101,7 +101,7 @@ const HealthFacilityModal = ({
             },
             callback: (res) => {
               setLoading(false);
-              if (res && res.success) {
+              if (res?.success) {
                 openNotification(
                   'success',
                   intl.formatMessage({ id: 'app.common.edit.success' }),
@@ -120,7 +120,7 @@ const HealthFacilityModal = ({
             payload: addItem,
             callback: (res) => {
               setLoading(false);
-              if (res && res.success) {
+              if (res?.success) {
                 openNotification(
                   'success',
                   intl.formatMessage(

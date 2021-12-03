@@ -52,7 +52,7 @@ const ForgetPassword = ({ intl, visible }) => {
         payload: payload,
         callback: (res) => {
           setLoading(false);
-          if (res && res.success) {
+          if (res?.success) {
             openNotification(
               'success',
               intl.formatMessage({ id: 'app.forgot.list.title.sendEmail' }),

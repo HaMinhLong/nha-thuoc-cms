@@ -119,14 +119,14 @@ const HealthFacilitySpeciaListModal = ({
         id: id,
       },
       callback: (res) => {
-        if (res && res.success === true) {
+        if (res?.success === true) {
           openNotification(
             'success',
             intl.formatMessage({ id: 'app.common.delete.success' }),
             '#f6ffed'
           );
           getSpecialist(dataEdit?.id);
-        } else if (res && res.success === false) {
+        } else if (res?.success === false) {
           openNotification('error', res && res.message, '#fff1f0');
         }
       },

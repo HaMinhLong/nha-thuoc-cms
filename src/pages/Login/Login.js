@@ -25,7 +25,7 @@ const Login = ({ isMobile, intl }) => {
       type: 'auth/signIn',
       payload: values,
       callback: (res) => {
-        if (res && res.success) {
+        if (res?.success) {
           const { list } = res.results;
           openNotification(
             'success',

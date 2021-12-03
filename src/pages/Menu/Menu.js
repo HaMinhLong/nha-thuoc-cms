@@ -67,7 +67,7 @@ const Menu = ({ isMobile, intl, headerPage }) => {
         params: params,
       },
       callback: (res) => {
-        if (res && res.success) {
+        if (res?.success) {
           const { list } = res.results;
           getList(list);
           setPermissions(list);
@@ -323,7 +323,7 @@ const Menu = ({ isMobile, intl, headerPage }) => {
         id: id,
       },
       callback: (res) => {
-        if (res && res.success) {
+        if (res?.success) {
           openNotification(
             'success',
             intl.formatMessage({ id: 'app.common.delete.success' }),

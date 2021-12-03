@@ -42,7 +42,7 @@ const CustomerModal = ({
       setCheckFirst(false);
     } else {
       changeModal('show');
-      getOne(dataEdit && dataEdit.id);
+      getOne(dataEdit?.id);
     }
   }, [visible]);
 
@@ -56,7 +56,7 @@ const CustomerModal = ({
         },
         callback: (res) => {
           setLoading(false);
-          if (res && res.success) {
+          if (res?.success) {
             const { list } = res.results;
             setData(list);
           }
@@ -96,7 +96,7 @@ const CustomerModal = ({
               },
             },
             callback: (res) => {
-              if (res && res.success) {
+              if (res?.success) {
                 openNotification(
                   'success',
                   intl.formatMessage({ id: 'app.common.edit.success' }),
@@ -115,7 +115,7 @@ const CustomerModal = ({
             type: 'customer/add',
             payload: addItem,
             callback: (res) => {
-              if (res && res.success) {
+              if (res?.success) {
                 openNotification(
                   'success',
                   intl.formatMessage(

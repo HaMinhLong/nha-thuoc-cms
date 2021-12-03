@@ -21,6 +21,8 @@ import producerGroupReducer from '../features/producerGroup/producerGroupSlice';
 import producerReducer from '../features/producer/producerSlice';
 import customerGroupReducer from '../features/customerGroup/customerGroupSlice';
 import customerReducer from '../features/customer/customerSlice';
+import medicineReducer from '../features/medicine/medicineSlice';
+import medicineUnitReducer from '../features/medicineUnit/medicineUnitSlice';
 import medicineTypeReducer from '../features/medicineType/medicineTypeSlice';
 import apothecaryReducer from '../features/apothecary/apothecarySlice';
 import packagesReducer from '../features/packages/packagesSlice';
@@ -50,6 +52,8 @@ export const rootReducer = {
   producer: producerReducer,
   customerGroup: customerGroupReducer,
   customer: customerReducer,
+  medicine: medicineReducer,
+  medicineUnit: medicineUnitReducer,
   medicineType: medicineTypeReducer,
   apothecary: apothecaryReducer,
   packages: packagesReducer,

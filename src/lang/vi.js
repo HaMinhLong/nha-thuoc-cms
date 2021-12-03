@@ -20,6 +20,8 @@ const ProducerGroup = require('./vi-VN/ProducerGroup');
 const Producer = require('./vi-VN/Producer');
 const CustomerGroup = require('./vi-VN/CustomerGroup');
 const Customer = require('./vi-VN/Customer');
+const Medicine = require('./vi-VN/Medicine');
+const MedicineUnit = require('./vi-VN/MedicineUnit');
 const MedicineType = require('./vi-VN/MedicineType');
 const Apothecary = require('./vi-VN/Apothecary');
 const Package = require('./vi-VN/Package');
@@ -126,6 +128,8 @@ module.exports = {
   ...Producer,
   ...CustomerGroup,
   ...Customer,
+  ...Medicine,
+  ...MedicineUnit,
   ...MedicineType,
   ...Apothecary,
   ...Package,

@@ -4,6 +4,7 @@ module.exports = {
   'app.producer.list.header': 'Manage producers',
   'app.producer.update.header': 'Edit producer',
   'app.producer.create.header': 'Add new producer',
+  'app.producer.quickCreate.header': 'Quick add producer',
 
   // Tiêu đề các cột
   'app.producer.list.col0': 'Producer name',

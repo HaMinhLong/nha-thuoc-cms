@@ -36,7 +36,7 @@ const AccountInfo = ({ isMobile, intl, currentUser, getCurrentUser }) => {
             },
             callback: (res) => {
               setLoading(false);
-              if (res && res.success) {
+              if (res?.success) {
                 openNotification(
                   'success',
                   intl.formatMessage({ id: 'app.common.edit.success' }),

@@ -35,7 +35,7 @@ const ProducerDrawer = ({
       setCheckFirst(false);
     } else {
       changeDrawer('show');
-      getOne(dataEdit && dataEdit.id);
+      getOne(dataEdit?.id);
     }
   }, [visible]);
 
@@ -49,7 +49,7 @@ const ProducerDrawer = ({
         },
         callback: (res) => {
           setLoading(false);
-          if (res && res.success) {
+          if (res?.success) {
             const { list } = res.results;
             setData(list);
           }
@@ -89,7 +89,7 @@ const ProducerDrawer = ({
               },
             },
             callback: (res) => {
-              if (res && res.success) {
+              if (res?.success) {
                 openNotification(
                   'success',
                   intl.formatMessage({ id: 'app.common.edit.success' }),
@@ -108,7 +108,7 @@ const ProducerDrawer = ({
             type: 'producer/add',
             payload: addItem,
             callback: (res) => {
-              if (res && res.success) {
+              if (res?.success) {
                 openNotification(
                   'success',
                   intl.formatMessage(

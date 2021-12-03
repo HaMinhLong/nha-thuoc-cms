@@ -69,7 +69,7 @@ const MedicalFacilityGroup = ({ isMobile, intl, headerPage }) => {
         params: params,
       },
       callback: (res) => {
-        if (res && res.success) {
+        if (res?.success) {
           const { list } = res.results;
           setPermissions(list);
         } else {
@@ -141,14 +141,14 @@ const MedicalFacilityGroup = ({ isMobile, intl, headerPage }) => {
         params: item,
       },
       callback: (res) => {
-        if (res && res.success === true) {
+        if (res?.success === true) {
           openNotification(
             'success',
             intl.formatMessage({ id: 'app.common.edit.success' }),
             '#f6ffed'
           );
           getList();
-        } else if (res && res.success === false) {
+        } else if (res?.success === false) {
           openNotification('error', res && res.message, '#fff1f0');
         }
       },
@@ -216,7 +216,7 @@ const MedicalFacilityGroup = ({ isMobile, intl, headerPage }) => {
           },
         },
         callback: (res) => {
-          if (res && res.success) {
+          if (res?.success) {
             openNotification(
               'success',
               intl.formatMessage({ id: 'app.common.edit.success' }),
@@ -237,7 +237,7 @@ const MedicalFacilityGroup = ({ isMobile, intl, headerPage }) => {
         type: 'medicalFacilityGroup/add',
         payload: addItem,
         callback: (res) => {
-          if (res && res.success) {
+          if (res?.success) {
             openNotification(
               'success',
               intl.formatMessage(
@@ -508,14 +508,14 @@ const MedicalFacilityGroup = ({ isMobile, intl, headerPage }) => {
         id: id,
       },
       callback: (res) => {
-        if (res && res.success === true) {
+        if (res?.success === true) {
           openNotification(
             'success',
             intl.formatMessage({ id: 'app.common.delete.success' }),
             '#f6ffed'
           );
           getList();
-        } else if (res && res.success === false) {
+        } else if (res?.success === false) {
           openNotification('error', res && res.message, '#fff1f0');
         }
       },

@@ -39,7 +39,7 @@ const SupplierModal = ({
       setCheckFirst(false);
     } else {
       changeModal('show');
-      getOne(dataEdit && dataEdit.id);
+      getOne(dataEdit?.id);
     }
   }, [visible]);
 
@@ -53,7 +53,7 @@ const SupplierModal = ({
         },
         callback: (res) => {
           setLoading(false);
-          if (res && res.success) {
+          if (res?.success) {
             const { list } = res.results;
             setData(list);
           }
@@ -93,7 +93,7 @@ const SupplierModal = ({
               },
             },
             callback: (res) => {
-              if (res && res.success) {
+              if (res?.success) {
                 openNotification(
                   'success',
                   intl.formatMessage({ id: 'app.common.edit.success' }),
@@ -112,7 +112,7 @@ const SupplierModal = ({
             type: 'supplier/add',
             payload: addItem,
             callback: (res) => {
-              if (res && res.success) {
+              if (res?.success) {
                 openNotification(
                   'success',
                   intl.formatMessage(

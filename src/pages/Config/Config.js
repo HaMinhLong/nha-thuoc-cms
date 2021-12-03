@@ -47,7 +47,7 @@ const Config = ({ isMobile, intl, headerPage }) => {
         params: params,
       },
       callback: (res) => {
-        if (res && res.success) {
+        if (res?.success) {
           const { list } = res.results;
           setPermissions(list);
         } else {
@@ -100,7 +100,7 @@ const Config = ({ isMobile, intl, headerPage }) => {
           params: addItem,
         },
         callback: (res) => {
-          if (res && res.success === true) {
+          if (res?.success === true) {
             openNotification(
               'success',
               intl.formatMessage({ id: 'app.common.edit.success' }),
@@ -118,7 +118,7 @@ const Config = ({ isMobile, intl, headerPage }) => {
         type: 'config/add',
         payload: addItem,
         callback: (res) => {
-          if (res && res.success === true) {
+          if (res?.success === true) {
             openNotification(
               'success',
               intl.formatMessage(

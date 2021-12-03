@@ -34,7 +34,7 @@ const App = () => {
       type: 'auth/verifyToken',
       payload: token,
       callback: (res) => {
-        if (res && res.success) {
+        if (res?.success) {
           setCheckLogin(true);
         } else {
           setCheckLogin(false);

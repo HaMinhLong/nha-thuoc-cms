@@ -24,7 +24,7 @@ const ChangePassword = ({ intl, token }) => {
             params: values,
           },
           callback: (res) => {
-            if (res && res.success) {
+            if (res?.success) {
               openNotification(
                 'success',
                 intl.formatMessage({

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Layout, Menu } from 'antd';
 import { Link } from 'react-router-dom';
 import { useIntl } from 'react-intl';
-import logo from '../assets/logo-page.png';
+import logo from '../assets/logo-page.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import RightContentHeader from '../components/RightContentHeader/RightContentHeader';
 import { userGroupRole } from '../features/userGroupRole/userGroupRoleSlice';
@@ -22,7 +22,7 @@ const HeaderPage = ({ localLanguage, setLocalLanguage }) => {
         type: 'userGroupRole/authRole',
         payload: token,
         callback: (res) => {
-          if (res && res.success) {
+          if (res?.success) {
             const { list } = res.results;
             setMenus(list);
           } else {
@@ -41,7 +41,7 @@ const HeaderPage = ({ localLanguage, setLocalLanguage }) => {
     <Header id="components-layout-demo-top">
       <div>
         <Link to="/dashboard">
-          <img width="40" height="40" className="logo" src={logo} alt="" />
+          <img width="30" height="30" className="logo" src={logo} alt="" />
         </Link>
         {/* defaultSelectedKeys={['1']} */}
         <Menu mode="horizontal">

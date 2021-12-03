@@ -69,7 +69,7 @@ const HealthFacilitySpeciaListAddModal = ({
           type: 'healthFacilitySpecialist/bulkCreate',
           payload: addItem,
           callback: (res) => {
-            if (res && res.success) {
+            if (res?.success) {
               openNotification(
                 'success',
                 intl.formatMessage(

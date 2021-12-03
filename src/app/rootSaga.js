@@ -22,6 +22,8 @@ import { producerGroupSaga } from '../features/producerGroup/producerGroupSaga';
 import { producerSaga } from '../features/producer/producerSaga';
 import { customerGroupSaga } from '../features/customerGroup/customerGroupSaga';
 import { customerSaga } from '../features/customer/customerSaga';
+import { medicineSaga } from '../features/medicine/medicineSaga';
+import { medicineUnitSaga } from '../features/medicineUnit/medicineUnitSaga';
 import { medicineTypeSaga } from '../features/medicineType/medicineTypeSaga';
 import { apothecarySaga } from '../features/apothecary/apothecarySaga';
 import { packagesSaga } from '../features/packages/packagesSaga';
@@ -52,6 +54,8 @@ export default function* rootSaga() {
     producerSaga(),
     customerGroupSaga(),
     customerSaga(),
+    medicineSaga(),
+    medicineUnitSaga(),
     medicineTypeSaga(),
     apothecarySaga(),
     packagesSaga(),
