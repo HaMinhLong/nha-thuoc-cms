@@ -21,7 +21,6 @@ const WorkScheduleModal = ({ intl, visible, dataEdit, titleModal }) => {
   const [loading, setLoading] = useState(false);
   const [visibleModal, setVisibleModal] = useState(false);
   const [workScheduleData, setWorkScheduleData] = useState([]);
-  const healthFacilityId = localStorage.getItem('healthFacilityId');
 
   useEffect(() => {
     if (!visible && checkFirst) {
@@ -38,9 +37,7 @@ const WorkScheduleModal = ({ intl, visible, dataEdit, titleModal }) => {
     };
     dispatch({
       type: 'workSchedule/fetch',
-      payload: {
-        params: params,
-      },
+      payload: params,
       callback: (res) => {
         if (res.success === false) {
           openNotification('error', res && res.message, '#fff1f0');
@@ -128,7 +125,7 @@ const WorkScheduleModal = ({ intl, visible, dataEdit, titleModal }) => {
           } else {
             addItem.push({
               id: 0,
-              healthFacilityId: healthFacilityId,
+              healthFacilityId: dataEdit?.id,
               weekday: capitalize(item),
               open: values[`${item}-open`].format('HH:mm:ss').toString() || '',
               close:
@@ -204,6 +201,7 @@ const WorkScheduleModal = ({ intl, visible, dataEdit, titleModal }) => {
         visible={visibleModal}
         onOk={handleSchedule}
         onCancel={() => setVisibleModal(false)}
+        loading={loading}
         cancelText={
           <Fragment>
             <i className="fas fa-sync" /> &nbsp;
