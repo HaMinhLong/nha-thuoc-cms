@@ -31,6 +31,7 @@ import { unitSaga } from '../features/unit/unitSaga';
 import { warehouseSaga } from '../features/warehouse/warehouseSaga';
 import { printFormSaga } from '../features/printForm/printFormSaga';
 import { paperSizeTypeSaga } from '../features/paperSizeType/paperSizeTypeSaga';
+import { workScheduleSaga } from '../features/workSchedule/workScheduleSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -66,5 +67,6 @@ export default function* rootSaga() {
     warehouseSaga(),
     printFormSaga(),
     paperSizeTypeSaga(),
+    workScheduleSaga(),
   ]);
 }

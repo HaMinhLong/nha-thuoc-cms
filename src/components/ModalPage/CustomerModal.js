@@ -19,7 +19,7 @@ import { useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import ShortCutSelectCustomerGroup from '../ShortCutSelect/ShortCutSelectCustomerGroup';
 import moment from 'moment';
-const { isFullNameNnumber2, isPhone, isEmail, isNumber, isUrl } = regexHelper;
+const { isFullNameNnumber2, isPhone, isEmail } = regexHelper;
 const FormItem = Form.Item;
 
 const CustomerModal = ({

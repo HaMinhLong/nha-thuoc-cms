@@ -30,6 +30,7 @@ import unitReducer from '../features/unit/unitSlice';
 import warehouseReducer from '../features/warehouse/warehouseSlice';
 import printFormReducer from '../features/printForm/printFormSlice';
 import paperSizeTypeReducer from '../features/paperSizeType/paperSizeTypeSlice';
+import workScheduleReducer from '../features/workSchedule/workScheduleSlice';
 
 export const rootReducer = {
   userGroup: userGroupReducer,
@@ -64,4 +65,5 @@ export const rootReducer = {
   warehouse: warehouseReducer,
   printForm: printFormReducer,
   paperSizeType: paperSizeTypeReducer,
+  workSchedule: workScheduleReducer,
 };

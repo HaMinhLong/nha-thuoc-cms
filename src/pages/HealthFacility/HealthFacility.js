@@ -37,6 +37,7 @@ import ProvinceSelect from '../../components/Common/ProvinceSelect';
 import DistrictSelect from '../../components/Common/DistrictSelect';
 import WardSelect from '../../components/Common/WardSelect';
 import HealthFacilitySpeciaListModal from '../../components/ModalPage/HealthFacilitySpeciaListModal';
+import WorkScheduleModal from '../../components/ModalPage/WorkScheduleModal';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -52,6 +53,8 @@ const HealthFacility = ({ isMobile, intl, headerPage }) => {
   const [dataEdit, setDataEdit] = useState({});
   const [dataEditSpeciaList, setDataEditSpeciaList] = useState({});
   const [visibleSpeciaList, setVisibleSpeciaList] = useState(false);
+  const [visibleWorkSchedule, setVisibleWorkSchedule] = useState(false);
+  const [dateEditWorkSchedule, setDateEditWorkSchedule] = useState({});
   const [permissions, setPermissions] = useState({});
 
   useEffect(() => {
@@ -815,7 +818,13 @@ const HealthFacility = ({ isMobile, intl, headerPage }) => {
               <Dropdown
                 overlay={
                   <Menu className="menu_icon">
-                    <Menu.Item key="1">
+                    <Menu.Item
+                      key="1"
+                      onClick={() => {
+                        setVisibleWorkSchedule(!visibleWorkSchedule);
+                        setDateEditWorkSchedule(row);
+                      }}
+                    >
                       {intl.formatMessage({
                         id: 'app.healthFacility.different.col1',
                       })}
@@ -961,6 +970,15 @@ const HealthFacility = ({ isMobile, intl, headerPage }) => {
         })}
         dataEdit={dataEditSpeciaList}
         getList={getList}
+      />
+      <WorkScheduleModal
+        intl={intl}
+        isMobile={isMobile}
+        visible={visibleWorkSchedule}
+        dataEdit={dateEditWorkSchedule}
+        titleModal={intl.formatMessage({
+          id: 'app.healthFacility.different.col1',
+        })}
       />
     </>
   );
