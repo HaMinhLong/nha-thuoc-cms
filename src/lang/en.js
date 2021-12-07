@@ -28,6 +28,7 @@ const Package = require('./en-US/Package');
 const Unit = require('./en-US/Unit');
 const Warehouse = require('./en-US/Warehouse');
 const PrintForm = require('./en-US/PrintForm');
+const ClinicServicePackage = require('./en-US/ClinicServicePackage');
 
 module.exports = {
   'app.common.validate.max300':
@@ -137,4 +138,5 @@ module.exports = {
   ...Unit,
   ...Warehouse,
   ...PrintForm,
+  ...ClinicServicePackage,
 };

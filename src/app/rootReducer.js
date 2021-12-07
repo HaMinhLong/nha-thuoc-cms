@@ -31,6 +31,8 @@ import warehouseReducer from '../features/warehouse/warehouseSlice';
 import printFormReducer from '../features/printForm/printFormSlice';
 import paperSizeTypeReducer from '../features/paperSizeType/paperSizeTypeSlice';
 import workScheduleReducer from '../features/workSchedule/workScheduleSlice';
+import clinicTypeReducer from '../features/clinicType/clinicTypeSlice';
+import clinicServicePackageReducer from '../features/clinicServicePackage/clinicServicePackageSlice';
 
 export const rootReducer = {
   userGroup: userGroupReducer,
@@ -66,4 +68,6 @@ export const rootReducer = {
   printForm: printFormReducer,
   paperSizeType: paperSizeTypeReducer,
   workSchedule: workScheduleReducer,
+  clinicType: clinicTypeReducer,
+  clinicServicePackage: clinicServicePackageReducer,
 };

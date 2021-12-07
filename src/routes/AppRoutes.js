@@ -31,6 +31,7 @@ import Packages from '../pages/Packages/Packages';
 import Unit from '../pages/Unit/Unit';
 import Warehouse from '../pages/Warehouse/Warehouse';
 import PrintForm from '../pages/PrintForm/PrintForm';
+import ClinicServicePackage from '../pages/ClinicServicePackage/ClinicServicePackage';
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
 const AppRoutes = ({ headerPage }) => {
@@ -166,6 +167,13 @@ const AppRoutes = ({ headerPage }) => {
         </Route>
         <Route path="/print-form/:id">
           <PrintForm isMobile={isMobile} intl={intl} headerPage={headerPage} />
+        </Route>
+        <Route path="/clinic-service-package/:id">
+          <ClinicServicePackage
+            isMobile={isMobile}
+            intl={intl}
+            headerPage={headerPage}
+          />
         </Route>
         <Route path="/account-config">
           <Account isMobile={isMobile} intl={intl} headerPage={headerPage} />
