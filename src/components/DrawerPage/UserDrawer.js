@@ -19,7 +19,7 @@ import DistrictSelect from '../../components/Common/DistrictSelect';
 import WardSelect from '../../components/Common/WardSelect';
 
 const FormItem = Form.Item;
-const { isFullNameNnumber, isFullName, isPhone, isEmail, isPassword } =
+const { isFullNameNnumberUrl, isFullName, isPhone, isEmail, isPassword } =
   regexHelper;
 
 const UserGroupDrawer = ({
@@ -232,7 +232,7 @@ const UserGroupDrawer = ({
                 name="username"
                 rules={[
                   {
-                    pattern: isFullNameNnumber,
+                    pattern: isFullNameNnumberUrl,
                     message: intl.formatMessage({
                       id: 'app.common.crud.validate.fomat',
                     }),
@@ -240,12 +240,13 @@ const UserGroupDrawer = ({
                   {
                     required: true,
                     message: intl.formatMessage({
-                      id: 'app.common.crud.validate.input',
+                      id: 'app.common.crud.validate.formatName',
                     }),
                   },
                 ]}
               >
                 <Input
+                  disabled={data.id}
                   placeholder={intl.formatMessage({
                     id: 'app.user.list.username',
                   })}

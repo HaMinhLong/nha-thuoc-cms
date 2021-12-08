@@ -32,6 +32,7 @@ import Unit from '../pages/Unit/Unit';
 import Warehouse from '../pages/Warehouse/Warehouse';
 import PrintForm from '../pages/PrintForm/PrintForm';
 import ClinicServicePackage from '../pages/ClinicServicePackage/ClinicServicePackage';
+import ClinicService from '../pages/ClinicService/ClinicService';
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
 const AppRoutes = ({ headerPage }) => {
@@ -170,6 +171,13 @@ const AppRoutes = ({ headerPage }) => {
         </Route>
         <Route path="/clinic-service-package/:id">
           <ClinicServicePackage
+            isMobile={isMobile}
+            intl={intl}
+            headerPage={headerPage}
+          />
+        </Route>
+        <Route path="/clinic-service/:id">
+          <ClinicService
             isMobile={isMobile}
             intl={intl}
             headerPage={headerPage}

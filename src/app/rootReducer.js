@@ -33,6 +33,7 @@ import paperSizeTypeReducer from '../features/paperSizeType/paperSizeTypeSlice';
 import workScheduleReducer from '../features/workSchedule/workScheduleSlice';
 import clinicTypeReducer from '../features/clinicType/clinicTypeSlice';
 import clinicServicePackageReducer from '../features/clinicServicePackage/clinicServicePackageSlice';
+import clinicServiceReducer from '../features/clinicService/clinicServiceSlice';
 
 export const rootReducer = {
   userGroup: userGroupReducer,
@@ -70,4 +71,5 @@ export const rootReducer = {
   workSchedule: workScheduleReducer,
   clinicType: clinicTypeReducer,
   clinicServicePackage: clinicServicePackageReducer,
+  clinicService: clinicServiceReducer,
 };

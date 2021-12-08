@@ -34,6 +34,7 @@ import { paperSizeTypeSaga } from '../features/paperSizeType/paperSizeTypeSaga';
 import { workScheduleSaga } from '../features/workSchedule/workScheduleSaga';
 import { clinicTypeSaga } from '../features/clinicType/clinicTypeSaga';
 import { clinicServicePackageSaga } from '../features/clinicServicePackage/clinicServicePackageSaga';
+import { clinicServiceSaga } from '../features/clinicService/clinicServiceSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -72,5 +73,6 @@ export default function* rootSaga() {
     workScheduleSaga(),
     clinicTypeSaga(),
     clinicServicePackageSaga(),
+    clinicServiceSaga(),
   ]);
 }
