@@ -30,6 +30,8 @@ const Warehouse = require('./en-US/Warehouse');
 const PrintForm = require('./en-US/PrintForm');
 const ClinicServicePackage = require('./en-US/ClinicServicePackage');
 const ClinicService = require('./en-US/ClinicService');
+const Receipt = require('./en-US/Receipt');
+const ReceiptMedicine = require('./en-US/ReceiptMedicine');
 
 module.exports = {
   'app.common.validate.max300':
@@ -70,6 +72,9 @@ module.exports = {
   'app.common.crudBtns.4': 'Save',
   'app.common.searchBtn': 'Search',
   'app.common.different': 'Different',
+  'app.common.inDay': 'In day',
+  'app.common.inWeek': 'In week',
+  'app.common.inMonth': 'In month',
   'app.common.forgotBtn': 'Send email',
   'app.common.delete.success': 'Delete record successfully!',
   'app.common.edit.success': 'Successfully updated!',
@@ -141,4 +146,6 @@ module.exports = {
   ...PrintForm,
   ...ClinicServicePackage,
   ...ClinicService,
+  ...Receipt,
+  ...ReceiptMedicine,
 };

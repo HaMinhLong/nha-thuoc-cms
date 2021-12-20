@@ -741,3 +741,17 @@ $screen-xs: 576px;
     width: 100% !important;
   }
 }
+.salesExtra {
+  span {
+    color: #000;
+    margin-left: 24px;
+    font-size: 12px;
+    cursor: pointer;
+    &:hover {
+      color: #1878bc;
+    }
+    &.currentDate {
+      color: #1878bc;
+    }
+  }
+}

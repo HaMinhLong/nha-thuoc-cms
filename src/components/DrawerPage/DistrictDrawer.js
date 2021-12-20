@@ -68,6 +68,7 @@ const UserGroupDrawer = ({
       style: { background: color },
     });
   };
+
   const handleSubmit = () => {
     formRef.current
       .validateFields()

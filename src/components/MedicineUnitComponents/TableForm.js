@@ -60,7 +60,9 @@ const TableForm = (props) => {
           setLoading(false);
           // formRef.current.resetFields();
           setVisibleModal(false);
-          onChange([...data, addItem]);
+          if (onChange) {
+            onChange([...data, addItem]);
+          }
           index++;
         }
       } else {
@@ -73,10 +75,13 @@ const TableForm = (props) => {
                 wholesalePrice: values.wholesalePrice,
               }
         );
+        setLoading(false);
         setData(newData);
         setVisibleModal(false);
         setEditOrCreate(-1);
-        onChange(newData);
+        if (onChange) {
+          onChange(newData);
+        }
       }
       setKey(key + 1);
     });
@@ -105,6 +110,9 @@ const TableForm = (props) => {
               '#f6ffed'
             );
             setData(data.filter((item) => item.id !== id));
+            if (onChange) {
+              onChange(data.filter((item) => item.id !== id));
+            }
           } else if (res?.success === false) {
             openNotification('error', res && res.message, '#fff1f0');
           }
@@ -112,6 +120,9 @@ const TableForm = (props) => {
       });
     } else {
       setData(data.filter((item) => item.id !== id));
+      if (onChange) {
+        onChange(data.filter((item) => item.id !== id));
+      }
     }
   };
 
@@ -295,7 +306,7 @@ const TableForm = (props) => {
             key={`MedicineUnit_${key}`}
           >
             <FormItem hidden name="id">
-              <Input />{' '}
+              <Input />
             </FormItem>
             <Row gutter={[20, 20]}>
               <Col xs={24} sm={24}>
@@ -379,6 +390,7 @@ const TableForm = (props) => {
                     placeholder={intl.formatMessage({
                       id: 'app.medicineUnit.list.retailPrice',
                     })}
+                    min={0}
                     key={key}
                   />
                 </FormItem>
@@ -407,6 +419,7 @@ const TableForm = (props) => {
                     placeholder={intl.formatMessage({
                       id: 'app.medicineUnit.list.wholesalePrice',
                     })}
+                    min={0}
                     key={key}
                   />
                 </FormItem>

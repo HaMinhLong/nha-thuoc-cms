@@ -4,6 +4,7 @@ module.exports = {
   'app.paymentMethod.list.header': 'Quản lý phương thức thanh toán',
   'app.paymentMethod.update.header': 'Sửa phương thức thanh toán',
   'app.paymentMethod.create.header': 'Thêm mới phương thức thanh toán',
+  'app.paymentMethod.quickCreate.header': 'Thêm nhanh phương thức thanh toán',
 
   // Tiêu đề các cột
   'app.paymentMethod.list.col0': 'Tên phương thức thanh toán',

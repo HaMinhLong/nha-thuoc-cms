@@ -35,6 +35,9 @@ import { workScheduleSaga } from '../features/workSchedule/workScheduleSaga';
 import { clinicTypeSaga } from '../features/clinicType/clinicTypeSaga';
 import { clinicServicePackageSaga } from '../features/clinicServicePackage/clinicServicePackageSaga';
 import { clinicServiceSaga } from '../features/clinicService/clinicServiceSaga';
+import { receiptSaga } from '../features/receipt/receiptSaga';
+import { receiptCodeSaga } from '../features/receiptCode/receiptCodeSaga';
+import { receiptMedicineSaga } from '../features/receiptMedicine/receiptMedicineSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -74,5 +77,8 @@ export default function* rootSaga() {
     clinicTypeSaga(),
     clinicServicePackageSaga(),
     clinicServiceSaga(),
+    receiptSaga(),
+    receiptCodeSaga(),
+    receiptMedicineSaga(),
   ]);
 }

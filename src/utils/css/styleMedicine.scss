@@ -1,0 +1,114 @@
+.dropmed {
+  border: 1px solid #999;
+  // border-top-width: 0;
+  list-style: none;
+  max-height: 250px;
+  min-height: 30px;
+  overflow-y: auto;
+  padding-left: 0;
+  position: absolute;
+  z-index: 100;
+  background: #fff;
+  width: 100%;
+  margin-top: -10px;
+  box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+}
+.dropmeduong {
+  border: 1px solid #999;
+  // border-top-width: 0;
+  list-style: none;
+  max-height: 250px;
+  min-height: 30px;
+  overflow-y: auto;
+  padding-left: 0;
+  position: absolute;
+  z-index: 100;
+  background: #fff;
+  width: 70%;
+  margin-top: -10px;
+  box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+}
+.itemLiZero {
+  padding: 0.5rem 0.5rem 1rem;
+  cursor: pointer;
+  background: #8ddeb1;
+  user-select: none;
+}
+.itemLi {
+  border-bottom: 1px solid #999;
+  padding: 0.5rem 0.5rem 1rem;
+  color: #3e515b;
+  cursor: pointer;
+  background: #fff;
+  user-select: none;
+  span {
+    font-size: 14px;
+  }
+}
+.itemLiduong {
+  border-bottom: 1px solid #999;
+  padding: 3px 5px;
+  color: #3e515b;
+  cursor: pointer;
+  background: #fff;
+  user-select: none;
+}
+
+.nameMed {
+  color: #20a8d8 !important;
+  font-weight: 700;
+  font-size: 1rem;
+}
+.nameduong {
+  color: #000;
+  font-weight: 600;
+  font-size: 1rem;
+}
+.registrationNumber {
+  color: #f86c6b !important;
+  font-weight: 700;
+}
+.madein {
+  color: #4dbd74 !important;
+  font-weight: 700;
+}
+.itemLiduong:hover {
+  background: #2d6b95;
+  .nameduong {
+    color: #fff;
+  }
+}
+.itemLi:hover {
+  background: #e3eae5;
+}
+.styleIssTable {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.styleIssTable > div {
+  padding: 0 10px 10px 0;
+}
+// .styleIssTable>div:last-child{
+//   padding: 0 10px 0 0;
+// }
+.headerList {
+  background: rgb(241, 241, 241);
+  color: rgb(169, 169, 169);
+  padding: 10px;
+}
+.headerList > div {
+  line-height: 30px;
+}
+.modalTrang {
+  .ant-modal-content {
+    background: #fff;
+  }
+}

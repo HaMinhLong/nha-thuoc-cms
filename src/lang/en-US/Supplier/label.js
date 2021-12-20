@@ -4,6 +4,7 @@ module.exports = {
   'app.supplier.list.header': 'Manage suppliers',
   'app.supplier.update.header': 'Edit supplier',
   'app.supplier.create.header': 'Add new supplier',
+  'app.supplier.quickCreate.header': 'Quick create supplier',
 
   // Tiêu đề các cột
   'app.supplier.list.col0': 'Supplier name',

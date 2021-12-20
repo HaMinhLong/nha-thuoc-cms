@@ -295,6 +295,7 @@ const ClinicServiceDrawer = ({
                 id: 'app.medicineUnit.list.retailPrice',
               })}
               key={key}
+              min={0}
             />
           </FormItem>
 

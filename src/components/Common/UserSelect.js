@@ -1,34 +1,19 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
-import {
-  Select,
-  Tooltip,
-  Input,
-  Button,
-  Spin,
-  Modal,
-  Form,
-  notification,
-} from 'antd';
-import { useDispatch } from 'react-redux';
-import regexHelper from '../../utils/regexHelper';
 import '@ant-design/compatible/assets/index.css';
+import { useDispatch } from 'react-redux';
 import { fnKhongDau } from '../../utils/utils';
+import { Select, Spin } from 'antd';
 import _ from 'lodash';
 
 let timer = null;
-const { isGroupName } = regexHelper;
 
-const FormItem = Form.Item;
-const ShortCutSelectSupplierGroup = ({
-  intl,
-  isMobile,
-  placeholder,
+const UserSelect = ({
   value,
   textProps,
   filter,
   key,
+  placeholder,
   disabled,
   allowClear,
   size,
@@ -37,7 +22,9 @@ const ShortCutSelectSupplierGroup = ({
   getAll,
 }) => {
   const dispatch = useDispatch();
+
   const [valueState, setValueState] = useState(value);
+  const [loading, setLoading] = useState(false);
   const [dataArr, setDataArr] = useState([]);
   const [icon, setIcon] = useState(null);
   const [numOfScroll, setNumOfScroll] = useState(2);
@@ -45,56 +32,11 @@ const ShortCutSelectSupplierGroup = ({
   const [checkState, setCheckState] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [dataStore, setDataStore] = useState([]);
+  const healthFacilityId = localStorage.getItem('healthFacilityId');
   const [text, setText] = useState(textProps || '');
-  const [visibleAddApothecary, setVisibleAddApothecary] = useState(false);
-  const [apothecaryName, setApothecaryName] = useState('');
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    setValueState(value);
-  }, [value]);
   useEffect(() => {
     fetch(1, undefined, valueState, false, false, false);
   }, []);
-  const handleSubmit = () => {
-    setLoading(true);
-    const addItem = {
-      apothecaryName: (apothecaryName && apothecaryName.trim()) || '',
-      status: 1,
-    };
-    dispatch({
-      type: 'apothecary/add',
-      payload: addItem,
-      callback: (res) => {
-        setLoading(true);
-        if (res?.success) {
-          openNotification(
-            'success',
-            intl.formatMessage(
-              { id: 'app.common.create.success' },
-              {
-                name: intl.formatMessage({
-                  id: 'app.apothecary.list.title',
-                }),
-              }
-            ),
-            '#f6ffed'
-          );
-          setVisibleAddApothecary(false);
-          fetch(1, undefined, valueState, false, false, false);
-        } else {
-          openNotification('error', res?.message, '#fff1f0');
-        }
-        setLoading(false);
-      },
-    });
-  };
-  const openNotification = (type, message, color) => {
-    notification[type]({
-      message: message,
-      placement: 'bottomRight',
-      style: { background: color },
-    });
-  };
 
   const onFocus = () => {
     setIcon(<i className="fa fa-search" />);
@@ -134,23 +76,24 @@ const ShortCutSelectSupplierGroup = ({
   ) => {
     const pagesize = 20;
     const tfilter = {
-      apothecaryName: searchValue,
+      fullName: searchValue,
+      healthFacilityId: healthFacilityId,
       status: 1,
     };
     if (getAll) {
       delete tfilter.status;
     }
     if (!searchValue || (searchValue && !searchValue.trim())) {
-      delete tfilter.apothecaryName;
+      delete tfilter.fullName;
     }
     const params = {
       filter: JSON.stringify(tfilter),
       range: JSON.stringify([pagesize * (current - 1), current * pagesize]),
-      sort: JSON.stringify(['apothecaryName', 'ASC']),
-      attributes: 'id,apothecaryName',
+      sort: JSON.stringify(['fullName', 'ASC']),
+      attributes: 'id,fullName',
     };
     dispatch({
-      type: 'apothecary/fetchLazyLoading',
+      type: 'user/fetchLazyLoading',
       payload: params,
       select: current !== 1,
       callback: (result) => {
@@ -160,7 +103,7 @@ const ShortCutSelectSupplierGroup = ({
             result.results &&
             result.results.list.map((data) => ({
               valueState: data.id,
-              text: data.apothecaryName,
+              text: data.fullName,
             }));
           setTotalItems(
             result &&
@@ -264,110 +207,33 @@ const ShortCutSelectSupplierGroup = ({
       </Select.Option>
     ));
   const dataRender = renderData(dataArr);
-
   return (
     <React.Fragment>
-      <div style={{ display: 'inline-flex', width: '100%' }}>
-        <Select
-          key={key}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          suffixIcon={icon}
-          showArrow
-          showSearch
-          defaultValue={valueState || undefined}
-          notFoundContent={loading ? <Spin size="small" /> : null}
-          onChange={onChangeFun}
-          onSearch={search}
-          filterOption={false}
-          disabled={disabled}
-          placeholder={placeholder}
-          size={size}
-          allowClear={allowClear}
-          loading={loading}
-          onPopupScroll={handleScroll}
-          onDropdownVisibleChange={handleMouseLeave}
-          style={style}
-        >
-          {dataRender}
-        </Select>
-        <Tooltip
-          title={
-            !isMobile &&
-            intl.formatMessage({ id: 'app.apothecary.quickCreate.header' })
-          }
-        >
-          <Button
-            style={{
-              color: '#495057',
-              borderRadius: 'unset !important',
-              border: '1px solid #d9d9d9',
-            }}
-            type="ghost"
-            icon={<PlusOutlined />}
-            onClick={() => setVisibleAddApothecary(!visibleAddApothecary)}
-          />
-        </Tooltip>
-      </div>
-      <Spin spinning={loading}>
-        <Modal
-          destroyOnClose
-          title={intl.formatMessage({
-            id: 'app.apothecary.quickCreate.header',
-          })}
-          visible={visibleAddApothecary}
-          onOk={handleSubmit}
-          width={isMobile ? '100%' : '520px'}
-          onCancel={() => setVisibleAddApothecary(false)}
-          cancelText={
-            <React.Fragment>
-              <i className="fas fa-sync" /> &nbsp;
-              {intl.formatMessage({ id: 'app.common.deleteBtn.cancelText' })}
-            </React.Fragment>
-          }
-          okText={
-            <React.Fragment>
-              <i className="fa fa-save" /> &nbsp;
-              {intl.formatMessage({ id: 'app.common.crudBtns.4' })}
-            </React.Fragment>
-          }
-        >
-          <FormItem
-            labelCol={{ span: 24 }}
-            wrapperCol={{ span: 24 }}
-            labelAlign="left"
-            label={
-              <span>
-                <span style={{ color: 'red' }}>*</span>&nbsp;
-                {intl.formatMessage({ id: 'app.apothecary.list.col0' })}
-              </span>
-            }
-            rules={[
-              {
-                required: true,
-                message: intl.formatMessage({
-                  id: 'app.common.crud.validate.input',
-                }),
-              },
-              {
-                pattern: isGroupName,
-                message: intl.formatMessage({
-                  id: 'app.common.crud.validate.fomatNew',
-                }),
-              },
-            ]}
-          >
-            <Input
-              placeholder={intl.formatMessage({
-                id: 'app.apothecary.list.name',
-              })}
-              onChange={(e) => setApothecaryName(e.target.value)}
-            />
-          </FormItem>
-        </Modal>
-      </Spin>
+      <Select
+        key={key}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        suffixIcon={icon}
+        showArrow
+        showSearch
+        defaultValue={valueState || undefined}
+        notFoundContent={loading ? <Spin size="small" /> : null}
+        onChange={onChangeFun}
+        onSearch={search}
+        filterOption={false}
+        disabled={disabled}
+        placeholder={placeholder}
+        size={size}
+        allowClear={allowClear}
+        loading={loading}
+        onPopupScroll={handleScroll}
+        onDropdownVisibleChange={handleMouseLeave}
+        style={style}
+      >
+        {dataRender}
+      </Select>
     </React.Fragment>
   );
 };
 
-export default ShortCutSelectSupplierGroup;
+export default UserSelect;

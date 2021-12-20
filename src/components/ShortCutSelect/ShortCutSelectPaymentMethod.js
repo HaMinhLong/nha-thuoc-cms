@@ -21,7 +21,7 @@ let timer = null;
 const { isGroupName } = regexHelper;
 
 const FormItem = Form.Item;
-const ShortCutSelectSupplierGroup = ({
+const ShortCutSelectPaymentMethod = ({
   intl,
   isMobile,
   placeholder,
@@ -46,23 +46,21 @@ const ShortCutSelectSupplierGroup = ({
   const [totalItems, setTotalItems] = useState(0);
   const [dataStore, setDataStore] = useState([]);
   const [text, setText] = useState(textProps || '');
-  const [visibleAddApothecary, setVisibleAddApothecary] = useState(false);
-  const [apothecaryName, setApothecaryName] = useState('');
+  const [visibleAddPaymentMethod, setVisibleAddPaymentMethod] = useState(false);
+  const [paymentMethodName, setPaymentMethodName] = useState('');
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    setValueState(value);
-  }, [value]);
   useEffect(() => {
     fetch(1, undefined, valueState, false, false, false);
   }, []);
+
   const handleSubmit = () => {
     setLoading(true);
     const addItem = {
-      apothecaryName: (apothecaryName && apothecaryName.trim()) || '',
+      paymentMethodName: (paymentMethodName && paymentMethodName.trim()) || '',
       status: 1,
     };
     dispatch({
-      type: 'apothecary/add',
+      type: 'paymentMethod/add',
       payload: addItem,
       callback: (res) => {
         setLoading(true);
@@ -73,13 +71,13 @@ const ShortCutSelectSupplierGroup = ({
               { id: 'app.common.create.success' },
               {
                 name: intl.formatMessage({
-                  id: 'app.apothecary.list.title',
+                  id: 'app.paymentMethod.list.title',
                 }),
               }
             ),
             '#f6ffed'
           );
-          setVisibleAddApothecary(false);
+          setVisibleAddPaymentMethod(false);
           fetch(1, undefined, valueState, false, false, false);
         } else {
           openNotification('error', res?.message, '#fff1f0');
@@ -134,23 +132,23 @@ const ShortCutSelectSupplierGroup = ({
   ) => {
     const pagesize = 20;
     const tfilter = {
-      apothecaryName: searchValue,
+      paymentMethodName: searchValue,
       status: 1,
     };
     if (getAll) {
       delete tfilter.status;
     }
     if (!searchValue || (searchValue && !searchValue.trim())) {
-      delete tfilter.apothecaryName;
+      delete tfilter.paymentMethodName;
     }
     const params = {
       filter: JSON.stringify(tfilter),
       range: JSON.stringify([pagesize * (current - 1), current * pagesize]),
-      sort: JSON.stringify(['apothecaryName', 'ASC']),
-      attributes: 'id,apothecaryName',
+      sort: JSON.stringify(['paymentMethodName', 'ASC']),
+      attributes: 'id,paymentMethodName',
     };
     dispatch({
-      type: 'apothecary/fetchLazyLoading',
+      type: 'paymentMethod/fetchLazyLoading',
       payload: params,
       select: current !== 1,
       callback: (result) => {
@@ -160,7 +158,7 @@ const ShortCutSelectSupplierGroup = ({
             result.results &&
             result.results.list.map((data) => ({
               valueState: data.id,
-              text: data.apothecaryName,
+              text: data.paymentMethodName,
             }));
           setTotalItems(
             result &&
@@ -294,7 +292,7 @@ const ShortCutSelectSupplierGroup = ({
         <Tooltip
           title={
             !isMobile &&
-            intl.formatMessage({ id: 'app.apothecary.quickCreate.header' })
+            intl.formatMessage({ id: 'app.paymentMethod.quickCreate.header' })
           }
         >
           <Button
@@ -305,7 +303,8 @@ const ShortCutSelectSupplierGroup = ({
             }}
             type="ghost"
             icon={<PlusOutlined />}
-            onClick={() => setVisibleAddApothecary(!visibleAddApothecary)}
+            onClick={() => setVisibleAddPaymentMethod(!visibleAddPaymentMethod)}
+            size={size}
           />
         </Tooltip>
       </div>
@@ -313,12 +312,12 @@ const ShortCutSelectSupplierGroup = ({
         <Modal
           destroyOnClose
           title={intl.formatMessage({
-            id: 'app.apothecary.quickCreate.header',
+            id: 'app.paymentMethod.quickCreate.header',
           })}
-          visible={visibleAddApothecary}
+          visible={visibleAddPaymentMethod}
           onOk={handleSubmit}
           width={isMobile ? '100%' : '520px'}
-          onCancel={() => setVisibleAddApothecary(false)}
+          onCancel={() => setVisibleAddPaymentMethod(false)}
           cancelText={
             <React.Fragment>
               <i className="fas fa-sync" /> &nbsp;
@@ -339,7 +338,7 @@ const ShortCutSelectSupplierGroup = ({
             label={
               <span>
                 <span style={{ color: 'red' }}>*</span>&nbsp;
-                {intl.formatMessage({ id: 'app.apothecary.list.col0' })}
+                {intl.formatMessage({ id: 'app.paymentMethod.list.col0' })}
               </span>
             }
             rules={[
@@ -359,9 +358,9 @@ const ShortCutSelectSupplierGroup = ({
           >
             <Input
               placeholder={intl.formatMessage({
-                id: 'app.apothecary.list.name',
+                id: 'app.paymentMethod.list.name',
               })}
-              onChange={(e) => setApothecaryName(e.target.value)}
+              onChange={(e) => setPaymentMethodName(e.target.value)}
             />
           </FormItem>
         </Modal>
@@ -370,4 +369,4 @@ const ShortCutSelectSupplierGroup = ({
   );
 };
 
-export default ShortCutSelectSupplierGroup;
+export default ShortCutSelectPaymentMethod;

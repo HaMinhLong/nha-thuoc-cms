@@ -113,7 +113,6 @@ const Unit = ({ isMobile, intl, headerPage }) => {
       payload: params,
       callback: (res) => {
         setLoading(false);
-
         if (res.success === false) {
           openNotification('error', res && res.message, '#fff1f0');
         } else {

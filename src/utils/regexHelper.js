@@ -35,7 +35,7 @@ export default {
     /^[A-Za-z0-9ĐÀÁẢẠÃẦẤẨẬẪÂẮẰẶẴĂẲÈÉẸẺẼỂẾỀỆỄÊỊÌÍĨỈÒÓỎỌÕÔỐỒỔỘỖỜỚỠỢỞƠÙÚỤỦŨỨỪỬỮỰƯÝỲỶỸỴđàáảạãầấẩậẫâắằặẵăẳèéẹẻẽểếềệễêịìíĩỉòóỏọõôốồổộỗờớỡợ/ở ơùúụủũứừửữựưýỳỷỹỵ-]{1,100}$$/i, // check tên có dấu nhưng không có ký tự đặc biệt
   isBadCode: /^[A-Za-zĐ0-9/-]{0,20}$$/i,
   isMobile: /^(\+84|84|0|1){1}([0-9]{7,10})\b$/i,
-  invoiceCode: /^[A-Za-zĐ0-9/-_]{0,100}$$/i,
+  invoiceCode: /^[A-Za-zĐ0-9/-_]{2,50}$$/i,
   isTextNumberOrEmail:
     /^([a-zA-Z0-9_]{6,50}|[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4})$/i, // check là số từ 6 đến 50 kí tự và email
   isGroupName:

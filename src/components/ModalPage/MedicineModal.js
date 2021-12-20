@@ -42,8 +42,8 @@ const MedicineModal = ({
     if (!visible && checkFirst) {
       setCheckFirst(false);
     } else {
-      changeModal('show');
       getOne(dataEdit?.id);
+      changeModal('show');
     }
     if (dataEdit?.id) {
       getListMedicineUnit(dataEdit?.id);
@@ -268,6 +268,7 @@ const MedicineModal = ({
             medicineTypeId: data.medicineTypeId || undefined,
             packageId: data.packageId || undefined,
             producerId: data.producerId || undefined,
+            unitId: medicineUnits[0]?.unitId || undefined,
             status: data.id ? data.status : 1,
           }}
           ref={formRef}
@@ -293,12 +294,6 @@ const MedicineModal = ({
                     }
                     name="medicineName"
                     rules={[
-                      {
-                        pattern: isFullNameNnumber2,
-                        message: intl.formatMessage({
-                          id: 'app.common.crud.validate.fomat',
-                        }),
-                      },
                       {
                         required: true,
                         message: intl.formatMessage({
@@ -446,6 +441,7 @@ const MedicineModal = ({
                         <FormattedMessage id="app.medicine.list.col9" />
                       </span>
                     }
+                    name="unitId"
                     rules={[
                       {
                         required: true,

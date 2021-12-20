@@ -33,6 +33,7 @@ import Warehouse from '../pages/Warehouse/Warehouse';
 import PrintForm from '../pages/PrintForm/PrintForm';
 import ClinicServicePackage from '../pages/ClinicServicePackage/ClinicServicePackage';
 import ClinicService from '../pages/ClinicService/ClinicService';
+import Receipt from '../pages/Receipt/Receipt';
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
 const AppRoutes = ({ headerPage }) => {
@@ -182,6 +183,9 @@ const AppRoutes = ({ headerPage }) => {
             intl={intl}
             headerPage={headerPage}
           />
+        </Route>
+        <Route path="/nt-receipt/:id">
+          <Receipt isMobile={isMobile} intl={intl} headerPage={headerPage} />
         </Route>
         <Route path="/account-config">
           <Account isMobile={isMobile} intl={intl} headerPage={headerPage} />

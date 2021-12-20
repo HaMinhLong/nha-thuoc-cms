@@ -30,6 +30,8 @@ const Warehouse = require('./vi-VN/Warehouse');
 const PrintForm = require('./vi-VN/PrintForm');
 const ClinicServicePackage = require('./vi-VN/ClinicServicePackage');
 const ClinicService = require('./vi-VN/ClinicService');
+const Receipt = require('./vi-VN/Receipt');
+const ReceiptMedicine = require('./vi-VN/ReceiptMedicine');
 
 module.exports = {
   'app.common.validate.max300':
@@ -70,6 +72,9 @@ module.exports = {
   'app.common.crudBtns.4': 'Lưu',
   'app.common.searchBtn': 'Tìm kiếm',
   'app.common.different': 'Khác',
+  'app.common.inDay': 'Trong ngày',
+  'app.common.inWeek': 'Trong tuần',
+  'app.common.inMonth': 'Trong tháng',
   'app.common.forgotBtn': 'Gửi email',
   'app.common.delete.success': 'Xóa bản ghi thành công!',
   'app.common.login.success': 'Đăng nhập thành công!',
@@ -142,4 +147,6 @@ module.exports = {
   ...PrintForm,
   ...ClinicServicePackage,
   ...ClinicService,
+  ...Receipt,
+  ...ReceiptMedicine,
 };

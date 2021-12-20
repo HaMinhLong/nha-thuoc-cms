@@ -34,6 +34,9 @@ import workScheduleReducer from '../features/workSchedule/workScheduleSlice';
 import clinicTypeReducer from '../features/clinicType/clinicTypeSlice';
 import clinicServicePackageReducer from '../features/clinicServicePackage/clinicServicePackageSlice';
 import clinicServiceReducer from '../features/clinicService/clinicServiceSlice';
+import receiptReducer from '../features/receipt/receiptSlice';
+import receiptCodeReducer from '../features/receiptCode/receiptCodeSlice';
+import receiptMedicineReducer from '../features/receiptMedicine/receiptMedicineSlice';
 
 export const rootReducer = {
   userGroup: userGroupReducer,
@@ -72,4 +75,7 @@ export const rootReducer = {
   clinicType: clinicTypeReducer,
   clinicServicePackage: clinicServicePackageReducer,
   clinicService: clinicServiceReducer,
+  receipt: receiptReducer,
+  receiptCode: receiptCodeReducer,
+  receiptMedicine: receiptMedicineReducer,
 };

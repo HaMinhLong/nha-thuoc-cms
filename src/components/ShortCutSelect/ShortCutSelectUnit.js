@@ -50,6 +50,9 @@ const ShortCutSelectSupplierGroup = ({
   const [unitName, setUnitName] = useState('');
   const [loading, setLoading] = useState(false);
   useEffect(() => {
+    setValueState(value);
+  }, [value]);
+  useEffect(() => {
     fetch(1, undefined, valueState, false, false, false);
   }, []);
   const handleSubmit = () => {

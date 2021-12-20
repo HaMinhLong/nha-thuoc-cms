@@ -16,12 +16,13 @@ import regexHelper from '../../utils/regexHelper';
 import '@ant-design/compatible/assets/index.css';
 import { fnKhongDau } from '../../utils/utils';
 import _ from 'lodash';
+import SupplierGroupSelect from '../Common/SupplierGroupSelect';
 
 let timer = null;
-const { isGroupName } = regexHelper;
+const { isGroupName, isPhone } = regexHelper;
 
 const FormItem = Form.Item;
-const ShortCutSelectSupplierGroup = ({
+const ShortCutSelectSupplier = ({
   intl,
   isMobile,
   placeholder,
@@ -46,23 +47,26 @@ const ShortCutSelectSupplierGroup = ({
   const [totalItems, setTotalItems] = useState(0);
   const [dataStore, setDataStore] = useState([]);
   const [text, setText] = useState(textProps || '');
-  const [visibleAddApothecary, setVisibleAddApothecary] = useState(false);
-  const [apothecaryName, setApothecaryName] = useState('');
+  const healthFacilityId = localStorage.getItem('healthFacilityId');
+  const [visibleAddProducer, setVisibleAddProducer] = useState(false);
+  const [supplierGroupId, setSupplierGroupId] = useState('');
+  const [supplierName, setSupplierName] = useState('');
+  const [mobile, setMobile] = useState('');
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    setValueState(value);
-  }, [value]);
   useEffect(() => {
     fetch(1, undefined, valueState, false, false, false);
   }, []);
   const handleSubmit = () => {
     setLoading(true);
     const addItem = {
-      apothecaryName: (apothecaryName && apothecaryName.trim()) || '',
+      supplierName: (supplierName && supplierName.trim()) || '',
+      mobile,
+      supplierGroupId,
       status: 1,
+      healthFacilityId: healthFacilityId,
     };
     dispatch({
-      type: 'apothecary/add',
+      type: 'supplier/add',
       payload: addItem,
       callback: (res) => {
         setLoading(true);
@@ -73,13 +77,13 @@ const ShortCutSelectSupplierGroup = ({
               { id: 'app.common.create.success' },
               {
                 name: intl.formatMessage({
-                  id: 'app.apothecary.list.title',
+                  id: 'app.supplier.list.title',
                 }),
               }
             ),
             '#f6ffed'
           );
-          setVisibleAddApothecary(false);
+          setVisibleAddProducer(false);
           fetch(1, undefined, valueState, false, false, false);
         } else {
           openNotification('error', res?.message, '#fff1f0');
@@ -133,24 +137,26 @@ const ShortCutSelectSupplierGroup = ({
     checkDataAll
   ) => {
     const pagesize = 20;
+    const healthFacilityId = localStorage.getItem('healthFacilityId');
     const tfilter = {
-      apothecaryName: searchValue,
+      supplierName: searchValue,
+      healthFacilityId: healthFacilityId,
       status: 1,
     };
     if (getAll) {
       delete tfilter.status;
     }
     if (!searchValue || (searchValue && !searchValue.trim())) {
-      delete tfilter.apothecaryName;
+      delete tfilter.supplierName;
     }
     const params = {
       filter: JSON.stringify(tfilter),
       range: JSON.stringify([pagesize * (current - 1), current * pagesize]),
-      sort: JSON.stringify(['apothecaryName', 'ASC']),
-      attributes: 'id,apothecaryName',
+      sort: JSON.stringify(['supplierName', 'ASC']),
+      attributes: 'id,supplierName',
     };
     dispatch({
-      type: 'apothecary/fetchLazyLoading',
+      type: 'supplier/fetchLazyLoading',
       payload: params,
       select: current !== 1,
       callback: (result) => {
@@ -160,7 +166,7 @@ const ShortCutSelectSupplierGroup = ({
             result.results &&
             result.results.list.map((data) => ({
               valueState: data.id,
-              text: data.apothecaryName,
+              text: data.supplierName,
             }));
           setTotalItems(
             result &&
@@ -267,7 +273,7 @@ const ShortCutSelectSupplierGroup = ({
 
   return (
     <React.Fragment>
-      <div style={{ display: 'inline-flex', width: '100%' }}>
+      <div style={{ display: 'flex', width: '100%' }}>
         <Select
           key={key}
           onFocus={onFocus}
@@ -294,7 +300,7 @@ const ShortCutSelectSupplierGroup = ({
         <Tooltip
           title={
             !isMobile &&
-            intl.formatMessage({ id: 'app.apothecary.quickCreate.header' })
+            intl.formatMessage({ id: 'app.supplier.quickCreate.header' })
           }
         >
           <Button
@@ -305,7 +311,8 @@ const ShortCutSelectSupplierGroup = ({
             }}
             type="ghost"
             icon={<PlusOutlined />}
-            onClick={() => setVisibleAddApothecary(!visibleAddApothecary)}
+            onClick={() => setVisibleAddProducer(!visibleAddProducer)}
+            size={size}
           />
         </Tooltip>
       </div>
@@ -313,12 +320,12 @@ const ShortCutSelectSupplierGroup = ({
         <Modal
           destroyOnClose
           title={intl.formatMessage({
-            id: 'app.apothecary.quickCreate.header',
+            id: 'app.supplier.quickCreate.header',
           })}
-          visible={visibleAddApothecary}
+          visible={visibleAddProducer}
           onOk={handleSubmit}
           width={isMobile ? '100%' : '520px'}
-          onCancel={() => setVisibleAddApothecary(false)}
+          onCancel={() => setVisibleAddProducer(false)}
           cancelText={
             <React.Fragment>
               <i className="fas fa-sync" /> &nbsp;
@@ -339,7 +346,33 @@ const ShortCutSelectSupplierGroup = ({
             label={
               <span>
                 <span style={{ color: 'red' }}>*</span>&nbsp;
-                {intl.formatMessage({ id: 'app.apothecary.list.col0' })}
+                {intl.formatMessage({ id: 'app.supplier.list.col1' })}
+              </span>
+            }
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'app.common.crud.validate.select',
+                }),
+              },
+            ]}
+          >
+            <SupplierGroupSelect
+              placeholder={intl.formatMessage({
+                id: 'app.supplier.list.supplierGroup',
+              })}
+              onChange={(value) => setSupplierGroupId(value)}
+            />
+          </FormItem>
+          <FormItem
+            labelCol={{ span: 24 }}
+            wrapperCol={{ span: 24 }}
+            labelAlign="left"
+            label={
+              <span>
+                <span style={{ color: 'red' }}>*</span>&nbsp;
+                {intl.formatMessage({ id: 'app.supplier.list.col0' })}
               </span>
             }
             rules={[
@@ -359,9 +392,41 @@ const ShortCutSelectSupplierGroup = ({
           >
             <Input
               placeholder={intl.formatMessage({
-                id: 'app.apothecary.list.name',
+                id: 'app.supplier.list.name',
               })}
-              onChange={(e) => setApothecaryName(e.target.value)}
+              onChange={(e) => setSupplierName(e.target.value)}
+            />
+          </FormItem>
+          <FormItem
+            labelCol={{ span: 24 }}
+            wrapperCol={{ span: 24 }}
+            labelAlign="left"
+            label={
+              <span>
+                <span style={{ color: 'red' }}>*</span>&nbsp;
+                {intl.formatMessage({ id: 'app.supplier.list.col2' })}
+              </span>
+            }
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'app.common.crud.validate.input',
+                }),
+              },
+              {
+                pattern: isPhone,
+                message: intl.formatMessage({
+                  id: 'app.common.crud.validate.phone_email',
+                }),
+              },
+            ]}
+          >
+            <Input
+              placeholder={intl.formatMessage({
+                id: 'app.supplier.list.mobile',
+              })}
+              onChange={(e) => setMobile(e.target.value)}
             />
           </FormItem>
         </Modal>
@@ -370,4 +435,4 @@ const ShortCutSelectSupplierGroup = ({
   );
 };
 
-export default ShortCutSelectSupplierGroup;
+export default ShortCutSelectSupplier;

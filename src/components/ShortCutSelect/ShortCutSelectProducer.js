@@ -22,7 +22,7 @@ let timer = null;
 const { isGroupName, isPhone } = regexHelper;
 
 const FormItem = Form.Item;
-const ShortCutSelectSupplier = ({
+const ShortCutSelectProducer = ({
   intl,
   isMobile,
   placeholder,
@@ -53,6 +53,9 @@ const ShortCutSelectSupplier = ({
   const [producerName, setProducerName] = useState('');
   const [mobile, setMobile] = useState('');
   const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setValueState(value);
+  }, [value]);
   useEffect(() => {
     fetch(1, undefined, valueState, false, false, false);
   }, []);
@@ -312,6 +315,7 @@ const ShortCutSelectSupplier = ({
             type="ghost"
             icon={<PlusOutlined />}
             onClick={() => setVisibleAddProducer(!visibleAddProducer)}
+            size={size}
           />
         </Tooltip>
       </div>
@@ -434,4 +438,4 @@ const ShortCutSelectSupplier = ({
   );
 };
 
-export default ShortCutSelectSupplier;
+export default ShortCutSelectProducer;

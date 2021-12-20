@@ -4,6 +4,7 @@ module.exports = {
   'app.supplier.list.header': 'Quản lý nhà cung cấp',
   'app.supplier.update.header': 'Sửa nhà cung cấp',
   'app.supplier.create.header': 'Thêm mới nhà cung cấp',
+  'app.supplier.quickCreate.header': 'Thêm nhanh nhà cung cấp',
 
   // Tiêu đề các cột
   'app.supplier.list.col0': 'Tên nhà cung cấp',
