@@ -314,6 +314,15 @@ const TableFormReceipt = (props) => {
     setVisibleMedicineSelect(false);
   };
 
+  const totalMedicine = (data) => {
+    console.log('data', data);
+    let total = 0;
+    data.map((item) => {
+      total += item?.receiptMedicines?.total;
+    });
+    return formatNumber(Math.round(total));
+  };
+
   const handleReset = () => {
     // formRef.current.resetFields();
     setMedicineUnits([]);
@@ -511,6 +520,24 @@ const TableFormReceipt = (props) => {
           />
         </Row>
       </div>
+      <Row
+        style={{
+          background: 'rgb(241, 241, 241)',
+          padding: '20px',
+          color: '#002222',
+          // textTransform: 'capitalize',
+          fontSize: '15px',
+          fontWeight: '500',
+          position: 'absolute',
+          bottom: 0,
+          width: '100%',
+        }}
+      >
+        <Col span={12}>Tổng tiền</Col>
+        <Col offset={5} span={7} style={{ color: 'red' }}>
+          đ{totalMedicine(data)}
+        </Col>
+      </Row>
       <Modal
         key="Detail"
         title={

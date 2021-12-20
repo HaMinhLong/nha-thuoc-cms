@@ -150,7 +150,6 @@ const ReceiptPage = ({ isMobile, intl, headerPage }) => {
   };
 
   const handleTableChange = (pagination, filters, sorter) => {
-    console.log('handle table change', pagination);
     formRef.current.validateFields().then((values) => {
       const rangeValue = values.createDate || [];
       const fromDate =
@@ -397,7 +396,6 @@ const ReceiptPage = ({ isMobile, intl, headerPage }) => {
         setSpinning(false);
         if (res?.success) {
           const { list } = res.results;
-          console.log('list', list);
           setDataInfo(list);
           setDataMedicines(list.medicines);
         }
@@ -419,6 +417,7 @@ const ReceiptPage = ({ isMobile, intl, headerPage }) => {
   };
   const data = (list.data && list.data.list) || [];
   const pagination = (list.data && list.data.pagination) || [];
+
   const columns = [
     {
       dataIndex: null,
@@ -439,6 +438,25 @@ const ReceiptPage = ({ isMobile, intl, headerPage }) => {
       align: 'left',
       sorter: () => {},
       fixed: isMobile,
+    },
+    {
+      dataIndex: 'medicines',
+      name: 'medicines',
+      width: isMobile ? 100 : '4%',
+      title: <FormattedMessage id="app.receipt.list.col11" />,
+      align: 'center',
+      sorter: () => {},
+      render: (cell) => {
+        let total =
+          (cell &&
+            cell.length > 0 &&
+            cell.map((item) => Number(item.receiptMedicines.total || 0))) ||
+          0;
+        const reducer = (accumulator, currentValue) =>
+          accumulator + currentValue;
+        total = total === 0 ? 0 : total.reduce(reducer);
+        return formatNumber(Math.round(total));
+      },
     },
     {
       dataIndex: 'createdAt',
