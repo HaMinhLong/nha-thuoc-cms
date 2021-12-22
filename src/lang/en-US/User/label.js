@@ -34,9 +34,11 @@ module.exports = {
 
   //different
   'app.user.different.col1': 'Admin settings CSYT',
+  'app.user.different.col2': 'Admin settings warehouse',
   // placeholder
   'app.user.list.username': 'Enter username',
   'app.user.list.province': 'Select province',
+  'app.user.list.warehouse': 'Select warehouse',
   'app.user.list.district': 'Select district',
   'app.user.list.ward': 'Select ward',
   'app.user.list.address': 'Enter house number, street,...',

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { HomeOutlined } from '@ant-design/icons';
 import { Button, Modal, Tooltip, notification, Form, Spin } from 'antd';
 import { useDispatch } from 'react-redux';
 import HealthFacilitySelect from '../Common/HealthFacilitySelect';
+import WarehouseUser from './WarehouseUserModal';
 import '../../utils/css/styleList.scss';
 
 const FormItem = Form.Item;
@@ -20,6 +22,7 @@ const HealthFacilityUserModal = ({
   const [checkFirst, setCheckFirst] = useState(true);
   const [loading, setLoading] = useState(false);
   const [visibleModal, setVisibleModal] = useState(false);
+  const [visibleModalWarehouse, setVisibleModalWarehouse] = useState(false);
   const [data, setData] = useState([]);
   useEffect(() => {
     if (!visible && checkFirst) {
@@ -35,10 +38,10 @@ const HealthFacilityUserModal = ({
       setVisibleModal(!visibleModal);
     } else if (value === 'close') {
       setVisibleModal(false);
-      handleReset();
       setData([]);
     }
   };
+
   const openNotification = (type, message, color) => {
     notification[type]({
       message: message,
@@ -71,9 +74,7 @@ const HealthFacilityUserModal = ({
       setData([]);
     }
   };
-  const handleReset = () => {
-    formRef.current.resetFields();
-  };
+
   const handleAdd = () => {
     formRef.current
       .validateFields()
@@ -198,9 +199,13 @@ const HealthFacilityUserModal = ({
               <div key={item.id} className="listItemPlace">
                 Cơ sở {index + 1}: {item.healthFacilityName}
                 <span className="listItemPlaceIcon">
-                  <div
+                  <span
                     className="expand-row-icon"
-                    style={{ color: '#1175BB', cursor: 'pointer' }}
+                    style={{
+                      color: '#1175BB',
+                      cursor: 'pointer',
+                      fontSize: '16px',
+                    }}
                     onClick={() =>
                       deleteRecord(item?.users?.[0]?.healthFacilityUsers?.id)
                     }
@@ -213,13 +218,40 @@ const HealthFacilityUserModal = ({
                     >
                       <i className="fas fa-times" />
                     </Tooltip>
-                  </div>
+                  </span>
+                  <span
+                    className="expand-row-icon"
+                    onClick={() => {
+                      setVisibleModalWarehouse(!visibleModalWarehouse);
+                    }}
+                    style={{
+                      color: '#1175BB',
+                      cursor: 'pointer',
+                      position: 'relative',
+                      top: '-1.4px',
+                    }}
+                  >
+                    <Tooltip
+                      title={
+                        !isMobile &&
+                        intl.formatMessage({ id: 'app.user.different.col2' })
+                      }
+                    >
+                      <HomeOutlined />
+                    </Tooltip>
+                  </span>
                 </span>
               </div>
             ))}
           </div>
         </Spin>
       </Modal>
+      <WarehouseUser
+        intl={intl}
+        isMobile={isMobile}
+        dataEdit={dataEdit}
+        visible={visibleModalWarehouse}
+      />
     </React.Fragment>
   );
 };

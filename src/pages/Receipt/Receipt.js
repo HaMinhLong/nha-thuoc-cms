@@ -397,7 +397,14 @@ const ReceiptPage = ({ isMobile, intl, headerPage }) => {
         if (res?.success) {
           const { list } = res.results;
           setDataInfo(list);
-          setDataMedicines(list.medicines);
+          setDataMedicines(
+            list?.medicines?.map((item) => {
+              return {
+                ...item,
+                flag: 1,
+              };
+            })
+          );
         }
       },
     });

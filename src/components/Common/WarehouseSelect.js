@@ -20,6 +20,7 @@ const WarehouseSelect = ({
   style,
   onChange,
   getAll,
+  data,
 }) => {
   const dispatch = useDispatch();
   const [valueState, setValueState] = useState(value);
@@ -73,10 +74,8 @@ const WarehouseSelect = ({
     checkDataAll
   ) => {
     const pagesize = 20;
-    const healthFacilityId = localStorage.getItem('healthFacilityId');
     const tfilter = {
       warehouseName: searchValue,
-      healthFacilityId: healthFacilityId,
       status: 1,
     };
     if (getAll) {
@@ -205,7 +204,13 @@ const WarehouseSelect = ({
         {item.text.trim()}
       </Select.Option>
     ));
-  const dataRender = renderData(dataArr);
+  let dataNew = dataArr;
+  if (data) {
+    for (let index = 0; index < data.length; index++) {
+      dataNew = dataNew.filter((item) => item.valueState !== data?.[index]?.id);
+    }
+  }
+  const dataRender = renderData(dataNew);
   return (
     <React.Fragment>
       <Select

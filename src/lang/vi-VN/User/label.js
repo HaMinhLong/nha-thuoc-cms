@@ -34,10 +34,12 @@ module.exports = {
 
   //different
   'app.user.different.col1': 'Thiết lập quản trị CSYT',
+  'app.user.different.col2': 'Thiết lập kho',
 
   // placeholder
   'app.user.list.username': 'Nhập tên tài khoản',
   'app.user.list.province': 'Chọn Tỉnh/Thành phố',
+  'app.user.list.warehouse': 'Chọn kho',
   'app.user.list.district': 'Chọn Quận/Huyện',
   'app.user.list.ward': 'Chọn Xã/Phường',
   'app.user.list.address': 'Nhập số nhà, đường,...',

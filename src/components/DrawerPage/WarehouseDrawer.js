@@ -75,12 +75,10 @@ const WarehouseDrawer = ({
       .validateFields()
       .then((values) => {
         setLoading(true);
-        const healthFacilityId = localStorage.getItem('healthFacilityId');
         const addItem = {
           ...values,
           warehouseName: values.warehouseName && values.warehouseName.trim(),
           warehouseNameOld: values.warehouseName && values.warehouseName.trim(),
-          healthFacilityId,
         };
         if (data.id) {
           dispatch({

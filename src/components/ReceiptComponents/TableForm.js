@@ -85,12 +85,12 @@ const TableFormReceipt = (props) => {
     });
   };
 
-  const remove = (id) => {
-    if (id > 0) {
+  const remove = (medicineId, receiptMedicineId, flag) => {
+    if (flag > 0) {
       dispatch({
         type: 'receiptMedicine/delete',
         payload: {
-          id: id,
+          id: receiptMedicineId,
         },
         callback: (res) => {
           if (res?.success === true) {
@@ -99,14 +99,20 @@ const TableFormReceipt = (props) => {
               intl.formatMessage({ id: 'app.common.delete.success' }),
               '#f6ffed'
             );
-            setData(data?.filter((item) => item.id !== id));
+            setData(data?.filter((item) => item.id !== medicineId));
+            if (onChange) {
+              onChange(data?.filter((item) => item.id !== medicineId));
+            }
           } else if (res?.success === false) {
             openNotification('error', res && res.message, '#fff1f0');
           }
         },
       });
     } else {
-      setData(data?.filter((item) => item.id !== id));
+      setData(data?.filter((item) => item.id !== medicineId));
+      if (onChange) {
+        onChange(data?.filter((item) => item.id !== medicineId));
+      }
     }
   };
 
@@ -474,7 +480,11 @@ const TableFormReceipt = (props) => {
                                 id: 'app.common.deleteBtn.cancelText',
                               }),
                               onOk: () => {
-                                remove(item.id);
+                                remove(
+                                  item.id,
+                                  item.receiptMedicines.id,
+                                  item.flag
+                                );
                               },
                               onCancel() {},
                             })
@@ -1046,6 +1056,7 @@ const TableFormReceipt = (props) => {
                           ]}
                         >
                           <Input
+                            disabled={editOrCreate > 0}
                             placeholder={intl.formatMessage({
                               id: 'app.receiptMedicine.list.barcode',
                             })}
@@ -1064,6 +1075,7 @@ const TableFormReceipt = (props) => {
                           name="lotNumber"
                         >
                           <Input
+                            disabled={editOrCreate > 0}
                             placeholder={intl.formatMessage({
                               id: 'app.receiptMedicine.list.lotNumber',
                             })}
@@ -1091,6 +1103,7 @@ const TableFormReceipt = (props) => {
                           ]}
                         >
                           <UnitSelectV2
+                            disabled={editOrCreate > 0}
                             placeholder={intl.formatMessage({
                               id: 'app.receiptMedicine.list.unit',
                             })}
@@ -1257,6 +1270,7 @@ const TableFormReceipt = (props) => {
                         })}
                         onBlur={total}
                         min={0}
+                        disabled={editOrCreate > 0}
                         // key={key}
                       />
                     </FormItem>

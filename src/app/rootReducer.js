@@ -37,6 +37,7 @@ import clinicServiceReducer from '../features/clinicService/clinicServiceSlice';
 import receiptReducer from '../features/receipt/receiptSlice';
 import receiptCodeReducer from '../features/receiptCode/receiptCodeSlice';
 import receiptMedicineReducer from '../features/receiptMedicine/receiptMedicineSlice';
+import warehouseUserReducer from '../features/warehouseUser/warehouseUserSlice';
 
 export const rootReducer = {
   userGroup: userGroupReducer,
@@ -78,4 +79,5 @@ export const rootReducer = {
   receipt: receiptReducer,
   receiptCode: receiptCodeReducer,
   receiptMedicine: receiptMedicineReducer,
+  warehouseUser: warehouseUserReducer,
 };

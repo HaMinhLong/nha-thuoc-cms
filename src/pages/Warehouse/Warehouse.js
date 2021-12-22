@@ -39,7 +39,6 @@ const PAGE_SIZE = process.env.REACT_APP_PAGE_SIZE;
 const Warehouse = ({ isMobile, intl, headerPage }) => {
   let { id } = useParams();
   const userGroupId = localStorage.getItem('userGroupId');
-  const healthFacilityId = localStorage.getItem('healthFacilityId');
   const dispatch = useDispatch();
   const list = useSelector(warehouse);
   const [loading, setLoading] = useState(false);
@@ -78,7 +77,7 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
     const queryFilter = list.filter;
     setLoading(true);
     let params = {
-      filter: JSON.stringify({ healthFacilityId: healthFacilityId }),
+      filter: JSON.stringify({}),
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
       attributes:
@@ -173,7 +172,6 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
       status: queryFilter && queryFilter.status,
       fromDate: fromDate,
       toDate: toDate,
-      healthFacilityId,
     };
     if (!(queryFilter.warehouseName && queryFilter.warehouseName.trim())) {
       delete queryName.warehouseName;
@@ -237,7 +235,6 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
       status: values && values.status,
       fromDate: fromDate,
       toDate: toDate,
-      healthFacilityId,
     };
     if (!(values.warehouseName && values.warehouseName.trim())) {
       delete queryName.warehouseName;
