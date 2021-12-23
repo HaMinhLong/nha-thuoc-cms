@@ -357,12 +357,13 @@ const TableForm = (props) => {
                     },
                   ]}
                 >
-                  <Input
+                  <NumberInput
                     className="inputNumberHiddenBorder1"
-                    disabled
                     placeholder={intl.formatMessage({
                       id: 'app.medicineUnit.list.amount',
                     })}
+                    min={1}
+                    key={key}
                   />
                 </FormItem>
               </Col>
