@@ -757,6 +757,7 @@ const Customer = ({ isMobile, intl, headerPage }) => {
                           style={{ marginRight: '5px' }}
                         />
                       }
+                      className="buttonThemMoi"
                       onClick={() => {
                         setVisibleModal(!visibleModal);
                         setDataEdit({});

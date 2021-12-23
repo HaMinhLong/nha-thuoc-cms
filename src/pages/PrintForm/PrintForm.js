@@ -664,6 +664,7 @@ const PrintForm = ({ isMobile, intl, headerPage }) => {
                           style={{ marginRight: '5px' }}
                         />
                       }
+                      className="buttonThemMoi"
                       onClick={() => {
                         setVisibleDrawer(!visibleDrawer);
                         setDataEdit({});

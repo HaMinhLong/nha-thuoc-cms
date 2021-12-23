@@ -854,6 +854,7 @@ const SupplierGroup = ({ isMobile, intl, headerPage }) => {
                           style={{ marginRight: '5px' }}
                         />
                       }
+                      className="buttonThemMoi"
                       onClick={() => handleAdd()}
                     >
                       {intl.formatMessage(

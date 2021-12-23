@@ -35,6 +35,7 @@ import './index.scss';
 import '../../utils/css/styleIssu.scss';
 import '../../utils/css/styleMedicine.scss';
 import _ from 'lodash';
+import debounce from 'lodash/debounce';
 
 const { isFullNameNnumber2, isNumber } = regexHelper;
 const FormItem = Form.Item;
@@ -670,7 +671,7 @@ const TableFormReceipt = (props) => {
                             placeholder={intl.formatMessage({
                               id: 'app.medicine.list.name',
                             })}
-                            onChange={onPressEnterSearch}
+                            onChange={debounce(onPressEnterSearch, 500)}
                             disabled={medicineName}
                             name="medicineName"
                             autoComplete="off"

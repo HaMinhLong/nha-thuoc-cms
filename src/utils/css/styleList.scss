@@ -44,7 +44,20 @@ $screen-xs: 576px;
 .linkNewspaper:hover {
   color: rgb(50, 103, 140);
 }
-
+.ant-switch-checked {
+  background-color: #34c38f !important;
+}
+.buttonThemMoi {
+  background: #34c38f !important;
+  border: 1px solid #34c38f !important;
+  color: #fff !important;
+}
+.buttonThemMoi:hover {
+  // opacity: 0.8 !important;
+  background: #2ca67a !important;
+  border: 1px solid #2ca67a !important;
+  color: #fff !important;
+}
 .center {
   position: absolute;
   top: 50%;

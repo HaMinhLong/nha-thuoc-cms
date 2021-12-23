@@ -34,6 +34,7 @@ import PrintForm from '../pages/PrintForm/PrintForm';
 import ClinicServicePackage from '../pages/ClinicServicePackage/ClinicServicePackage';
 import ClinicService from '../pages/ClinicService/ClinicService';
 import Receipt from '../pages/Receipt/Receipt';
+import MedicineIssue from '../pages/MedicineIssue/MedicineIssue';
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
 const AppRoutes = ({ headerPage }) => {
@@ -186,6 +187,13 @@ const AppRoutes = ({ headerPage }) => {
         </Route>
         <Route path="/nt-receipt/:id">
           <Receipt isMobile={isMobile} intl={intl} headerPage={headerPage} />
+        </Route>
+        <Route path="/nt-medicine-issue/:id">
+          <MedicineIssue
+            isMobile={isMobile}
+            intl={intl}
+            headerPage={headerPage}
+          />
         </Route>
         <Route path="/account-config">
           <Account isMobile={isMobile} intl={intl} headerPage={headerPage} />
