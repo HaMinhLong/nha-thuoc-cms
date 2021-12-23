@@ -33,6 +33,7 @@ import { useParams } from 'react-router-dom';
 import UploadMultipleUser from '../../components/ModalPage/UploadMultipleUser';
 import ProvinceSelect from '../../components/Common/ProvinceSelect';
 import HealthFacilityUserModal from '../../components/ModalPage/HealthFacilityUserModal';
+import WarehouseUserModal from '../../components/ModalPage/WarehouseUserModal';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -49,7 +50,9 @@ const User = ({ isMobile, intl, headerPage }) => {
   const [permissions, setPermissions] = useState({});
   const [fileList, setFileList] = useState([]);
   const [visibleCSYT, setVisibleCSYT] = useState(false);
+  const [visibleWarehouseUser, setVisibleWarehouseUser] = useState(false);
   const [dataCSYT, setDataCSYT] = useState({});
+  const [dataWarehouseUser, setDataWarehouseUser] = useState({});
   const [visibleUpload, setVisibleUpload] = useState(false);
 
   useEffect(() => {
@@ -787,6 +790,17 @@ const User = ({ isMobile, intl, headerPage }) => {
                         id: 'app.user.different.col1',
                       })}
                     </Menu.Item>
+                    <Menu.Item
+                      key="2"
+                      onClick={() => {
+                        setVisibleWarehouseUser(!visibleWarehouseUser);
+                        setDataWarehouseUser(row);
+                      }}
+                    >
+                      {intl.formatMessage({
+                        id: 'app.user.different.col2',
+                      })}
+                    </Menu.Item>
                   </Menu>
                 }
                 trigger={['click']}
@@ -957,6 +971,13 @@ const User = ({ isMobile, intl, headerPage }) => {
         visible={visibleCSYT}
         titleModal={intl.formatMessage({ id: 'app.user.different.col1' })}
         dataEdit={dataCSYT}
+      />
+      <WarehouseUserModal
+        intl={intl}
+        isMobile={isMobile}
+        visible={visibleWarehouseUser}
+        titleModal={intl.formatMessage({ id: 'app.user.different.col2' })}
+        dataEdit={dataWarehouseUser}
       />
     </>
   );

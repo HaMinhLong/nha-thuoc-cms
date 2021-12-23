@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { HomeOutlined } from '@ant-design/icons';
+// import { HomeOutlined } from '@ant-design/icons';
 import { Button, Modal, Tooltip, notification, Form, Spin } from 'antd';
 import { useDispatch } from 'react-redux';
 import HealthFacilitySelect from '../Common/HealthFacilitySelect';
-import WarehouseUser from './WarehouseUserModal';
 import '../../utils/css/styleList.scss';
 
 const FormItem = Form.Item;
@@ -22,7 +21,7 @@ const HealthFacilityUserModal = ({
   const [checkFirst, setCheckFirst] = useState(true);
   const [loading, setLoading] = useState(false);
   const [visibleModal, setVisibleModal] = useState(false);
-  const [visibleModalWarehouse, setVisibleModalWarehouse] = useState(false);
+  // const [visibleModalWarehouse, setVisibleModalWarehouse] = useState(false);
   const [data, setData] = useState([]);
   useEffect(() => {
     if (!visible && checkFirst) {
@@ -219,7 +218,7 @@ const HealthFacilityUserModal = ({
                       <i className="fas fa-times" />
                     </Tooltip>
                   </span>
-                  <span
+                  {/* <span
                     className="expand-row-icon"
                     onClick={() => {
                       setVisibleModalWarehouse(!visibleModalWarehouse);
@@ -239,19 +238,19 @@ const HealthFacilityUserModal = ({
                     >
                       <HomeOutlined />
                     </Tooltip>
-                  </span>
+                  </span> */}
                 </span>
               </div>
             ))}
           </div>
         </Spin>
       </Modal>
-      <WarehouseUser
+      {/* <WarehouseUser
         intl={intl}
         isMobile={isMobile}
         dataEdit={dataEdit}
         visible={visibleModalWarehouse}
-      />
+      /> */}
     </React.Fragment>
   );
 };

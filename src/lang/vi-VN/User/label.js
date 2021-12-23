@@ -34,7 +34,7 @@ module.exports = {
 
   //different
   'app.user.different.col1': 'Thiết lập quản trị CSYT',
-  'app.user.different.col2': 'Thiết lập kho',
+  'app.user.different.col2': 'Thiết lập quản trị kho',
 
   // placeholder
   'app.user.list.username': 'Nhập tên tài khoản',

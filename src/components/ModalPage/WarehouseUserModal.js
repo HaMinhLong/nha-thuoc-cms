@@ -128,7 +128,7 @@ const WarehouseUserModal = ({ intl, isMobile, visible, dataEdit }) => {
             {dataEdit?.username}
           </h3>
         }
-        width={isMobile ? '100%' : 450}
+        width={isMobile ? '100%' : 520}
         onCancel={() => changeModal('close')}
         visible={visibleModalWarehouse}
         footer={null}
