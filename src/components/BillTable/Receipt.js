@@ -18,7 +18,7 @@ import regexHelper from '../../utils/regexHelper';
 import { useDispatch } from 'react-redux';
 import UserSelect from '../Common/UserSelect';
 import ShortCutSelectPaymentMethod from '../ShortCutSelect/ShortCutSelectPaymentMethod';
-import WarehouseSelect from '../Common/WarehouseSelect';
+import WarehouseUserSelect from '../Common/WarehouseUserSelect';
 import ShortCutSelectSupplier from '../ShortCutSelect/ShortCutSelectSupplier';
 
 const FormItem = Form.Item;
@@ -430,7 +430,7 @@ const Receipt = ({
                           },
                         ]}
                       >
-                        <WarehouseSelect
+                        <WarehouseUserSelect
                           placeholder={intl.formatMessage({
                             id: 'app.receipt.list.warehouse',
                           })}

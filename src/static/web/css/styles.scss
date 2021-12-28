@@ -28,7 +28,20 @@ body {
 p {
   margin-bottom: 0px;
 }
-
+.ant-form-item-label {
+  label {
+    span {
+      text-transform: uppercase !important;
+      font-size: 12px;
+      color: #222;
+      letter-spacing: 0.67px;
+      font-weight: 700;
+      opacity: 0.7;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
 button.ant-btn-primary {
   background: $mainColor !important;
 }

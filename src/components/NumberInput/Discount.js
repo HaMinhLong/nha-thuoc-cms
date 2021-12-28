@@ -14,6 +14,7 @@ const Discount = (props) => {
     smallWidth,
     className1,
     className2,
+    style1,
   } = props;
   const [number, setNumber] = useState(props?.value?.number || 0);
   const [currency, setCurrency] = useState(props?.value?.currency || 1);
@@ -60,6 +61,7 @@ const Discount = (props) => {
         onChange={handleNumberChange}
         placeholder={placeholder}
         style={{
+          ...style1,
           width: smallWidth ? '59%' : '67%',
           marginRight: smallWidth ? '2%' : '3%',
         }}

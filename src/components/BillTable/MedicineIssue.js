@@ -11,6 +11,7 @@ import {
   Card,
   Tooltip,
   Form,
+  Modal,
 } from 'antd';
 import HeaderContent from '../../layouts/HeaderContent';
 import { FormattedMessage } from 'react-intl';
@@ -19,11 +20,13 @@ import { useDispatch } from 'react-redux';
 import UserSelect from '../Common/UserSelect';
 import ShortCutSelectPaymentMethod from '../ShortCutSelect/ShortCutSelectPaymentMethod';
 import debounce from 'lodash/debounce';
+import ReactToPrint from 'react-to-print';
+import Receipt from '../PrintTemplate/Pharmacy/Receipt';
 
 const FormItem = Form.Item;
 const { invoiceCode, isPhone } = regexHelper;
 
-const Receipt = ({
+const MedicineIssue = ({
   childrenOne,
   childrenTwo,
   intl,
@@ -36,14 +39,22 @@ const Receipt = ({
   getReceiptCode,
   onCreate,
   dataMedicines,
+  warehouseId,
 }) => {
   const formRef = React.createRef();
+  const componentRef = React.useRef();
   const dispatch = useDispatch();
   const healthFacilityId = localStorage.getItem('healthFacilityId');
   const userId = localStorage.getItem('id');
   const [loading, setLoading] = useState(false);
   const [exitsCustomer, setExitsCustomer] = useState(false);
+  const [dataDetails, setDataDetails] = useState(dataInfo);
+  const [dataCustomer, setDataCustomer] = useState({});
   const [key, setKey] = useState(Math.random());
+
+  useEffect(() => {
+    setDataDetails(dataInfo);
+  }, [dataInfo]);
 
   useEffect(() => {
     formRef.current.setFieldsValue({
@@ -60,7 +71,7 @@ const Receipt = ({
           status: 1,
         }),
         sort: JSON.stringify(['createdAt', 'DESC']),
-        attributes: 'id,customerName,status',
+        attributes: 'id,customerName,address,status',
       };
       dispatch({
         type: 'customer/fetchLazyLoading',
@@ -74,6 +85,7 @@ const Receipt = ({
               formRef.current.setFieldsValue({
                 customerName: `${list[0].customerName}`,
                 customerId: list[0].id,
+                address: list[0].address,
               });
               setExitsCustomer(true);
             } else {
@@ -94,91 +106,139 @@ const Receipt = ({
     });
   };
 
-  const handleSubmit = () => {
-    formRef.current
-      .validateFields()
-      .then((values) => {
-        setLoading(true);
-        const addItem = {
-          ...values,
-          medicineIssueCode:
-            values.medicineIssueCode && values.medicineIssueCode.trim(),
-          medicineIssueCodeOld:
-            values.medicineIssueCode && values.medicineIssueCode.trim(),
-          customerId: values.customerId,
-          debit: values.debit || false,
-          status: values.status || 1,
-          healthFacilityId,
-          medicines: dataMedicines,
-          exitsCustomer,
-        };
-        if (dataMedicines.length === 0) {
+  const handleSubmit = (values) => {
+    setLoading(true);
+    const addItem = {
+      ...values,
+      medicineIssueCode:
+        values.medicineIssueCode && values.medicineIssueCode.trim(),
+      medicineIssueCodeOld:
+        values.medicineIssueCode && values.medicineIssueCode.trim(),
+      customerId: values.customerId,
+      debit: values.debit || false,
+      status: values.status || 1,
+      healthFacilityId,
+      warehouseId,
+      medicines: dataMedicines,
+      exitsCustomer,
+    };
+
+    if (warehouseId === undefined) {
+      setLoading(false);
+      openNotification('error', 'Vui lòng chọn kho bán thuốc!', '#fff1f0');
+    } else {
+      if (dataMedicines.length === 0) {
+        setLoading(false);
+        openNotification('error', 'Vui lòng thêm thuốc vào phiếu!', '#fff1f0');
+      } else {
+        if (dataDetails.id) {
+          dispatch({
+            type: 'medicineIssue/update',
+            payload: {
+              id: dataDetails.id,
+              params: {
+                ...addItem,
+              },
+            },
+            callback: (res) => {
+              if (res?.success) {
+                openNotification(
+                  'success',
+                  intl.formatMessage({ id: 'app.common.edit.success' }),
+                  '#f6ffed'
+                );
+                getList();
+                setKey(key + 1);
+                onCreate();
+              } else {
+                openNotification('error', res.message, '#fff1f0');
+              }
+              setLoading(false);
+            },
+          });
+        } else {
+          dispatch({
+            type: 'medicineIssue/add',
+            payload: addItem,
+            callback: (res) => {
+              if (res?.success) {
+                openNotification(
+                  'success',
+                  intl.formatMessage(
+                    { id: 'app.common.create.success' },
+                    {
+                      name: intl.formatMessage({
+                        id: 'app.medicineIssue.list.title',
+                      }),
+                    }
+                  ),
+                  '#f6ffed'
+                );
+                updateReceiptCode();
+                getList();
+                setKey(key + 1);
+                onCreate();
+              } else {
+                openNotification('error', res.message, '#fff1f0');
+              }
+              setLoading(false);
+            },
+          });
+        }
+      }
+    }
+  };
+
+  const handleConfirm = () => {
+    formRef.current.validateFields().then((values) => {
+      setDataCustomer({ ...values });
+      if (dataMedicines.length > 0 && warehouseId !== undefined) {
+        const modal = Modal.confirm({
+          title: 'Lưu thông tin',
+          content: (
+            <React.Fragment>
+              <i
+                className="fas fa-times"
+                style={{
+                  position: 'absolute',
+                  top: '10px',
+                  right: '10px',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  modal.destroy();
+                }}
+              />
+              Bạn có muốn in phiếu ?
+            </React.Fragment>
+          ),
+          okText: 'Có',
+          cancelText: 'Không',
+          onOk: () => handleSubmitAndPrint(true, values),
+          onCancel: () => handleSubmitAndPrint(false, values),
+        });
+      } else {
+        if (warehouseId === undefined) {
+          setLoading(false);
+          openNotification('error', 'Vui lòng chọn kho bán thuốc!', '#fff1f0');
+        } else if (dataMedicines.length === 0) {
           setLoading(false);
           openNotification(
             'error',
             'Vui lòng thêm thuốc vào phiếu!',
             '#fff1f0'
           );
-        } else {
-          if (dataInfo.id) {
-            dispatch({
-              type: 'medicineIssue/update',
-              payload: {
-                id: dataInfo.id,
-                params: {
-                  ...addItem,
-                },
-              },
-              callback: (res) => {
-                if (res?.success) {
-                  openNotification(
-                    'success',
-                    intl.formatMessage({ id: 'app.common.edit.success' }),
-                    '#f6ffed'
-                  );
-                  getList();
-                  setKey(key + 1);
-                  onCreate();
-                } else {
-                  openNotification('error', res.message, '#fff1f0');
-                }
-                setLoading(false);
-              },
-            });
-          } else {
-            dispatch({
-              type: 'medicineIssue/add',
-              payload: addItem,
-              callback: (res) => {
-                if (res?.success) {
-                  openNotification(
-                    'success',
-                    intl.formatMessage(
-                      { id: 'app.common.create.success' },
-                      {
-                        name: intl.formatMessage({
-                          id: 'app.medicineIssue.list.title',
-                        }),
-                      }
-                    ),
-                    '#f6ffed'
-                  );
-                  updateReceiptCode();
-                  getList();
-                  setKey(key + 1);
-                  onCreate();
-                } else {
-                  openNotification('error', res.message, '#fff1f0');
-                }
-                setLoading(false);
-              },
-            });
-          }
         }
-      })
-      .catch(({ errorFields }) => {
-        formRef.current.scrollToField(errorFields[0].name);
-      });
+      }
+    });
+  };
+
+  // Lưu giá trị thay đổi và in
+  const handleSubmitAndPrint = (flag, values) => {
+    if (flag) {
+      document.getElementById('print').click();
+    }
+    handleSubmit(values);
   };
 
   const updateReceiptCode = () => {
@@ -246,7 +306,7 @@ const Receipt = ({
         action={
           <React.Fragment>
             <div>
-              {permissions.isAdd && dataInfo.id && (
+              {permissions.isAdd && dataDetails.id && (
                 <Tooltip
                   title={
                     !isMobile &&
@@ -295,7 +355,7 @@ const Receipt = ({
                   htmlType="submit"
                   style={{ marginLeft: 8 }}
                   loading={loading}
-                  onClick={handleSubmit}
+                  onClick={() => handleConfirm()}
                 >
                   <i className="fa fa-save" />
                   &nbsp;
@@ -318,24 +378,30 @@ const Receipt = ({
                   hideRequiredMark
                   style={{ marginTop: 8 }}
                   initialValues={{
-                    medicineIssueCode: dataInfo.id
-                      ? dataInfo.medicineIssueCode
+                    medicineIssueCode: dataDetails.id
+                      ? dataDetails.medicineIssueCode
                       : medicineIssueCode.receiptCode,
-                    customerName: dataInfo?.customer?.customerName,
-                    mobile: dataInfo?.customer?.mobile,
-                    customerId: dataInfo?.customer?.id,
-                    userId: dataInfo.id ? dataInfo.userId : Number(userId),
-                    paymentMethodId: dataInfo.id
-                      ? dataInfo.paymentMethodId
+                    customerName: dataDetails?.customer?.customerName,
+                    mobile: dataDetails?.customer?.mobile,
+                    address: dataDetails?.customer?.address,
+                    customerId: dataDetails?.customer?.id,
+                    userId: dataDetails.id
+                      ? dataDetails.userId
+                      : Number(userId),
+                    paymentMethodId: dataDetails.id
+                      ? dataDetails.paymentMethodId
                       : '',
-                    debit: dataInfo.id ? dataInfo.debit : false,
-                    description: dataInfo.id ? dataInfo.description : '',
-                    status: dataInfo.id ? dataInfo.status : 1,
+                    debit: dataDetails.id ? dataDetails.debit : false,
+                    description: dataDetails.id ? dataDetails.description : '',
+                    status: dataDetails.id ? dataDetails.status : 1,
                   }}
                   ref={formRef}
-                  key={`${dataInfo?.id}_${key}` || '0'}
+                  key={`${dataDetails?.id}_${key}` || '0'}
                 >
                   <FormItem hidden name="customerId">
+                    <Input />
+                  </FormItem>
+                  <FormItem hidden name="address">
                     <Input />
                   </FormItem>
                   <Row gutter={10}>
@@ -565,6 +631,31 @@ const Receipt = ({
               </Card>
             </Spin>
             {childrenOne}
+            <div style={{ display: 'none' }}>
+              <ReactToPrint
+                trigger={() => (
+                  <Button
+                    id="print"
+                    type="primary"
+                    style={{ marginLeft: 8 }}
+                    // loading={submitting}
+                    // onClick={() => handleSubmit()}
+                  >
+                    Lưu và in phiếu thu
+                  </Button>
+                )}
+                content={() => componentRef.current}
+              />
+              <div ref={componentRef}>
+                <Receipt
+                  title={intl.formatMessage({
+                    id: 'app.medicineIssue.list.title1',
+                  })}
+                  dataMedicines={dataMedicines}
+                  dataCustomer={dataCustomer}
+                />
+              </div>
+            </div>
           </Col>
           <Col lg={9} xs={24}>
             <div
@@ -584,4 +675,4 @@ const Receipt = ({
   );
 };
 
-export default Receipt;
+export default MedicineIssue;

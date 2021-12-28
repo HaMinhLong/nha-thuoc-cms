@@ -39,6 +39,8 @@ import receiptCodeReducer from '../features/receiptCode/receiptCodeSlice';
 import receiptMedicineReducer from '../features/receiptMedicine/receiptMedicineSlice';
 import warehouseUserReducer from '../features/warehouseUser/warehouseUserSlice';
 import medicineIssueReducer from '../features/medicineIssue/medicineIssueSlice';
+import medicineIssueMedicineReducer from '../features/medicineIssueMedicine/medicineIssueMedicineSlice';
+import warehouseMedicineReducer from '../features/warehouseMedicine/warehouseMedicineSlice';
 
 export const rootReducer = {
   userGroup: userGroupReducer,
@@ -82,4 +84,6 @@ export const rootReducer = {
   receiptMedicine: receiptMedicineReducer,
   warehouseUser: warehouseUserReducer,
   medicineIssue: medicineIssueReducer,
+  medicineIssueMedicine: medicineIssueMedicineReducer,
+  warehouseMedicine: warehouseMedicineReducer,
 };

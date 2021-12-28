@@ -1,6 +1,7 @@
 module.exports = {
   // Tiêu đề
   'app.medicineIssue.list.title': 'medicine issue',
+  'app.medicineIssue.list.title1': 'Medicine issue',
   'app.medicineIssue.list.header': 'Manage medicine issues',
   'app.medicineIssue.update.header': 'Edit medicine issue',
   'app.medicineIssue.create.header': 'Add new medicine issue',
@@ -18,6 +19,8 @@ module.exports = {
   'app.medicineIssue.list.col8': 'Medicine name',
   'app.medicineIssue.list.col9': 'Amount',
   'app.medicineIssue.list.col10': 'Price',
+  'app.medicineIssue.list.col11': 'Price',
+  'app.medicineIssue.list.col12': 'Retail',
 
   // search
   'app.medicineIssue.search.col0': 'Search by receipt code',
@@ -32,8 +35,9 @@ module.exports = {
     'Enter phone number to get customer information',
   'app.medicineIssue.list.customer': 'Enter customer name',
   'app.medicineIssue.list.user': 'Select seller',
-  'app.medicineIssue.list.warehouse': 'Select warehouse for sale',
+  'app.medicineIssue.list.warehouse': 'Select warehouse for sale*',
   'app.medicineIssue.list.debit': 'Select debit',
-  'app.medicineIssue.list.description': 'Enter description',
+  'app.medicineIssue.list.description': 'Enter usage/amount/drinking',
+  'app.medicineIssue.list.price': 'Enter price',
   'app.medicineIssue.list.status': 'Select status',
 };

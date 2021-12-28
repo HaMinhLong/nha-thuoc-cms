@@ -18,6 +18,7 @@ module.exports = {
   'app.medicine.list.col9': 'Unit',
   'app.medicine.list.col10': 'Producer',
   'app.medicine.list.col11': 'Status',
+  'app.medicine.list.col12': 'Country',
 
   // search
   'app.medicine.search.col0': 'Search by medicine name',

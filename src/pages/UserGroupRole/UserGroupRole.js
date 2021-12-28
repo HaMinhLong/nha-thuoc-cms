@@ -74,7 +74,6 @@ const UserGroupRole = ({ isMobile, intl, headerPage }) => {
         setLoading(false);
         if (res.success) {
           const { list } = res.results;
-          console.log('list', list);
           setRoles(list);
         } else {
           openNotification('error', res && res.message, '#fff1f0');

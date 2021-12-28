@@ -322,7 +322,6 @@ const TableFormReceipt = (props) => {
   };
 
   const totalMedicine = (data) => {
-    console.log('data', data);
     let total = 0;
     data.map((item) => {
       total += item?.receiptMedicines?.total;
@@ -546,7 +545,7 @@ const TableFormReceipt = (props) => {
       >
         <Col span={12}>Tổng tiền</Col>
         <Col offset={5} span={7} style={{ color: 'red' }}>
-          đ{totalMedicine(data)}
+          {totalMedicine(data)}đ
         </Col>
       </Row>
       <Modal
@@ -1057,7 +1056,7 @@ const TableFormReceipt = (props) => {
                           ]}
                         >
                           <Input
-                            disabled={editOrCreate > 0}
+                            disabled={medicines.flag > 0}
                             placeholder={intl.formatMessage({
                               id: 'app.receiptMedicine.list.barcode',
                             })}
@@ -1076,7 +1075,7 @@ const TableFormReceipt = (props) => {
                           name="lotNumber"
                         >
                           <Input
-                            disabled={editOrCreate > 0}
+                            disabled={medicines.flag > 0}
                             placeholder={intl.formatMessage({
                               id: 'app.receiptMedicine.list.lotNumber',
                             })}
@@ -1104,7 +1103,7 @@ const TableFormReceipt = (props) => {
                           ]}
                         >
                           <UnitSelectV2
-                            disabled={editOrCreate > 0}
+                            disabled={medicines.flag > 0}
                             placeholder={intl.formatMessage({
                               id: 'app.receiptMedicine.list.unit',
                             })}
@@ -1271,7 +1270,7 @@ const TableFormReceipt = (props) => {
                         })}
                         onBlur={total}
                         min={0}
-                        disabled={editOrCreate > 0}
+                        disabled={medicines.flag > 0}
                         // key={key}
                       />
                     </FormItem>
@@ -1280,7 +1279,6 @@ const TableFormReceipt = (props) => {
                     <FormItem
                       label={
                         <span>
-                          <span style={{ color: 'red' }}>*</span>&nbsp;
                           {intl.formatMessage({
                             id: 'app.receiptMedicine.list.col7',
                           })}
@@ -1309,7 +1307,6 @@ const TableFormReceipt = (props) => {
                     <FormItem
                       label={
                         <span>
-                          <span style={{ color: 'red' }}>*</span>&nbsp;
                           {intl.formatMessage({
                             id: 'app.receiptMedicine.list.col8',
                           })}

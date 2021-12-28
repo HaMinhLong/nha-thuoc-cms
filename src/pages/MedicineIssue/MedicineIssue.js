@@ -23,7 +23,7 @@ import { formatNumber, getTimeDistance } from '../../utils/utils';
 import { useParams } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import MedicineIssue from '../../components/BillTable/MedicineIssue';
-import TableForm from '../../components/ReceiptComponents/TableForm';
+import TableForm from '../../components/MedicineIssueComponents/TableForm';
 import '../../utils/css/styleList.scss';
 
 const FormItem = Form.Item;
@@ -45,6 +45,7 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
     getTimeDistance('week')
   );
   const [medicineIssueCode, setMedicineIssueCode] = useState({});
+  const [warehouseId, setWarehouseId] = useState('');
   const [redirect, setRedirect] = useState('');
   const [permissions, setPermissions] = useState({});
   useEffect(() => {
@@ -409,25 +410,27 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
       sorter: () => {},
       fixed: isMobile,
     },
-    // {
-    //   dataIndex: 'medicines',
-    //   name: 'medicines',
-    //   width: isMobile ? 100 : '4%',
-    //   title: <FormattedMessage id="app.medicineIssue.list.col11" />,
-    //   align: 'center',
-    //   sorter: () => {},
-    //   render: (cell) => {
-    //     let total =
-    //       (cell &&
-    //         cell.length > 0 &&
-    //         cell.map((item) => Number(item.receiptMedicines.total || 0))) ||
-    //       0;
-    //     const reducer = (accumulator, currentValue) =>
-    //       accumulator + currentValue;
-    //     total = total === 0 ? 0 : total.reduce(reducer);
-    //     return formatNumber(Math.round(total));
-    //   },
-    // },
+    {
+      dataIndex: 'medicines',
+      name: 'medicines',
+      width: isMobile ? 100 : '4%',
+      title: <FormattedMessage id="app.medicineIssue.list.col10" />,
+      align: 'center',
+      sorter: () => {},
+      render: (cell) => {
+        let total =
+          (cell &&
+            cell.length > 0 &&
+            cell.map((item) =>
+              Number(item.medicineIssueMedicines.total || 0)
+            )) ||
+          0;
+        const reducer = (accumulator, currentValue) =>
+          accumulator + currentValue;
+        total = total === 0 ? 0 : total.reduce(reducer);
+        return formatNumber(Math.round(total));
+      },
+    },
     {
       dataIndex: 'createdAt',
       title: intl.formatMessage({ id: 'app.common.placeholder.dateCreated' }),
@@ -488,6 +491,7 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
             dataInfo={dataInfo || []}
             dataMedicines={dataMedicines || []}
             medicineIssueCode={medicineIssueCode}
+            warehouseId={warehouseId}
             getReceiptCode={getReceiptCode}
             getList={getList}
             onCreate={onCreate}
@@ -525,6 +529,7 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
                 medicineIssueCode={medicineIssueCode}
                 getReceiptCode={getReceiptCode}
                 onChange={(data) => setDataMedicines(data)}
+                onChangeWarehouse={(id) => setWarehouseId(id)}
               />
             }
           />

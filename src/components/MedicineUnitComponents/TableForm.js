@@ -73,6 +73,7 @@ const TableForm = (props) => {
                 ...item,
                 retailPrice: values.retailPrice,
                 wholesalePrice: values.wholesalePrice,
+                amount: values.amount,
               }
         );
         setLoading(false);
@@ -300,7 +301,7 @@ const TableForm = (props) => {
               unitId: dataEdit?.unitId,
               retailPrice: dataEdit?.retailPrice,
               wholesalePrice: dataEdit?.wholesalePrice,
-              amount: 1,
+              amount: dataEdit?.amount,
             }}
             ref={formRef}
             key={`MedicineUnit_${key}`}

@@ -18,6 +18,7 @@ module.exports = {
   'app.medicine.list.col9': 'Đơn vị tính',
   'app.medicine.list.col10': 'Nhà sản xuất',
   'app.medicine.list.col11': 'Trạng thái',
+  'app.medicine.list.col12': 'Quốc gia',
 
   // search
   'app.medicine.search.col0': 'Tìm kiếm theo tên thuốc',

@@ -406,7 +406,7 @@ const ClinicServicePackageModal = ({
                             style={{ marginLeft: 8 }}
                             // loading={submitting}
                           >
-                            In kết quả
+                            Lưu và in phiếu thu
                           </Button>
                         )}
                         content={() => componentRef.current}

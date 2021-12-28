@@ -22,27 +22,21 @@ const UnitSelectV2 = ({
   const [loading, setLoading] = useState(false);
   const [icon, setIcon] = useState(null);
   const [text, setText] = useState(textProps || '');
-
   const onChangeFun = (valueState) => {
     if (valueState) {
       setValueState(valueState);
-      setText(
-        dataArr.find((x) => x.valueState === valueState) &&
-          dataArr.find((x) => x.valueState === valueState).text
-      );
+      setText(dataArr?.find((x) => x.id === valueState)?.unitName);
     } else {
       setValueState(valueState);
-      setText(
-        dataArr.find((x) => x.valueState === valueState) &&
-          dataArr.find((x) => x.valueState === valueState).text
-      );
+      setText(dataArr?.find((x) => x.id === valueState)?.unitName);
       fetch(1, undefined, valueState, false, false, true);
     }
     if (onChange)
       onChange(
         valueState,
-        dataArr.find((x) => x.valueState === valueState) &&
-          dataArr.find((x) => x.valueState === valueState).text
+        dataArr?.find((x) => x.id === valueState)?.unitName,
+        dataArr?.find((x) => x.id === valueState)?.retailPrice,
+        dataArr?.find((x) => x.id === valueState)?.wholesalePrice
       );
   };
 

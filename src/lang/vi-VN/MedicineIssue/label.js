@@ -1,6 +1,7 @@
 module.exports = {
   // Tiêu đề
   'app.medicineIssue.list.title': 'phiếu Bán Thuốc/Vật tư',
+  'app.medicineIssue.list.title1': 'Phiếu Bán Thuốc/Vật tư',
   'app.medicineIssue.list.header': 'Quản lý phiếu Bán Thuốc/Vật tư',
   'app.medicineIssue.update.header': 'Sửa phiếu Bán Thuốc/Vật tư',
   'app.medicineIssue.create.header': 'Thêm mới phiếu Bán Thuốc/Vật tư',
@@ -18,6 +19,8 @@ module.exports = {
   'app.medicineIssue.list.col8': 'Tên thuốc',
   'app.medicineIssue.list.col9': 'Số lượng',
   'app.medicineIssue.list.col10': 'Thành tiền',
+  'app.medicineIssue.list.col11': 'Giá bán',
+  'app.medicineIssue.list.col12': 'Bán lẻ',
 
   // search
   'app.medicineIssue.search.col0': 'Tìm kiếm theo số phiếu',
@@ -31,8 +34,9 @@ module.exports = {
   'app.medicineIssue.list.mobile': 'Nhập số điện thoại để lấy thông tin KH',
   'app.medicineIssue.list.customer': 'Nhập tên khách hàng',
   'app.medicineIssue.list.user': 'Chọn người bán',
-  'app.medicineIssue.list.warehouse': 'Chọn kho bán',
+  'app.medicineIssue.list.warehouse': 'Chọn kho bán*',
   'app.medicineIssue.list.debit': 'Chọn công nợ',
-  'app.medicineIssue.list.description': 'Nhập ghi chú',
+  'app.medicineIssue.list.description': 'Nhập cách sử dụng/số lượng/uống',
+  'app.medicineIssue.list.price': 'Nhập giá bán',
   'app.medicineIssue.list.status': 'Chọn trạng thái',
 };

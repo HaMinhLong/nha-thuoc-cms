@@ -40,6 +40,8 @@ import { receiptCodeSaga } from '../features/receiptCode/receiptCodeSaga';
 import { receiptMedicineSaga } from '../features/receiptMedicine/receiptMedicineSaga';
 import { warehouseUserSaga } from '../features/warehouseUser/warehouseUserSaga';
 import { medicineIssueSaga } from '../features/medicineIssue/medicineIssueSaga';
+import { medicineIssueMedicineSaga } from '../features/medicineIssueMedicine/medicineIssueMedicineSaga';
+import { warehouseMedicineSaga } from '../features/warehouseMedicine/warehouseMedicineSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -84,5 +86,7 @@ export default function* rootSaga() {
     receiptMedicineSaga(),
     warehouseUserSaga(),
     medicineIssueSaga(),
+    medicineIssueMedicineSaga(),
+    warehouseMedicineSaga(),
   ]);
 }
