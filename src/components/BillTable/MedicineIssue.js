@@ -639,7 +639,6 @@ const MedicineIssue = ({
                     type="primary"
                     style={{ marginLeft: 8 }}
                     // loading={submitting}
-                    // onClick={() => handleSubmit()}
                   >
                     Lưu và in phiếu thu
                   </Button>

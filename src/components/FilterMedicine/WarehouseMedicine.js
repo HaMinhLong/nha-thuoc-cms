@@ -1,7 +1,7 @@
 import React, { useState, Fragment } from 'react';
 import { SearchOutlined, CloseOutlined } from '@ant-design/icons';
 import { Input, Col, Row, Button } from 'antd';
-import { fnKhongDau, formatNumber } from '../../utils/utils';
+import { formatNumber } from '../../utils/utils';
 
 const WarehouseMedicine = (props) => {
   const {

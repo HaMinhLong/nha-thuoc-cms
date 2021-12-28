@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, Fragment } from 'react';
-import { MenuOutlined, CloseOutlined } from '@ant-design/icons';
+import { MenuOutlined } from '@ant-design/icons';
 import {
   Form,
   Modal,
@@ -38,7 +38,6 @@ const TableFormMedicineIssue = (props) => {
     value,
     medicineIssueCode,
     dataInfo,
-    onChangeDataInfo,
     onChangeWarehouse,
   } = props;
   const dispatch = useDispatch();
@@ -52,9 +51,6 @@ const TableFormMedicineIssue = (props) => {
   const [medicines, setMedicines] = useState({});
   const [medicineIssueMedicines, setMedicineIssueMedicines] = useState({});
   const [unit, setUnit] = useState([]);
-  const [visibleMedicineSelect, setVisibleMedicineSelect] = useState(false);
-  const [dataMedicineSelect, setDataMedicineSelect] = useState([]);
-  const [medicineName, setMedicineName] = useState('');
   const [warehouseId, setWarehouseId] = useState('');
   const [warehouseMedicine, setWarehouseMedicine] = useState([]);
   const [retailPrice, setRetailPrice] = useState(0);
@@ -191,24 +187,39 @@ const TableFormMedicineIssue = (props) => {
   };
 
   const total = () => {
-    let total =
-      formRef.current.getFieldValue('price') *
-        formRef.current.getFieldValue('amount') || 0;
-    if (formRef.current.getFieldValue('discount')?.number > 0) {
-      const currency =
-        formRef.current.getFieldValue('discount')?.currency === 1
-          ? formRef.current.getFieldValue('discount')?.number
-          : total * (formRef.current.getFieldValue('discount')?.number / 100);
-      total -= currency;
+    const inStock = medicines?.warehouses?.[0]?.warehouseMedicines?.inStock;
+    const exchangeWarehouse =
+      medicines?.warehouses?.[0]?.warehouseMedicines?.exchange;
+    const amount = formRef.current.getFieldValue('amount');
+    const unitId = formRef.current.getFieldValue('unitId');
+    const exchange = Number(
+      medicineUnits?.find((it) => it.unitId === unitId)?.amount
+    );
+    if (amount * (exchangeWarehouse / exchange) > inStock) {
+      openNotification(
+        'error',
+        'Số lượng thuốc trong kho không đủ!',
+        '#fff1f0'
+      );
+      formRef.current.setFieldsValue({ amount: inStock });
+    } else {
+      let total = formRef.current.getFieldValue('price') * amount || 0;
+      if (formRef.current.getFieldValue('discount')?.number > 0) {
+        const currency =
+          formRef.current.getFieldValue('discount')?.currency === 1
+            ? formRef.current.getFieldValue('discount')?.number
+            : total * (formRef.current.getFieldValue('discount')?.number / 100);
+        total -= currency;
+      }
+      if (formRef.current.getFieldValue('tax')?.number > 0) {
+        const tax =
+          formRef.current.getFieldValue('tax')?.currency === 1
+            ? formRef.current.getFieldValue('tax')?.number
+            : total * (formRef.current.getFieldValue('tax')?.number / 100);
+        total += tax;
+      }
+      formRef.current.setFieldsValue({ total: total });
     }
-    if (formRef.current.getFieldValue('tax')?.number > 0) {
-      const tax =
-        formRef.current.getFieldValue('tax')?.currency === 1
-          ? formRef.current.getFieldValue('tax')?.number
-          : total * (formRef.current.getFieldValue('tax')?.number / 100);
-      total += tax;
-    }
-    formRef.current.setFieldsValue({ total: total });
   };
 
   const resetFields = () => {
@@ -286,36 +297,6 @@ const TableFormMedicineIssue = (props) => {
       });
   };
 
-  const onPressEnterSearch = (event) => {
-    let params = {
-      filter: JSON.stringify({
-        healthFacilityId: healthFacilityId,
-        medicineName: event.target.value.trim(),
-        status: 1,
-      }),
-      sort: JSON.stringify(['createdAt', 'DESC']),
-    };
-
-    if (event.target.value) {
-      dispatch({
-        type: 'medicine/fetch',
-        payload: params,
-        callback: (res) => {
-          if (res?.success) {
-            const { list } = res.results;
-            setDataMedicineSelect(list);
-            setVisibleMedicineSelect(true);
-          } else {
-            openNotification('error', res.message, '#fff1f0');
-          }
-        },
-      });
-    } else {
-      setDataMedicineSelect([]);
-      setVisibleMedicineSelect(false);
-    }
-  };
-
   const totalMedicine = (data) => {
     let total = 0;
     data.map((item) => {
@@ -329,8 +310,6 @@ const TableFormMedicineIssue = (props) => {
     setMedicineUnits([]);
     setMedicines({});
     setMedicineIssueMedicines({});
-    setDataMedicineSelect([]);
-    setVisibleMedicineSelect(false);
     setVisibleModalMedicine(false);
   };
 
@@ -405,7 +384,6 @@ const TableFormMedicineIssue = (props) => {
             style={{ float: 'right', marginRight: 15, marginBottom: 10 }}
             onClick={() => {
               setEditOrCreate(-1);
-              setMedicineName('');
               setKey(key + 1);
               setVisibleModalMedicine(!visibleModalMedicine);
             }}
@@ -452,7 +430,6 @@ const TableFormMedicineIssue = (props) => {
                           onClick={() => {
                             getListMedicineUnit(item?.id);
                             setMedicines(item);
-                            setMedicineName(item?.medicineName);
                             setMedicineIssueMedicines(
                               item?.medicineIssueMedicines
                             );
@@ -699,6 +676,7 @@ const TableFormMedicineIssue = (props) => {
                   />
                 </FormItem>
               </Col>
+              {console.log('medicines', medicines)}
               <Col sm={8} xs={24}>
                 <div>
                   <h2
