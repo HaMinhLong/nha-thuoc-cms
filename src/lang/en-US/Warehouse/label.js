@@ -18,6 +18,8 @@ module.exports = {
   'app.warehouse.search.col1': 'Search by province',
   'app.warehouse.search.col2': 'Search by district',
   'app.warehouse.search.col3': 'Search by ward',
+  'app.warehouse.search.col4':
+    'Please select a store to add medicine to your prescription',
 
   // placeholder
   'app.warehouse.list.warehouseName': 'Enter warehouse name',

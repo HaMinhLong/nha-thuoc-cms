@@ -35,6 +35,7 @@ import ClinicServicePackage from '../pages/ClinicServicePackage/ClinicServicePac
 import ClinicService from '../pages/ClinicService/ClinicService';
 import Receipt from '../pages/Receipt/Receipt';
 import MedicineIssue from '../pages/MedicineIssue/MedicineIssue';
+import Consumable from '../pages/Consumable/Consumable';
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
 const AppRoutes = ({ headerPage }) => {
@@ -194,6 +195,9 @@ const AppRoutes = ({ headerPage }) => {
             intl={intl}
             headerPage={headerPage}
           />
+        </Route>
+        <Route path="/nt-consumable/:id">
+          <Consumable isMobile={isMobile} intl={intl} headerPage={headerPage} />
         </Route>
         <Route path="/account-config">
           <Account isMobile={isMobile} intl={intl} headerPage={headerPage} />

@@ -5,7 +5,17 @@ import { useDispatch } from 'react-redux';
 import { formatNumber } from '../../../utils/utils';
 import '../../../utils/css/stylePrint.scss';
 
-const Receipt = ({ intl, isMobile, title, dataMedicines, dataCustomer }) => {
+const Receipt = ({
+  intl,
+  isMobile,
+  title,
+  dataMedicines,
+  dataForm,
+  fullName,
+  warehouseName,
+  consumableCode,
+  dataInfo,
+}) => {
   const dispatch = useDispatch();
   const token = localStorage.getItem('token');
   const healthFacilityId = localStorage.getItem('healthFacilityId');
@@ -13,7 +23,7 @@ const Receipt = ({ intl, isMobile, title, dataMedicines, dataCustomer }) => {
   const [currentHealthFacility, setCurrentHealthFacility] = useState({});
   let total = 0;
   dataMedicines.map((item) => {
-    total += item?.medicineIssueMedicines?.total;
+    total += item?.consumableMedicines?.total;
   });
   useEffect(() => {
     getCurrentUser();
@@ -79,12 +89,12 @@ const Receipt = ({ intl, isMobile, title, dataMedicines, dataCustomer }) => {
         <span style={{ marginLeft: '28%' }}>
           Số phiếu:{' '}
           <span style={{ fontWeight: 'bold' }}>
-            {dataCustomer?.medicineIssueCode}
+            {consumableCode.consumableCode || dataInfo.consumableCode}
           </span>
         </span>
       </p>
       {/* <p style={{ marginBottom: 0, }}>
-    {`Số hóa đơn: ${dataCustomer?.invoiceCode}`}
+    {`Số hóa đơn: ${dataForm?.invoiceCode}`}
   </p> */}
       <p
         style={{
@@ -97,24 +107,16 @@ const Receipt = ({ intl, isMobile, title, dataMedicines, dataCustomer }) => {
         {title || 'PHIẾU THU'}
       </p>
       <p>
-        <strong>Khách hàng: </strong>
-        {dataCustomer?.customerName || ''}
+        <strong>Người xuất hóa đơn: </strong>
+        {fullName || currentUser.fullName}
       </p>
       <p>
-        <strong>Địa chỉ: </strong>
-        {dataCustomer?.address || ''}
-      </p>
-      <p>
-        <span>
-          <strong>Điện thoại: </strong>
-          <span style={{ fontWeight: 'bold' }}>
-            {dataCustomer?.mobile || ''}
-          </span>
-        </span>
+        <strong>Kho hàng: </strong>
+        {warehouseName || ''}
       </p>
       <p>
         <strong>Ghi chú: </strong>
-        {dataCustomer?.description || ''}
+        {dataForm?.description || ''}
       </p>
       <div className="tablePrint">
         <table>
@@ -132,19 +134,15 @@ const Receipt = ({ intl, isMobile, title, dataMedicines, dataCustomer }) => {
             {dataMedicines?.map((item) => (
               <tr>
                 <td> {`${item?.medicineName}`}</td>
-                <td>{`${item?.medicineIssueMedicines?.amount}`}</td>
+                <td>{`${item?.consumableMedicines?.amount}`}</td>
+                <td>{`${formatNumber(item?.consumableMedicines?.price)}`}</td>
                 <td>{`${formatNumber(
-                  item?.medicineIssueMedicines?.price
+                  item?.consumableMedicines?.discount || 0
                 )}`}</td>
                 <td>{`${formatNumber(
-                  item?.medicineIssueMedicines?.discount || 0
+                  item?.consumableMedicines?.tax || 0
                 )}`}</td>
-                <td>{`${formatNumber(
-                  item?.medicineIssueMedicines?.tax || 0
-                )}`}</td>
-                <td>{`${formatNumber(
-                  item?.medicineIssueMedicines?.total
-                )}`}</td>
+                <td>{`${formatNumber(item?.consumableMedicines?.total)}`}</td>
               </tr>
             ))}
           </tbody>
@@ -186,18 +184,16 @@ const Receipt = ({ intl, isMobile, title, dataMedicines, dataCustomer }) => {
             marginTop: 10,
           }}
         >
-          {`Ngày ${moment(dataCustomer?.createdAt).format('DD')} tháng ${moment(
-            dataCustomer?.createdAt
-          ).format('MM')} năm ${moment(dataCustomer?.createdAt).format(
-            'YYYY'
-          )}`}
+          {`Ngày ${moment(dataForm?.createdAt).format('DD')} tháng ${moment(
+            dataForm?.createdAt
+          ).format('MM')} năm ${moment(dataForm?.createdAt).format('YYYY')}`}
           <br />
           Người thu
         </p>
         <p
           style={{ width: '40%', textAlign: 'center', display: 'inline-table' }}
         >
-          {dataCustomer?.name}
+          {dataForm?.name}
         </p>
         <p
           style={{ width: '60%', textAlign: 'center', display: 'inline-table' }}

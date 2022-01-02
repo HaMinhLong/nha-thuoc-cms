@@ -18,6 +18,7 @@ module.exports = {
   'app.warehouse.search.col1': 'Tìm kiếm theo Tỉnh/Thành phố',
   'app.warehouse.search.col2': 'Tìm kiếm theo Quận/Huyện',
   'app.warehouse.search.col3': 'Tìm kiếm theo Xã/Phường',
+  'app.warehouse.search.col4': 'Vui lòng chọn kho bán để thêm thuốc vào đơn',
 
   // placeholder
   'app.warehouse.list.warehouseName': 'Nhập tên kho',

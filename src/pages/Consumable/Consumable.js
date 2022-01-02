@@ -14,28 +14,25 @@ import moment from 'moment';
 import Table from '../../components/Table';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  medicineIssue,
-  filter,
-} from '../../features/medicineIssue/medicineIssueSlice';
+import { consumable, filter } from '../../features/consumable/consumableSlice';
 import { FormattedMessage } from 'react-intl';
 import { formatNumber, getTimeDistance } from '../../utils/utils';
 import { useParams } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
-import MedicineIssue from '../../components/BillTable/MedicineIssue';
-import TableForm from '../../components/MedicineIssueComponents/TableForm';
+import Consumable from '../../components/BillTable/Consumable';
+import TableForm from '../../components/ConsumableComponents/TableForm';
 import '../../utils/css/styleList.scss';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const PAGE_SIZE = process.env.REACT_APP_PAGE_SIZE;
 
-const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
+const ConsumablePage = ({ intl, isMobile, headerPage }) => {
   let { id } = useParams();
   const formRef = React.createRef();
   const userGroupId = localStorage.getItem('userGroupId');
   const healthFacilityId = localStorage.getItem('healthFacilityId');
-  const list = useSelector(medicineIssue);
+  const list = useSelector(consumable);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [spinning, setSpinning] = useState(false);
@@ -44,10 +41,12 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
   const [rangePickerValue, setRangePickerValue] = useState(
     getTimeDistance('week')
   );
-  const [medicineIssueCode, setMedicineIssueCode] = useState({});
+  const [consumableCode, setConsumableCode] = useState({});
   const [warehouseId, setWarehouseId] = useState('');
+  const [warehouseName, setWarehouseName] = useState('');
   const [redirect, setRedirect] = useState('');
   const [permissions, setPermissions] = useState({});
+
   useEffect(() => {
     getList();
     getReceiptCode();
@@ -57,6 +56,7 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
   if (redirect) {
     return <Redirect to={redirect} />;
   }
+
   const getPermission = () => {
     const params = {
       filter: JSON.stringify({ userGroupId: userGroupId }),
@@ -82,7 +82,7 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
     let params = {
       filter: JSON.stringify({
         healthFacilityId: healthFacilityId,
-        formType: '2',
+        formType: '3',
       }),
     };
     dispatch({
@@ -91,7 +91,7 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
       callback: (res) => {
         if (res?.success) {
           const { list } = res.results;
-          setMedicineIssueCode(list);
+          setConsumableCode(list);
         }
       },
     });
@@ -144,7 +144,7 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
     }
     dispatch(filter(values));
     dispatch({
-      type: 'medicineIssue/fetch',
+      type: 'consumable/fetch',
       payload: params,
       callback: (res) => {
         setLoading(false);
@@ -189,7 +189,7 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
         attributes: '',
       };
       dispatch({
-        type: 'medicineIssue/fetch',
+        type: 'consumable/fetch',
         payload: query,
         callback: (res) => {
           setLoading(false);
@@ -201,7 +201,7 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
   const handleClickRow = (record) => {
     setSpinning(true);
     dispatch({
-      type: 'medicineIssue/getOne',
+      type: 'consumable/getOne',
       payload: {
         id: record.id,
       },
@@ -229,7 +229,7 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
       status,
     };
     dispatch({
-      type: 'medicineIssue/updateStatus',
+      type: 'consumable/updateStatus',
       payload: {
         id: row.id,
         params: item,
@@ -299,7 +299,7 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
     };
     setLoading(true);
     dispatch({
-      type: 'medicineIssue/fetch',
+      type: 'consumable/fetch',
       payload: params,
       callback: (res) => {
         setLoading(false);
@@ -332,7 +332,7 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
                 fontWeight: 'bold',
               }}
             >
-              {intl.formatMessage({ id: 'app.medicineIssue.list' })}
+              {intl.formatMessage({ id: 'app.consumable.list' })}
             </p>
           </Col>
           <Col
@@ -445,34 +445,21 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
       fixed: isMobile,
     },
     {
-      dataIndex: 'medicineIssueCode',
-      name: 'medicineIssueCode',
+      dataIndex: 'consumableCode',
+      name: 'consumableCode',
       width: isMobile ? 100 : '4%',
-      title: <FormattedMessage id="app.medicineIssue.list.col0" />,
+      title: <FormattedMessage id="app.consumable.list.col0" />,
       align: 'left',
       sorter: () => {},
       fixed: isMobile,
     },
     {
-      dataIndex: 'medicines',
-      name: 'medicines',
-      width: isMobile ? 100 : '4%',
-      title: <FormattedMessage id="app.medicineIssue.list.col10" />,
+      dataIndex: 'warehouse',
+      title: intl.formatMessage({ id: 'app.consumable.list.col2' }),
       align: 'center',
+      width: !isMobile && '5%',
       sorter: () => {},
-      render: (cell) => {
-        let total =
-          (cell &&
-            cell.length > 0 &&
-            cell.map((item) =>
-              Number(item.medicineIssueMedicines.total || 0)
-            )) ||
-          0;
-        const reducer = (accumulator, currentValue) =>
-          accumulator + currentValue;
-        total = total === 0 ? 0 : total.reduce(reducer);
-        return formatNumber(Math.round(total));
-      },
+      render: (cell) => <React.Fragment>{cell?.warehouseName}</React.Fragment>,
     },
     {
       dataIndex: 'createdAt',
@@ -487,16 +474,16 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
       ),
     },
     {
-      dataIndex: 'customer',
-      title: intl.formatMessage({ id: 'app.medicineIssue.list.col3' }),
+      dataIndex: 'user',
+      title: intl.formatMessage({ id: 'app.consumable.list.col1' }),
       align: 'center',
       width: !isMobile && '5%',
       sorter: () => {},
-      render: (cell) => <React.Fragment>{cell?.customerName}</React.Fragment>,
+      render: (cell) => <React.Fragment>{cell?.fullName}</React.Fragment>,
     },
     {
       dataIndex: 'status',
-      title: intl.formatMessage({ id: 'app.medicineIssue.list.col7' }),
+      title: intl.formatMessage({ id: 'app.consumable.list.col4' }),
       align: 'center',
       name: 'status',
       width: '2%',
@@ -522,19 +509,20 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
   ];
 
   return (
-    <Fragment>
+    <React.Fragment>
       {permissions ? (
         <>
           {headerPage}
-          <MedicineIssue
+          <Consumable
             isMobile={isMobile}
             intl={intl}
             permissions={permissions}
             spinning={spinning}
             dataInfo={dataInfo || []}
             dataMedicines={dataMedicines || []}
-            medicineIssueCode={medicineIssueCode}
+            consumableCode={consumableCode}
             warehouseId={warehouseId}
+            warehouseName={warehouseName}
             getReceiptCode={getReceiptCode}
             getList={getList}
             onCreate={onCreate}
@@ -555,7 +543,7 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
                   columns={columns}
                   onChange={handleTableChange}
                   rowClassName={(record) =>
-                    record.id === dataInfo.id ? 'rowChecked' : 'rowUnCheck'
+                    record?.id === dataInfo?.id ? 'rowChecked' : 'rowUnCheck'
                   }
                   onRow={(record) => ({
                     onDoubleClick: () => handleClickRow(record),
@@ -569,10 +557,13 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
                 isMobile={isMobile}
                 value={dataMedicines || []}
                 dataInfo={dataInfo || []}
-                medicineIssueCode={medicineIssueCode}
+                consumableCode={consumableCode}
                 getReceiptCode={getReceiptCode}
                 onChange={(data) => setDataMedicines(data)}
-                onChangeWarehouse={(id) => setWarehouseId(id)}
+                onChangeWarehouse={(id, text) => {
+                  setWarehouseId(id);
+                  setWarehouseName(text);
+                }}
               />
             }
           />
@@ -589,8 +580,8 @@ const MedicineIssuePage = ({ intl, isMobile, headerPage }) => {
           }
         />
       )}
-    </Fragment>
+    </React.Fragment>
   );
 };
 
-export default MedicineIssuePage;
+export default ConsumablePage;

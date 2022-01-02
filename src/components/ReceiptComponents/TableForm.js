@@ -543,7 +543,9 @@ const TableFormReceipt = (props) => {
           width: '100%',
         }}
       >
-        <Col span={12}>Tổng tiền</Col>
+        <Col span={12}>
+          {intl.formatMessage({ id: 'app.consumable.list.col8' })}
+        </Col>
         <Col offset={5} span={7} style={{ color: 'red' }}>
           {totalMedicine(data)}đ
         </Col>

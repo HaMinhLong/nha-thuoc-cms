@@ -14,7 +14,6 @@ import {
   Menu,
   Dropdown,
   Popconfirm,
-  Checkbox,
 } from 'antd';
 import { useDispatch } from 'react-redux';
 import NumberInput from '../NumberInput/NumberInput';
@@ -30,13 +29,13 @@ import '../../utils/css/styleMedicine.scss';
 
 const FormItem = Form.Item;
 
-const TableFormMedicineIssue = (props) => {
+const TableForm = (props) => {
   const {
     intl,
     isMobile,
     onChange,
     value,
-    medicineIssueCode,
+    consumableCode,
     dataInfo,
     onChangeWarehouse,
   } = props;
@@ -49,7 +48,7 @@ const TableFormMedicineIssue = (props) => {
   const [editOrCreate, setEditOrCreate] = useState(-1);
   const [medicineUnits, setMedicineUnits] = useState([]);
   const [medicines, setMedicines] = useState({});
-  const [medicineIssueMedicines, setMedicineIssueMedicines] = useState({});
+  const [consumableMedicines, setConsumableMedicines] = useState({});
   const [unit, setUnit] = useState([]);
   const [warehouseId, setWarehouseId] = useState('');
   const [warehouseMedicine, setWarehouseMedicine] = useState([]);
@@ -62,94 +61,21 @@ const TableFormMedicineIssue = (props) => {
   }, [value]);
 
   useEffect(() => {
-    getListUnit();
-  }, []);
-
-  useEffect(() => {
     if (dataInfo.id) {
       setWarehouseId(dataInfo.warehouseId);
       if (onChangeWarehouse) {
-        onChangeWarehouse(dataInfo.warehouseId);
+        onChangeWarehouse(
+          dataInfo.warehouseId,
+          dataInfo.warehouse.warehouseName
+        );
       }
     } else {
       setWarehouseId(undefined);
       if (onChangeWarehouse) {
-        onChangeWarehouse(undefined);
+        onChangeWarehouse(undefined, '');
       }
     }
   }, [dataInfo]);
-
-  const getListUnit = () => {
-    let params = {
-      filter: JSON.stringify({}),
-      range: JSON.stringify([0, 100]),
-      sort: JSON.stringify(['createdAt', 'DESC']),
-      attributes: 'id,unitName',
-    };
-    dispatch({
-      type: 'unit/fetch',
-      payload: params,
-      callback: (res) => {
-        if (res?.success) {
-          const { list } = res.results;
-          setUnit(list);
-        }
-      },
-    });
-  };
-
-  const getListWarehouseMedicine = (warehouseId) => {
-    let params = {
-      filter: JSON.stringify({
-        status: 1,
-        healthFacilityId: healthFacilityId,
-        warehouseId: warehouseId,
-      }),
-      range: JSON.stringify([0, 100]),
-      sort: JSON.stringify(['createdAt', 'DESC']),
-    };
-    dispatch({
-      type: 'warehouseMedicine/fetch',
-      payload: params,
-      callback: (res) => {
-        if (res?.success) {
-          const { list } = res.results;
-          setWarehouseMedicine(list);
-        }
-      },
-    });
-  };
-
-  const remove = (medicineId, medicineIssueMedicineId, flag) => {
-    if (flag > 0) {
-      dispatch({
-        type: 'medicineIssueMedicine/delete',
-        payload: {
-          id: medicineIssueMedicineId,
-        },
-        callback: (res) => {
-          if (res?.success === true) {
-            openNotification(
-              'success',
-              intl.formatMessage({ id: 'app.common.delete.success' }),
-              '#f6ffed'
-            );
-            setData(data?.filter((item) => item.id !== medicineId));
-            if (onChange) {
-              onChange(data?.filter((item) => item.id !== medicineId));
-            }
-          } else if (res?.success === false) {
-            openNotification('error', res && res.message, '#fff1f0');
-          }
-        },
-      });
-    } else {
-      setData(data?.filter((item) => item.id !== medicineId));
-      if (onChange) {
-        onChange(data?.filter((item) => item.id !== medicineId));
-      }
-    }
-  };
 
   const getListMedicineUnit = (id) => {
     let params = {
@@ -179,48 +105,65 @@ const TableFormMedicineIssue = (props) => {
     });
   };
 
+  const getListWarehouseMedicine = (warehouseId) => {
+    let params = {
+      filter: JSON.stringify({
+        status: 1,
+        healthFacilityId: healthFacilityId,
+        warehouseId: warehouseId,
+      }),
+      range: JSON.stringify([0, 100]),
+      sort: JSON.stringify(['createdAt', 'DESC']),
+    };
+    dispatch({
+      type: 'warehouseMedicine/fetch',
+      payload: params,
+      callback: (res) => {
+        if (res?.success) {
+          const { list } = res.results;
+          setWarehouseMedicine(list);
+        }
+      },
+    });
+  };
+
+  const remove = (medicineId, consumableMedicineId, flag) => {
+    if (flag > 0) {
+      dispatch({
+        type: 'consumableMedicine/delete',
+        payload: {
+          id: consumableMedicineId,
+        },
+        callback: (res) => {
+          if (res?.success === true) {
+            openNotification(
+              'success',
+              intl.formatMessage({ id: 'app.common.delete.success' }),
+              '#f6ffed'
+            );
+            setData(data?.filter((item) => item.id !== medicineId));
+            if (onChange) {
+              onChange(data?.filter((item) => item.id !== medicineId));
+            }
+          } else if (res?.success === false) {
+            openNotification('error', res && res.message, '#fff1f0');
+          }
+        },
+      });
+    } else {
+      setData(data?.filter((item) => item.id !== medicineId));
+      if (onChange) {
+        onChange(data?.filter((item) => item.id !== medicineId));
+      }
+    }
+  };
+
   const changeWarehouse = (value, text) => {
     setWarehouseId(value);
     if (onChangeWarehouse) {
-      onChangeWarehouse(value);
+      onChangeWarehouse(value,text);
     }
     getListWarehouseMedicine(value);
-  };
-
-  const total = () => {
-    const inStock = medicines?.warehouses?.[0]?.warehouseMedicines?.inStock;
-    const exchangeWarehouse =
-      medicines?.warehouses?.[0]?.warehouseMedicines?.exchange;
-    const amount = formRef.current.getFieldValue('amount');
-    const unitId = formRef.current.getFieldValue('unitId');
-    const exchange = Number(
-      medicineUnits?.find((it) => it.unitId === unitId)?.amount
-    );
-    if (amount * (exchangeWarehouse / exchange) > inStock) {
-      openNotification(
-        'error',
-        'Số lượng thuốc trong kho không đủ!',
-        '#fff1f0'
-      );
-      formRef.current.setFieldsValue({ amount: inStock });
-    } else {
-      let total = formRef.current.getFieldValue('price') * amount || 0;
-      if (formRef.current.getFieldValue('discount')?.number > 0) {
-        const currency =
-          formRef.current.getFieldValue('discount')?.currency === 1
-            ? formRef.current.getFieldValue('discount')?.number
-            : total * (formRef.current.getFieldValue('discount')?.number / 100);
-        total -= currency;
-      }
-      if (formRef.current.getFieldValue('tax')?.number > 0) {
-        const tax =
-          formRef.current.getFieldValue('tax')?.currency === 1
-            ? formRef.current.getFieldValue('tax')?.number
-            : total * (formRef.current.getFieldValue('tax')?.number / 100);
-        total += tax;
-      }
-      formRef.current.setFieldsValue({ total: total });
-    }
   };
 
   const resetFields = () => {
@@ -240,18 +183,12 @@ const TableFormMedicineIssue = (props) => {
           flag: 1,
           healthFacilityId,
         };
-        addMedicine.medicineIssueMedicines = {
-          id: values.medicineIssueMedicineId,
-          price: values.price,
+        addMedicine.consumableMedicines = {
+          id: values.consumableMedicineId,
           amount: values.amount,
+          price: values.price,
           unitId: values.unitId,
-          retail: values.retail || false,
-          description: values.description || '',
-          discount: values.discount.number || 0,
-          discountType: values.discount.currency || 1,
-          tax: values.tax.number || 0,
-          taxType: values.tax.currency || 1,
-          total: values.total || 0,
+          total: values.amount * retailPrice || 0,
           exchange: Number(
             medicineUnits?.find((it) => it.unitId === values.unitId)?.amount
           ),
@@ -301,16 +238,38 @@ const TableFormMedicineIssue = (props) => {
   const totalMedicine = (data) => {
     let total = 0;
     data.map((item) => {
-      total += item?.medicineIssueMedicines?.total;
+      total += item?.consumableMedicines?.total;
     });
     return formatNumber(Math.round(total));
+  };
+
+  const total = () => {
+    const inStock = medicines?.warehouses?.[0]?.warehouseMedicines?.inStock;
+    const amount = formRef.current.getFieldValue('amount');
+    const exchangeWarehouse =
+      medicines?.warehouses?.[0]?.warehouseMedicines?.exchange;
+    const unitId = formRef.current.getFieldValue('unitId');
+    const exchange = Number(
+      medicineUnits?.find((it) => it.unitId === unitId)?.amount
+    );
+    if (amount * (exchangeWarehouse / exchange) > inStock) {
+      openNotification(
+        'error',
+        'Số lượng thuốc trong kho không đủ!',
+        '#fff1f0'
+      );
+      formRef.current.setFieldsValue({ amount: inStock });
+    } else {
+      let total = formRef.current.getFieldValue('price') * amount || 0;
+      formRef.current.setFieldsValue({ total: total });
+    }
   };
 
   const handleReset = () => {
     // formRef.current.resetFields();
     setMedicineUnits([]);
     setMedicines({});
-    setMedicineIssueMedicines({});
+    setConsumableMedicines({});
     setVisibleModalMedicine(false);
   };
 
@@ -341,7 +300,7 @@ const TableFormMedicineIssue = (props) => {
   };
 
   return (
-    <Fragment>
+    <React.Fragment>
       <div
         style={{
           display: 'flex',
@@ -361,13 +320,13 @@ const TableFormMedicineIssue = (props) => {
           Mã&nbsp;
           <span style={{ color: '#196CA6' }}>
             {dataInfo?.id
-              ? dataInfo?.medicineIssueCode
-              : medicineIssueCode?.receiptCode}
+              ? dataInfo?.consumableCode
+              : consumableCode?.receiptCode}
           </span>
         </div>
         <WarehouseUserSelect
           placeholder={intl.formatMessage({
-            id: 'app.medicineIssue.list.warehouse',
+            id: 'app.consumable.list.warehouse',
           })}
           value={warehouseId}
           onChange={changeWarehouse}
@@ -429,11 +388,9 @@ const TableFormMedicineIssue = (props) => {
                         <span
                           style={{ fontSize: '12px' }}
                           onClick={() => {
-                            getListMedicineUnit(item?.id);
                             setMedicines(item);
-                            setMedicineIssueMedicines(
-                              item?.medicineIssueMedicines
-                            );
+                            getListMedicineUnit(item?.id);
+                            setConsumableMedicines(item?.consumableMedicines);
                             setEditOrCreate(1);
                             setKey(key + 1);
                             setVisibleModalMedicine(true);
@@ -472,7 +429,7 @@ const TableFormMedicineIssue = (props) => {
                                   onOk: () => {
                                     remove(
                                       item.id,
-                                      item.medicineIssueMedicines.id,
+                                      item.consumableMedicines.id,
                                       item.flag
                                     );
                                   },
@@ -492,13 +449,13 @@ const TableFormMedicineIssue = (props) => {
                         <Col span={4} xs={4}>
                           <span>
                             {formatNumber(
-                              item?.medicineIssueMedicines?.amount || 0
+                              item?.consumableMedicines?.amount || 0
                             )}
                             &nbsp;
                             {
                               unit?.find(
                                 (it) =>
-                                  it.id === item?.medicineIssueMedicines?.unitId
+                                  it.id === item?.consumableMedicines?.unitId
                               )?.unitName
                             }
                           </span>
@@ -506,7 +463,7 @@ const TableFormMedicineIssue = (props) => {
                         <Col span={6} xs={6}>
                           <span>
                             {formatNumber(
-                              item?.medicineIssueMedicines?.total || 0
+                              item?.consumableMedicines?.total || 0
                             )}
                           </span>
                         </Col>
@@ -632,21 +589,11 @@ const TableFormMedicineIssue = (props) => {
             style={{ marginTop: 8 }}
             initialValues={{
               id: medicines.id,
-              medicineIssueMedicineId: medicineIssueMedicines?.id,
-              price: medicineIssueMedicines?.price,
-              amount: medicineIssueMedicines?.amount,
-              unitId: medicineIssueMedicines.unitId || undefined,
-              retail: medicineIssueMedicines?.retail,
-              description: medicineIssueMedicines?.description,
-              discount: {
-                number: medicineIssueMedicines?.discount,
-                currency: medicineIssueMedicines?.discountType,
-              },
-              tax: {
-                number: medicineIssueMedicines?.tax,
-                currency: medicineIssueMedicines?.taxType,
-              },
-              total: medicineIssueMedicines?.total,
+              consumableMedicineId: consumableMedicines?.id,
+              amount: consumableMedicines?.amount,
+              price: consumableMedicines?.price,
+              total: consumableMedicines?.total,
+              unitId: consumableMedicines.unitId || undefined,
             }}
             ref={formRef}
             key={key}
@@ -654,9 +601,10 @@ const TableFormMedicineIssue = (props) => {
             <FormItem hidden name="id">
               <Input />
             </FormItem>
-            <FormItem hidden name="medicineIssueMedicineId">
+            <FormItem hidden name="consumableMedicineId">
               <Input />
             </FormItem>
+
             <Row gutter={20} justify="center" style={{ marginTop: '10px' }}>
               <Col
                 sm={16}
@@ -716,20 +664,13 @@ const TableFormMedicineIssue = (props) => {
                       })}
                       className="selectHiddenBorder"
                       dataArr={medicineUnits || []}
-                      value={medicineIssueMedicines.unitId || undefined}
+                      value={consumableMedicines.unitId || undefined}
                       onChange={(value, text, retailPrice, wholesalePrice) => {
                         formRef.current.setFieldsValue({ unitId: value });
                         setRetailPrice(Number(retailPrice));
-                        setWholesalePrice(Number(wholesalePrice));
-                        if (formRef.current.getFieldValue('retail')) {
-                          formRef.current.setFieldsValue({
-                            price: Number(retailPrice),
-                          });
-                        } else {
-                          formRef.current.setFieldsValue({
-                            price: Number(wholesalePrice),
-                          });
-                        }
+                        formRef.current.setFieldsValue({
+                          price: Number(retailPrice),
+                        });
                       }}
                       allowClear
                     />
@@ -740,7 +681,7 @@ const TableFormMedicineIssue = (props) => {
                       <span>
                         <span style={{ color: 'red' }}>*</span>&nbsp;
                         {intl.formatMessage({
-                          id: 'app.medicineIssue.list.col9',
+                          id: 'app.consumable.list.col6',
                         })}
                       </span>
                     }
@@ -756,11 +697,11 @@ const TableFormMedicineIssue = (props) => {
                   >
                     <NumberInput
                       placeholder={intl.formatMessage({
-                        id: 'app.receiptMedicine.list.amount',
+                        id: 'app.consumable.list.amount',
                       })}
                       className="inputNumberHiddenBorder"
-                      onBlur={total}
                       min={0}
+                      onBlur={total}
                       disabled={medicines.flag > 0}
                       // key={key}
                     />
@@ -787,7 +728,7 @@ const TableFormMedicineIssue = (props) => {
                   >
                     <NumberInput
                       placeholder={intl.formatMessage({
-                        id: 'app.medicineIssue.list.price',
+                        id: 'app.consumable.list.price',
                       })}
                       className="inputNumberHiddenBorder"
                       min={0}
@@ -795,157 +736,53 @@ const TableFormMedicineIssue = (props) => {
                       // key={key}
                     />
                   </FormItem>
-                  <FormItem name="description">
-                    <Input.TextArea
-                      placeholder={intl.formatMessage({
-                        id: 'app.medicineIssue.list.description',
-                      })}
-                      autoSize={{ minRows: 7, maxRows: 7 }}
+                  <FormItem
+                    {...formItemLayout}
+                    label={
+                      <span
+                        style={{
+                          fontSize: '14px',
+                          fontWeight: '600',
+                          color: 'red',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        {intl.formatMessage({
+                          id: 'app.receiptMedicine.list.col11',
+                        })}
+                      </span>
+                    }
+                    name="total"
+                    rules={[
+                      {
+                        required: true,
+                        message: intl.formatMessage({
+                          id: 'app.common.crud.validate.input',
+                        }),
+                      },
+                    ]}
+                  >
+                    <NumberInput
+                      min={0}
+                      disabled
+                      className="inputNumberHiddenBorder"
+                      style={{
+                        fontWeight: 'bold',
+                        fontSize: '18px',
+                        color: 'rgba(0, 0, 0, 0.45)',
+                        width: '100%',
+                      }}
+                      // key={key}
                     />
                   </FormItem>
-                  <div
-                    className="backgroundIsu2"
-                    style={{
-                      height: '200px',
-                    }}
-                  >
-                    <FormItem
-                      {...formItemLayout}
-                      label={
-                        <span>
-                          {intl.formatMessage({
-                            id: 'app.medicineIssue.list.col12',
-                          })}
-                        </span>
-                      }
-                      name="retail"
-                      valuePropName="checked"
-                    >
-                      <Checkbox
-                        style={{ float: 'right' }}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            formRef.current.setFieldsValue({
-                              price: retailPrice,
-                            });
-                            total();
-                          } else {
-                            formRef.current.setFieldsValue({
-                              price: wholesalePrice,
-                            });
-                            total();
-                          }
-                        }}
-                      />
-                    </FormItem>
-                    <FormItem
-                      {...formItemLayout}
-                      label={
-                        <span>
-                          {intl.formatMessage({
-                            id: 'app.receiptMedicine.list.col7',
-                          })}
-                        </span>
-                      }
-                      name="discount"
-                      rules={[
-                        {
-                          required: true,
-                          message: intl.formatMessage({
-                            id: 'app.common.crud.validate.input',
-                          }),
-                        },
-                      ]}
-                    >
-                      <Discount
-                        placeholder={intl.formatMessage({
-                          id: 'app.receiptMedicine.list.discount',
-                        })}
-                        onBlur={total}
-                        smallWidth
-                        className1="inputNumberHiddenBorder"
-                        className2="selectHiddenBorder2"
-                        style1={{ background: '#F8F8F8' }}
-                      />
-                    </FormItem>
-                    <FormItem
-                      {...formItemLayout}
-                      label={
-                        <span>
-                          {intl.formatMessage({
-                            id: 'app.receiptMedicine.list.col8',
-                          })}
-                        </span>
-                      }
-                      name="tax"
-                      rules={[
-                        {
-                          required: true,
-                          message: intl.formatMessage({
-                            id: 'app.common.crud.validate.input',
-                          }),
-                        },
-                      ]}
-                    >
-                      <Discount
-                        placeholder={intl.formatMessage({
-                          id: 'app.receiptMedicine.list.tax',
-                        })}
-                        onBlur={total}
-                        smallWidth
-                        className1="inputNumberHiddenBorder"
-                        className2="selectHiddenBorder2"
-                        style1={{ background: '#F8F8F8' }}
-                      />
-                    </FormItem>
-                    <FormItem
-                      {...formItemLayout}
-                      label={
-                        <span
-                          style={{
-                            fontSize: '14px',
-                            fontWeight: '600',
-                            color: 'red',
-                            textTransform: 'uppercase',
-                          }}
-                        >
-                          {intl.formatMessage({
-                            id: 'app.receiptMedicine.list.col11',
-                          })}
-                        </span>
-                      }
-                      name="total"
-                      rules={[
-                        {
-                          required: true,
-                          message: intl.formatMessage({
-                            id: 'app.common.crud.validate.input',
-                          }),
-                        },
-                      ]}
-                    >
-                      <NumberInput
-                        min={0}
-                        disabled
-                        className="inputNumberHiddenBorder"
-                        style={{
-                          fontWeight: 'bold',
-                          fontSize: '18px',
-                          color: 'rgba(0, 0, 0, 0.45)',
-                          width: '100%',
-                        }}
-                        // key={key}
-                      />
-                    </FormItem>
-                  </div>
                 </div>
               </Col>
             </Row>
           </Form>
         </Spin>
       </Modal>
-    </Fragment>
+    </React.Fragment>
   );
 };
 
-export default TableFormMedicineIssue;
+export default TableForm;

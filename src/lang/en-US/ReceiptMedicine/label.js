@@ -3,7 +3,7 @@ module.exports = {
   'app.receiptMedicine.list.title': 'drug information in the form',
   'app.receiptMedicine.list.header': 'Manage drug information in the form',
   'app.receiptMedicine.update.header': 'Edit drug information in the form',
-  'app.receiptMedicine.create.header': 'Add mới drug information in the form',
+  'app.receiptMedicine.create.header': 'Add new drug information in the form',
 
   // Tiêu đề các cột
   'app.receiptMedicine.list.col0': 'barcode',
