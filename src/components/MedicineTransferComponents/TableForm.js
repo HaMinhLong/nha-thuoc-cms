@@ -34,7 +34,7 @@ const TableForm = (props) => {
     isMobile,
     onChange,
     value,
-    consumableCode,
+    medicineTransferCode,
     dataInfo,
     onChangeWarehouse,
   } = props;
@@ -47,7 +47,7 @@ const TableForm = (props) => {
   const [editOrCreate, setEditOrCreate] = useState(-1);
   const [medicineUnits, setMedicineUnits] = useState([]);
   const [medicines, setMedicines] = useState({});
-  const [consumableMedicines, setConsumableMedicines] = useState({});
+  const [medicineTransferMedicines, setConsumableMedicines] = useState({});
   const [unit, setUnit] = useState([]);
   const [warehouseId, setWarehouseId] = useState('');
   const [warehouseMedicine, setWarehouseMedicine] = useState([]);
@@ -182,7 +182,7 @@ const TableForm = (props) => {
           flag: 1,
           healthFacilityId,
         };
-        addMedicine.consumableMedicines = {
+        addMedicine.medicineTransferMedicines = {
           id: values.consumableMedicineId,
           amount: values.amount,
           price: values.price,
@@ -237,7 +237,7 @@ const TableForm = (props) => {
   const totalMedicine = (data) => {
     let total = 0;
     data.map((item) => {
-      total += item?.consumableMedicines?.total;
+      total += item?.medicineTransferMedicines?.total;
     });
     return formatNumber(Math.round(total));
   };
@@ -319,13 +319,13 @@ const TableForm = (props) => {
           Mã&nbsp;
           <span style={{ color: '#196CA6' }}>
             {dataInfo?.id
-              ? dataInfo?.consumableCode
-              : consumableCode?.receiptCode}
+              ? dataInfo?.medicineTransferCode
+              : medicineTransferCode?.receiptCode}
           </span>
         </div>
         <WarehouseUserSelect
           placeholder={intl.formatMessage({
-            id: 'app.consumable.list.warehouse',
+            id: 'app.medicineTransfer.list.warehouse',
           })}
           value={warehouseId}
           onChange={changeWarehouse}
@@ -389,7 +389,9 @@ const TableForm = (props) => {
                           onClick={() => {
                             setMedicines(item);
                             getListMedicineUnit(item?.id);
-                            setConsumableMedicines(item?.consumableMedicines);
+                            setConsumableMedicines(
+                              item?.medicineTransferMedicines
+                            );
                             setEditOrCreate(1);
                             setKey(key + 1);
                             setVisibleModalMedicine(true);
@@ -428,7 +430,7 @@ const TableForm = (props) => {
                                   onOk: () => {
                                     remove(
                                       item.id,
-                                      item.consumableMedicines.id,
+                                      item.medicineTransferMedicines.id,
                                       item.flag
                                     );
                                   },
@@ -448,13 +450,14 @@ const TableForm = (props) => {
                         <Col span={4} xs={4}>
                           <span>
                             {formatNumber(
-                              item?.consumableMedicines?.amount || 0
+                              item?.medicineTransferMedicines?.amount || 0
                             )}
                             &nbsp;
                             {
                               unit?.find(
                                 (it) =>
-                                  it.id === item?.consumableMedicines?.unitId
+                                  it.id ===
+                                  item?.medicineTransferMedicines?.unitId
                               )?.unitName
                             }
                           </span>
@@ -462,7 +465,7 @@ const TableForm = (props) => {
                         <Col span={6} xs={6}>
                           <span>
                             {formatNumber(
-                              item?.consumableMedicines?.total || 0
+                              item?.medicineTransferMedicines?.total || 0
                             )}
                           </span>
                         </Col>
@@ -497,7 +500,7 @@ const TableForm = (props) => {
             }}
           >
             <Col span={12}>
-              {intl.formatMessage({ id: 'app.consumable.list.col8' })}
+              {intl.formatMessage({ id: 'app.medicineTransfer.list.col8' })}
             </Col>
             <Col offset={5} span={7} style={{ color: 'red' }}>
               {totalMedicine(data)}đ
@@ -588,11 +591,11 @@ const TableForm = (props) => {
             style={{ marginTop: 8 }}
             initialValues={{
               id: medicines.id,
-              consumableMedicineId: consumableMedicines?.id,
-              amount: consumableMedicines?.amount,
-              price: consumableMedicines?.price,
-              total: consumableMedicines?.total,
-              unitId: consumableMedicines.unitId || undefined,
+              consumableMedicineId: medicineTransferMedicines?.id,
+              amount: medicineTransferMedicines?.amount,
+              price: medicineTransferMedicines?.price,
+              total: medicineTransferMedicines?.total,
+              unitId: medicineTransferMedicines.unitId || undefined,
             }}
             ref={formRef}
             key={key}
@@ -634,7 +637,9 @@ const TableForm = (props) => {
                       borderBottom: '1px solid #F1F1F1',
                     }}
                   >
-                    {intl.formatMessage({ id: 'app.consumable.list.col7' })}
+                    {intl.formatMessage({
+                      id: 'app.medicineTransfer.list.col7',
+                    })}
                   </h2>
                   <FormItem
                     {...formItemLayout}
@@ -663,7 +668,7 @@ const TableForm = (props) => {
                       })}
                       className="selectHiddenBorder"
                       dataArr={medicineUnits || []}
-                      value={consumableMedicines.unitId || undefined}
+                      value={medicineTransferMedicines.unitId || undefined}
                       onChange={(value, text, retailPrice, wholesalePrice) => {
                         formRef.current.setFieldsValue({ unitId: value });
                         setRetailPrice(Number(retailPrice));
@@ -680,7 +685,7 @@ const TableForm = (props) => {
                       <span>
                         <span style={{ color: 'red' }}>*</span>&nbsp;
                         {intl.formatMessage({
-                          id: 'app.consumable.list.col6',
+                          id: 'app.medicineTransfer.list.col6',
                         })}
                       </span>
                     }
@@ -696,7 +701,7 @@ const TableForm = (props) => {
                   >
                     <NumberInput
                       placeholder={intl.formatMessage({
-                        id: 'app.consumable.list.amount',
+                        id: 'app.medicineTransfer.list.amount',
                       })}
                       className="inputNumberHiddenBorder"
                       min={0}
@@ -727,7 +732,7 @@ const TableForm = (props) => {
                   >
                     <NumberInput
                       placeholder={intl.formatMessage({
-                        id: 'app.consumable.list.price',
+                        id: 'app.medicineTransfer.list.price',
                       })}
                       className="inputNumberHiddenBorder"
                       min={0}

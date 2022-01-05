@@ -20,7 +20,9 @@ const WarehouseMedicine = (props) => {
     if (getListMedicineUnit) {
       getListMedicineUnit(item.id);
     }
-    resetFields();
+    if (resetFields) {
+      resetFields();
+    }
     if (onChange) {
       onChange(item);
     }
@@ -73,6 +75,9 @@ const WarehouseMedicine = (props) => {
               fontWeight: '600',
             }}
             onClick={() => {
+              if (resetFields) {
+                resetFields();
+              }
               if (onChange) {
                 onChange([]);
               }

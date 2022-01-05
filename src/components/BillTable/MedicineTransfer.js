@@ -17,13 +17,14 @@ import { FormattedMessage } from 'react-intl';
 import regexHelper from '../../utils/regexHelper';
 import { useDispatch } from 'react-redux';
 import UserSelect from '../Common/UserSelect';
+import WarehouseUserSelect from '../Common/WarehouseUserSelect';
 import ReactToPrint from 'react-to-print';
-import Consumable from '../PrintTemplate/Pharmacy/Consumable';
+import MedicineTransfer from '../PrintTemplate/Pharmacy/MedicineTransfer';
 
 const FormItem = Form.Item;
 const { invoiceCode } = regexHelper;
 
-const ConsumablePage = ({
+const MedicineTransferPage = ({
   childrenOne,
   childrenTwo,
   intl,
@@ -31,7 +32,7 @@ const ConsumablePage = ({
   permissions,
   spinning,
   dataInfo,
-  consumableCode,
+  medicineTransferCode,
   getList,
   getReceiptCode,
   onCreate,
@@ -47,6 +48,7 @@ const ConsumablePage = ({
   const [loading, setLoading] = useState(false);
   const [dataDetails, setDataDetails] = useState(dataInfo);
   const [userFullName, setUserFullName] = useState('');
+  const [warehouseTransferName, setWarehouseTransferName] = useState('');
   const [dataForm, setDataForm] = useState({});
   const [key, setKey] = useState(Math.random());
 
@@ -56,16 +58,22 @@ const ConsumablePage = ({
   }, [dataInfo]);
 
   useEffect(() => {
+    formRef.current.resetFields();
+  }, [warehouseId]);
+
+  useEffect(() => {
     formRef.current.setFieldsValue({
-      consumableCode: consumableCode.receiptCode,
+      medicineTransferCode: medicineTransferCode.receiptCode,
     });
-  }, [consumableCode]);
+  }, [medicineTransferCode]);
 
   const handleSubmit = (values) => {
     const addItem = {
       ...values,
-      consumableCode: values.consumableCode && values.consumableCode.trim(),
-      consumableCodeOld: values.consumableCode && values.consumableCode.trim(),
+      medicineTransferCode:
+        values.medicineTransferCode && values.medicineTransferCode.trim(),
+      medicineTransferCodeOld:
+        values.medicineTransferCode && values.medicineTransferCode.trim(),
       status: values.status || 1,
       healthFacilityId,
       warehouseId,
@@ -73,7 +81,11 @@ const ConsumablePage = ({
     };
     if (warehouseId === undefined) {
       setLoading(false);
-      openNotification('error', 'Vui lòng chọn kho hàng!', '#fff1f0');
+      openNotification(
+        'error',
+        'Vui lòng chọn kho xuất Thuốc/Vật tư!',
+        '#fff1f0'
+      );
     } else {
       if (dataMedicines.length === 0) {
         setLoading(false);
@@ -81,7 +93,7 @@ const ConsumablePage = ({
       } else {
         if (dataDetails.id) {
           dispatch({
-            type: 'consumable/update',
+            type: 'medicineTransfer/update',
             payload: {
               id: dataDetails.id,
               params: {
@@ -106,7 +118,7 @@ const ConsumablePage = ({
           });
         } else {
           dispatch({
-            type: 'consumable/add',
+            type: 'medicineTransfer/add',
             payload: addItem,
             callback: (res) => {
               if (res?.success) {
@@ -116,7 +128,7 @@ const ConsumablePage = ({
                     { id: 'app.common.create.success' },
                     {
                       name: intl.formatMessage({
-                        id: 'app.consumable.list.title',
+                        id: 'app.medicineTransfer.list.title',
                       }),
                     }
                   ),
@@ -168,7 +180,11 @@ const ConsumablePage = ({
       } else {
         if (warehouseId === undefined) {
           setLoading(false);
-          openNotification('error', 'Vui lòng chọn kho hàng!', '#fff1f0');
+          openNotification(
+            'error',
+            'Vui lòng chọn kho xuất Thuốc/Vật tư!',
+            '#fff1f0'
+          );
         } else if (dataMedicines.length === 0) {
           setLoading(false);
           openNotification(
@@ -193,7 +209,7 @@ const ConsumablePage = ({
     dispatch({
       type: 'receiptCode/update',
       payload: {
-        id: consumableCode.id,
+        id: medicineTransferCode.id,
       },
       callback: (res) => {
         if (res?.success) {
@@ -252,7 +268,7 @@ const ConsumablePage = ({
   return (
     <React.Fragment>
       <HeaderContent
-        title={<FormattedMessage id="app.consumable.list.header" />}
+        title={<FormattedMessage id="app.medicineTransfer.list.header" />}
         action={
           <React.Fragment>
             <div>
@@ -261,7 +277,7 @@ const ConsumablePage = ({
                   title={
                     !isMobile &&
                     intl.formatMessage({
-                      id: 'app.consumable.create.header',
+                      id: 'app.medicineTransfer.create.header',
                     })
                   }
                 >
@@ -317,7 +333,6 @@ const ConsumablePage = ({
         }
       >
         <Row gutter={isMobile ? 0 : 10} style={{ background: '#e0e8ef' }}>
-          {' '}
           <Col lg={15} xs={24}>
             <Spin spinning={spinning}>
               <Card
@@ -329,15 +344,15 @@ const ConsumablePage = ({
                   hideRequiredMark
                   style={{ marginTop: 8 }}
                   initialValues={{
-                    consumableCode: dataDetails.id
-                      ? dataDetails.consumableCode
-                      : consumableCode.receiptCode,
+                    medicineTransferCode: dataDetails.id
+                      ? dataDetails.medicineTransferCode
+                      : medicineTransferCode.receiptCode,
                     userId: dataDetails.id
                       ? dataDetails.userId
                       : Number(userId),
-                    warehouseId: dataDetails.id
-                      ? dataDetails.warehouseId
-                      : Number(warehouseId),
+                    warehouseTransferId: dataDetails.id
+                      ? dataDetails.warehouseTransferId
+                      : undefined,
                     description: dataDetails.id ? dataDetails.description : '',
                     status: dataDetails.id ? dataDetails.status : 1,
                   }}
@@ -352,11 +367,11 @@ const ConsumablePage = ({
                           <span>
                             <span style={{ color: 'red' }}>*</span>&nbsp;
                             {intl.formatMessage({
-                              id: 'app.consumable.list.col0',
+                              id: 'app.medicineTransfer.list.col0',
                             })}
                           </span>
                         }
-                        name="consumableCode"
+                        name="medicineTransferCode"
                         rules={[
                           {
                             required: true,
@@ -374,7 +389,7 @@ const ConsumablePage = ({
                       >
                         <Input
                           placeholder={intl.formatMessage({
-                            id: 'app.consumable.list.name',
+                            id: 'app.medicineTransfer.list.name',
                           })}
                           size="small"
                           disabled
@@ -389,7 +404,7 @@ const ConsumablePage = ({
                           <span>
                             <span style={{ color: 'red' }}>*</span>&nbsp;
                             {intl.formatMessage({
-                              id: 'app.consumable.list.col1',
+                              id: 'app.medicineTransfer.list.col1',
                             })}
                           </span>
                         }
@@ -405,7 +420,7 @@ const ConsumablePage = ({
                         <UserSelect
                           size="small"
                           placeholder={intl.formatMessage({
-                            id: 'app.consumable.list.exporter',
+                            id: 'app.medicineTransfer.list.exporter',
                           })}
                           onChange={(value, text) => setUserFullName(text)}
                         />
@@ -413,13 +428,47 @@ const ConsumablePage = ({
                     </Col>
                   </Row>
                   <Row gutter={10}>
-                    <Col sm={24} xs={24}>
+                    <Col sm={12} xs={24}>
                       <FormItem
-                        {...formItemLayout1}
+                        {...formItemLayout}
+                        name="warehouseTransferId"
+                        label={
+                          <span>
+                            <span style={{ color: 'red' }}>*</span>&nbsp;
+                            {intl.formatMessage({
+                              id: 'app.medicineTransfer.list.col3',
+                            })}
+                          </span>
+                        }
+                        rules={[
+                          {
+                            required: true,
+                            message: intl.formatMessage({
+                              id: 'app.common.crud.validate.select',
+                            }),
+                          },
+                        ]}
+                      >
+                        <WarehouseUserSelect
+                          size="small"
+                          placeholder={intl.formatMessage({
+                            id: 'app.medicineTransfer.list.warehouseTransfer',
+                          })}
+                          warehouseId={warehouseId}
+                          disabled={!warehouseId || dataDetails.id}
+                          onChange={(value, text) => {
+                            setWarehouseTransferName(text);
+                          }}
+                        />
+                      </FormItem>
+                    </Col>
+                    <Col sm={12} xs={24}>
+                      <FormItem
+                        {...formItemLayout}
                         label={
                           <span>
                             {intl.formatMessage({
-                              id: 'app.consumable.list.col3',
+                              id: 'app.medicineTransfer.list.col4',
                             })}
                           </span>
                         }
@@ -435,7 +484,7 @@ const ConsumablePage = ({
                       >
                         <Input
                           placeholder={intl.formatMessage({
-                            id: 'app.consumable.list.description',
+                            id: 'app.medicineTransfer.list.description',
                           })}
                           className="input_descriptions"
                           suffix={<span className="suffix">200</span>}
@@ -463,15 +512,16 @@ const ConsumablePage = ({
                 content={() => componentRef.current}
               />
               <div ref={componentRef}>
-                <Consumable
+                <MedicineTransfer
                   title={intl.formatMessage({
-                    id: 'app.consumable.list.title1',
+                    id: 'app.medicineTransfer.list.title1',
                   })}
                   dataMedicines={dataMedicines}
                   dataForm={dataForm}
                   fullName={userFullName}
                   warehouseName={warehouseName}
-                  consumableCode={consumableCode}
+                  warehouseTransferName={warehouseTransferName}
+                  medicineTransferCode={medicineTransferCode}
                   dataInfo={dataDetails}
                 />
               </div>
@@ -495,4 +545,4 @@ const ConsumablePage = ({
   );
 };
 
-export default ConsumablePage;
+export default MedicineTransferPage;

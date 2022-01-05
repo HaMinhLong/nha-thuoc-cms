@@ -43,6 +43,7 @@ import { medicineIssueSaga } from '../features/medicineIssue/medicineIssueSaga';
 import { medicineIssueMedicineSaga } from '../features/medicineIssueMedicine/medicineIssueMedicineSaga';
 import { warehouseMedicineSaga } from '../features/warehouseMedicine/warehouseMedicineSaga';
 import { consumableSaga } from '../features/consumable/consumableSaga';
+import { medicineTransferSaga } from '../features/medicineTransfer/medicineTransferSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -90,5 +91,6 @@ export default function* rootSaga() {
     medicineIssueMedicineSaga(),
     warehouseMedicineSaga(),
     consumableSaga(),
+    medicineTransferSaga(),
   ]);
 }

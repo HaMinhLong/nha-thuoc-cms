@@ -8,7 +8,7 @@ import _ from 'lodash';
 
 let timer = null;
 
-const WarehouseSelect = ({
+const WarehouseUserSelect = ({
   value,
   textProps,
   filter,
@@ -20,11 +20,11 @@ const WarehouseSelect = ({
   style,
   onChange,
   getAll,
-  data,
+  warehouseId,
 }) => {
   const dispatch = useDispatch();
+
   const [valueState, setValueState] = useState(value);
-  const userId = localStorage.getItem('id');
   const [loading, setLoading] = useState(false);
   const [dataArr, setDataArr] = useState([]);
   const [icon, setIcon] = useState(null);
@@ -33,8 +33,8 @@ const WarehouseSelect = ({
   const [checkState, setCheckState] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [dataStore, setDataStore] = useState([]);
+  const userId = localStorage.getItem('id');
   const [text, setText] = useState(textProps || '');
-
   useEffect(() => {
     fetch(1, undefined, valueState, false, false, false);
   }, []);
@@ -78,7 +78,7 @@ const WarehouseSelect = ({
     const pagesize = 20;
     const tfilter = {
       warehouseName: searchValue,
-      userId,
+      userId: userId,
       status: 1,
     };
     if (getAll) {
@@ -207,11 +207,11 @@ const WarehouseSelect = ({
         {item.text.trim()}
       </Select.Option>
     ));
+
   let dataNew = dataArr;
-  if (data) {
-    for (let index = 0; index < data.length; index++) {
-      dataNew = dataNew.filter((item) => item.valueState !== data?.[index]?.id);
-    }
+
+  if (warehouseId) {
+    dataNew = dataNew.filter((item) => item.valueState !== warehouseId);
   }
   const dataRender = renderData(dataNew);
   return (
@@ -243,4 +243,4 @@ const WarehouseSelect = ({
   );
 };
 
-export default WarehouseSelect;
+export default WarehouseUserSelect;

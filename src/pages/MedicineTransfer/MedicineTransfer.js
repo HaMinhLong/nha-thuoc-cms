@@ -14,25 +14,28 @@ import moment from 'moment';
 import Table from '../../components/Table';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { consumable, filter } from '../../features/consumable/consumableSlice';
+import {
+  medicineTransfer,
+  filter,
+} from '../../features/medicineTransfer/medicineTransferSlice';
 import { FormattedMessage } from 'react-intl';
 import { formatNumber, getTimeDistance } from '../../utils/utils';
 import { useParams } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
-import Consumable from '../../components/BillTable/Consumable';
-import TableForm from '../../components/ConsumableComponents/TableForm';
+import MedicineTransfer from '../../components/BillTable/MedicineTransfer';
+import TableForm from '../../components/MedicineTransferComponents/TableForm';
 import '../../utils/css/styleList.scss';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const PAGE_SIZE = process.env.REACT_APP_PAGE_SIZE;
 
-const ConsumablePage = ({ intl, isMobile, headerPage }) => {
+const MedicineTransferPage = ({ intl, isMobile, headerPage }) => {
   let { id } = useParams();
   const formRef = React.createRef();
   const userGroupId = localStorage.getItem('userGroupId');
   const healthFacilityId = localStorage.getItem('healthFacilityId');
-  const list = useSelector(consumable);
+  const list = useSelector(medicineTransfer);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [spinning, setSpinning] = useState(false);
@@ -41,7 +44,7 @@ const ConsumablePage = ({ intl, isMobile, headerPage }) => {
   const [rangePickerValue, setRangePickerValue] = useState(
     getTimeDistance('week')
   );
-  const [consumableCode, setConsumableCode] = useState({});
+  const [medicineTransferCode, setMedicineTransferCode] = useState({});
   const [warehouseId, setWarehouseId] = useState('');
   const [warehouseName, setWarehouseName] = useState('');
   const [redirect, setRedirect] = useState('');
@@ -82,7 +85,7 @@ const ConsumablePage = ({ intl, isMobile, headerPage }) => {
     let params = {
       filter: JSON.stringify({
         healthFacilityId: healthFacilityId,
-        formType: '3',
+        formType: '4',
       }),
     };
     dispatch({
@@ -91,7 +94,7 @@ const ConsumablePage = ({ intl, isMobile, headerPage }) => {
       callback: (res) => {
         if (res?.success) {
           const { list } = res.results;
-          setConsumableCode(list);
+          setMedicineTransferCode(list);
         }
       },
     });
@@ -144,7 +147,7 @@ const ConsumablePage = ({ intl, isMobile, headerPage }) => {
     }
     dispatch(filter(values));
     dispatch({
-      type: 'consumable/fetch',
+      type: 'medicineTransfer/fetch',
       payload: params,
       callback: (res) => {
         setLoading(false);
@@ -189,7 +192,7 @@ const ConsumablePage = ({ intl, isMobile, headerPage }) => {
         attributes: '',
       };
       dispatch({
-        type: 'consumable/fetch',
+        type: 'medicineTransfer/fetch',
         payload: query,
         callback: (res) => {
           setLoading(false);
@@ -201,7 +204,7 @@ const ConsumablePage = ({ intl, isMobile, headerPage }) => {
   const handleClickRow = (record) => {
     setSpinning(true);
     dispatch({
-      type: 'consumable/getOne',
+      type: 'medicineTransfer/getOne',
       payload: {
         id: record.id,
       },
@@ -229,7 +232,7 @@ const ConsumablePage = ({ intl, isMobile, headerPage }) => {
       status,
     };
     dispatch({
-      type: 'consumable/updateStatus',
+      type: 'medicineTransfer/updateStatus',
       payload: {
         id: row.id,
         params: item,
@@ -299,7 +302,7 @@ const ConsumablePage = ({ intl, isMobile, headerPage }) => {
     };
     setLoading(true);
     dispatch({
-      type: 'consumable/fetch',
+      type: 'medicineTransfer/fetch',
       payload: params,
       callback: (res) => {
         setLoading(false);
@@ -332,7 +335,7 @@ const ConsumablePage = ({ intl, isMobile, headerPage }) => {
                 fontWeight: 'bold',
               }}
             >
-              {intl.formatMessage({ id: 'app.consumable.list' })}
+              {intl.formatMessage({ id: 'app.medicineTransfer.list' })}
             </p>
           </Col>
           <Col
@@ -445,17 +448,17 @@ const ConsumablePage = ({ intl, isMobile, headerPage }) => {
       fixed: isMobile,
     },
     {
-      dataIndex: 'consumableCode',
-      name: 'consumableCode',
+      dataIndex: 'medicineTransferCode',
+      name: 'medicineTransferCode',
       width: isMobile ? 100 : '4%',
-      title: <FormattedMessage id="app.consumable.list.col0" />,
+      title: <FormattedMessage id="app.medicineTransfer.list.col0" />,
       align: 'left',
       sorter: () => {},
       fixed: isMobile,
     },
     {
       dataIndex: 'warehouse',
-      title: intl.formatMessage({ id: 'app.consumable.list.col2' }),
+      title: intl.formatMessage({ id: 'app.medicineTransfer.list.col2' }),
       align: 'center',
       width: !isMobile && '5%',
       sorter: () => {},
@@ -475,7 +478,7 @@ const ConsumablePage = ({ intl, isMobile, headerPage }) => {
     },
     {
       dataIndex: 'user',
-      title: intl.formatMessage({ id: 'app.consumable.list.col1' }),
+      title: intl.formatMessage({ id: 'app.medicineTransfer.list.col1' }),
       align: 'center',
       width: !isMobile && '5%',
       sorter: () => {},
@@ -483,7 +486,7 @@ const ConsumablePage = ({ intl, isMobile, headerPage }) => {
     },
     {
       dataIndex: 'status',
-      title: intl.formatMessage({ id: 'app.consumable.list.col4' }),
+      title: intl.formatMessage({ id: 'app.medicineTransfer.list.col4' }),
       align: 'center',
       name: 'status',
       width: '2%',
@@ -513,14 +516,14 @@ const ConsumablePage = ({ intl, isMobile, headerPage }) => {
       {permissions ? (
         <>
           {headerPage}
-          <Consumable
+          <MedicineTransfer
             isMobile={isMobile}
             intl={intl}
             permissions={permissions}
             spinning={spinning}
             dataInfo={dataInfo || []}
             dataMedicines={dataMedicines || []}
-            consumableCode={consumableCode}
+            medicineTransferCode={medicineTransferCode}
             warehouseId={warehouseId}
             warehouseName={warehouseName}
             getReceiptCode={getReceiptCode}
@@ -557,7 +560,7 @@ const ConsumablePage = ({ intl, isMobile, headerPage }) => {
                 isMobile={isMobile}
                 value={dataMedicines || []}
                 dataInfo={dataInfo || []}
-                consumableCode={consumableCode}
+                medicineTransferCode={medicineTransferCode}
                 getReceiptCode={getReceiptCode}
                 onChange={(data) => setDataMedicines(data)}
                 onChangeWarehouse={(id, text) => {
@@ -584,4 +587,4 @@ const ConsumablePage = ({ intl, isMobile, headerPage }) => {
   );
 };
 
-export default ConsumablePage;
+export default MedicineTransferPage;

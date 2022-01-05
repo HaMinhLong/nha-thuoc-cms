@@ -1,4 +1,4 @@
-import { put, call, takeLatest } from 'redux-saga/effects';
+import { put, call, takeLatest, takeEvery } from 'redux-saga/effects';
 import { save, query } from './warehouseUserSlice';
 import {
   getListWarehouseUser,
@@ -31,6 +31,6 @@ function* deleteRecord({ payload: { id }, callback }) {
 export function* warehouseUserSaga() {
   yield takeLatest('warehouseUser/fetch', getList);
   yield takeLatest('warehouseUser/add', create);
-  yield takeLatest('warehouseUser/fetchLazyLoading', fetchLazyLoading);
+  yield takeEvery('warehouseUser/fetchLazyLoading', fetchLazyLoading);
   yield takeLatest('warehouseUser/delete', deleteRecord);
 }
