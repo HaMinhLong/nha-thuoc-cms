@@ -43,6 +43,8 @@ import medicineIssueMedicineReducer from '../features/medicineIssueMedicine/medi
 import warehouseMedicineReducer from '../features/warehouseMedicine/warehouseMedicineSlice';
 import consumableReducer from '../features/consumable/consumableSlice';
 import medicineTransferReducer from '../features/medicineTransfer/medicineTransferSlice';
+import clinicTimeReducer from '../features/clinicTime/clinicTimeSlice';
+import medicalRegisterReducer from '../features/medicalRegister/medicalRegisterSlice';
 
 export const rootReducer = {
   userGroup: userGroupReducer,
@@ -90,4 +92,6 @@ export const rootReducer = {
   warehouseMedicine: warehouseMedicineReducer,
   consumable: consumableReducer,
   medicineTransfer: medicineTransferReducer,
+  clinicTime: clinicTimeReducer,
+  medicalRegister: medicalRegisterReducer,
 };

@@ -77,7 +77,17 @@ const ChangePassword = ({ intl, visible }) => {
   return (
     <>
       <Modal
-        title={intl.formatMessage({ id: 'app.change.list.title.title' })}
+        title={
+          <p
+            style={{
+              fontWeight: '600',
+              fontSize: 18,
+              textTransform: 'uppercase',
+            }}
+          >
+            {intl.formatMessage({ id: 'app.change.list.title.title' })}
+          </p>
+        }
         visible={visibleModal}
         onCancel={handleCancel}
         footer={

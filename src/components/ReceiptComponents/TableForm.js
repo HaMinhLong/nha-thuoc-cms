@@ -199,7 +199,7 @@ const TableFormReceipt = (props) => {
         expiry: values.expiry,
         unitId: values.unitImport,
         price: values.price,
-        amount: values.amount,
+        amount: Number(values.amount),
         discount: values.discount.number,
         discountType: values.discount.currency,
         tax: values.tax.number,

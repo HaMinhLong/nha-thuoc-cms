@@ -685,7 +685,7 @@ const TableForm = (props) => {
                       <span>
                         <span style={{ color: 'red' }}>*</span>&nbsp;
                         {intl.formatMessage({
-                          id: 'app.medicineTransfer.list.col6',
+                          id: 'app.medicineTransfer.list.col7',
                         })}
                       </span>
                     }

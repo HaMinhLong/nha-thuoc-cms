@@ -35,6 +35,7 @@ const ReceiptMedicine = require('./vi-VN/ReceiptMedicine');
 const MedicineIssue = require('./vi-VN/MedicineIssue');
 const Consumable = require('./vi-VN/Consumable');
 const MedicineTransfer = require('./vi-VN/MedicineTransfer');
+const MedicalRegister = require('./vi-VN/MedicalRegister');
 
 module.exports = {
   'app.common.validate.max300':
@@ -155,4 +156,5 @@ module.exports = {
   ...MedicineIssue,
   ...Consumable,
   ...MedicineTransfer,
+  ...MedicalRegister,
 };

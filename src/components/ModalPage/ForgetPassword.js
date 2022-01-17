@@ -79,7 +79,17 @@ const ForgetPassword = ({ intl, visible }) => {
   return (
     <>
       <Modal
-        title={intl.formatMessage({ id: 'app.forgot.list.title.title' })}
+        title={
+          <p
+            style={{
+              fontWeight: '600',
+              fontSize: 18,
+              textTransform: 'uppercase',
+            }}
+          >
+            {intl.formatMessage({ id: 'app.forgot.list.title.title' })}
+          </p>
+        }
         visible={visibleModal}
         onCancel={handleCancel}
         footer={

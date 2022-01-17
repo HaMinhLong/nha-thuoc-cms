@@ -112,7 +112,17 @@ const HealthFacilitySpeciaListAddModal = ({
       footer={null}
     >
       <PageHeader
-        title={intl.formatMessage({ id: 'app.specialist.create.header' })}
+        title={
+          <p
+            style={{
+              fontWeight: '600',
+              fontSize: 18,
+              textTransform: 'uppercase',
+            }}
+          >
+            {intl.formatMessage({ id: 'app.specialist.create.header' })}
+          </p>
+        }
         extra={[
           <Popconfirm
             placement="bottom"

@@ -197,7 +197,17 @@ const WorkScheduleModal = ({ intl, visible, dataEdit, titleModal }) => {
   return (
     <Fragment>
       <Modal
-        title={<h3 style={{ marginBottom: '0px' }}>{titleModal}</h3>}
+        title={
+          <p
+            style={{
+              fontWeight: '600',
+              fontSize: 18,
+              textTransform: 'uppercase',
+            }}
+          >
+            {titleModal}
+          </p>
+        }
         visible={visibleModal}
         onOk={handleSchedule}
         onCancel={() => setVisibleModal(false)}

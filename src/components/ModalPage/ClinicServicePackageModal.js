@@ -13,7 +13,6 @@ import {
   PageHeader,
   TimePicker,
 } from 'antd';
-import moment from 'moment';
 import ReactToPrint from 'react-to-print';
 import regexHelper from '../../utils/regexHelper';
 import { useDispatch } from 'react-redux';
@@ -90,7 +89,6 @@ const ClinicServicePackageModal = ({
             values.clinicServicePackageName &&
             values.clinicServicePackageName.trim(),
           clinicServicePackageNameOld: data.clinicServicePackageName,
-          time: values.time.format('HH:mm:ss').toString() || '',
           healthFacilityId,
         };
         if (data.id) {
@@ -177,14 +175,22 @@ const ClinicServicePackageModal = ({
     >
       <PageHeader
         title={
-          data.id
-            ? intl.formatMessage(
-                { id: 'app.title.update' },
-                { name: data.clinicServicePackageName }
-              )
-            : intl.formatMessage({
-                id: 'app.clinicServicePackage.create.header',
-              })
+          <p
+            style={{
+              fontWeight: '600',
+              fontSize: 18,
+              textTransform: 'uppercase',
+            }}
+          >
+            {data.id
+              ? intl.formatMessage(
+                  { id: 'app.title.update' },
+                  { name: data.clinicServicePackageName }
+                )
+              : intl.formatMessage({
+                  id: 'app.clinicServicePackage.create.header',
+                })}
+          </p>
         }
         extra={[
           <Popconfirm
@@ -223,7 +229,6 @@ const ClinicServicePackageModal = ({
               initialValues={{
                 clinicServicePackageName: data.clinicServicePackageName || '',
                 clinicTypeId: data.clinicTypeId || '',
-                time: data.id ? moment(data?.time, 'HH:mm:ss') : '',
                 printFormId: data.printFormId || '',
                 sampleResults: data.sampleResults || '',
                 status: data.id ? data.status : 1,
@@ -266,7 +271,7 @@ const ClinicServicePackageModal = ({
                     />
                   </FormItem>
                 </Col>
-                <Col xs={24} md={8}>
+                <Col xs={24} md={12}>
                   <FormItem
                     name="clinicTypeId"
                     label={
@@ -294,36 +299,7 @@ const ClinicServicePackageModal = ({
                     />
                   </FormItem>
                 </Col>
-                <Col xs={24} md={8}>
-                  <FormItem
-                    label={
-                      <span>
-                        <span style={{ color: 'red' }}>*</span>&nbsp;
-                        {intl.formatMessage({
-                          id: 'app.clinicServicePackage.list.col2',
-                        })}
-                      </span>
-                    }
-                    name="time"
-                    rules={[
-                      {
-                        required: true,
-                        message: intl.formatMessage({
-                          id: 'app.common.crud.validate.select',
-                        }),
-                      },
-                    ]}
-                  >
-                    <TimePicker
-                      style={{ width: '100%' }}
-                      format="HH:mm:ss"
-                      placeholder={intl.formatMessage({
-                        id: 'app.clinicServicePackage.list.time',
-                      })}
-                    />
-                  </FormItem>
-                </Col>
-                <Col xs={24} md={8}>
+                <Col xs={24} md={12}>
                   <FormItem
                     label={
                       <span>

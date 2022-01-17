@@ -7,7 +7,9 @@ import {
   Form,
   Drawer,
   notification,
+  TimePicker,
 } from 'antd';
+import moment from 'moment';
 import regexHelper from '../../utils/regexHelper';
 import { useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
@@ -80,6 +82,7 @@ const ClinicServiceDrawer = ({
           clinicServiceName:
             values.clinicServiceName && values.clinicServiceName.trim(),
           clinicServiceNameOld: data.clinicServiceName,
+          time: values.time.format('HH:mm:ss').toString() || '',
           healthFacilityId,
         };
         if (data.id) {
@@ -204,6 +207,7 @@ const ClinicServiceDrawer = ({
             clinicServiceName: data.clinicServiceName || '',
             clinicServicePackageId: data.clinicServicePackageId || '',
             price: data.price || 0,
+            time: data.id ? moment(data?.time, 'HH:mm:ss') : '',
             userId: data.userId || '',
             description: data.description || '',
             status: data.id ? data.status : 1,
@@ -243,7 +247,6 @@ const ClinicServiceDrawer = ({
               })}
             />
           </FormItem>
-
           <FormItem
             name="clinicServicePackageId"
             label={
@@ -270,7 +273,6 @@ const ClinicServiceDrawer = ({
               allowClear
             />
           </FormItem>
-
           <FormItem
             label={
               <span>
@@ -296,6 +298,34 @@ const ClinicServiceDrawer = ({
               })}
               key={key}
               min={0}
+            />
+          </FormItem>
+
+          <FormItem
+            label={
+              <span>
+                <span style={{ color: 'red' }}>*</span>&nbsp;
+                {intl.formatMessage({
+                  id: 'app.clinicServicePackage.list.col2',
+                })}
+              </span>
+            }
+            name="time"
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'app.common.crud.validate.select',
+                }),
+              },
+            ]}
+          >
+            <TimePicker
+              style={{ width: '100%' }}
+              format="HH:mm:ss"
+              placeholder={intl.formatMessage({
+                id: 'app.clinicServicePackage.list.time',
+              })}
             />
           </FormItem>
 

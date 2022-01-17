@@ -220,10 +220,18 @@ const HealthFacilitySpeciaListModal = ({
           extra={[
             <Tooltip
               title={
-                !isMobile &&
-                intl.formatMessage({
-                  id: 'app.specialist.create.header',
-                })
+                <p
+                  style={{
+                    fontWeight: '600',
+                    fontSize: 18,
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  {!isMobile &&
+                    intl.formatMessage({
+                      id: 'app.specialist.create.header',
+                    })}
+                </p>
               }
             >
               <Button

@@ -170,12 +170,20 @@ const CustomerModal = ({
     >
       <PageHeader
         title={
-          data.id
-            ? intl.formatMessage(
-                { id: 'app.title.update' },
-                { name: data.customerName }
-              )
-            : intl.formatMessage({ id: 'app.customer.create.header' })
+          <p
+            style={{
+              fontWeight: '600',
+              fontSize: 18,
+              textTransform: 'uppercase',
+            }}
+          >
+            {data.id
+              ? intl.formatMessage(
+                  { id: 'app.title.update' },
+                  { name: data.customerName }
+                )
+              : intl.formatMessage({ id: 'app.customer.create.header' })}
+          </p>
         }
         extra={[
           <Popconfirm

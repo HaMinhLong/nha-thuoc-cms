@@ -167,12 +167,20 @@ const SupplierModal = ({
     >
       <PageHeader
         title={
-          data.id
-            ? intl.formatMessage(
-                { id: 'app.title.update' },
-                { name: data.supplierName }
-              )
-            : intl.formatMessage({ id: 'app.supplier.create.header' })
+          <p
+            style={{
+              fontWeight: '600',
+              fontSize: 18,
+              textTransform: 'uppercase',
+            }}
+          >
+            {data.id
+              ? intl.formatMessage(
+                  { id: 'app.title.update' },
+                  { name: data.supplierName }
+                )
+              : intl.formatMessage({ id: 'app.supplier.create.header' })}
+          </p>
         }
         extra={[
           <Popconfirm

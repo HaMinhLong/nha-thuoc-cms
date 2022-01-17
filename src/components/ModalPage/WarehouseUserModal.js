@@ -123,10 +123,16 @@ const WarehouseUserModal = ({ intl, isMobile, visible, dataEdit }) => {
     <React.Fragment>
       <Modal
         title={
-          <h3 style={{ marginBottom: '0px' }}>
+          <p
+            style={{
+              fontWeight: '600',
+              fontSize: 18,
+              textTransform: 'uppercase',
+            }}
+          >
             {intl.formatMessage({ id: 'app.user.different.col2' })} -{' '}
             {dataEdit?.username}
-          </h3>
+          </p>
         }
         width={isMobile ? '100%' : 520}
         onCancel={() => changeModal('close')}
