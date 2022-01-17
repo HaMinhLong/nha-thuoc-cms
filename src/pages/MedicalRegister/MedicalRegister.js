@@ -246,11 +246,21 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
     });
   };
 
-  const deleteRecord = (id) => {
+  const deleteRecord = (item) => {
+    const itemTime = {
+      isClose: false,
+    };
+    dispatch({
+      type: 'clinicTime/updateStatus',
+      payload: {
+        id: item.clinicTimeId,
+        params: itemTime,
+      },
+    });
     dispatch({
       type: 'medicalRegister/delete',
       payload: {
-        id: id,
+        id: item.id,
       },
       callback: (res) => {
         if (res?.success === true) {
@@ -592,7 +602,7 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
                 <Popconfirm
                   placement="bottom"
                   title={<FormattedMessage id="app.confirm.remove" />}
-                  onConfirm={() => deleteRecord(row.id)}
+                  onConfirm={() => deleteRecord(row)}
                 >
                   <Button
                     icon={
