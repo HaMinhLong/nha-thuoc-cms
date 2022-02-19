@@ -20,6 +20,8 @@ const ClinicServicePackageSelect = ({
   style,
   onChange,
   getAll,
+  className,
+  filterField,
 }) => {
   const dispatch = useDispatch();
   const [valueState, setValueState] = useState(value);
@@ -33,8 +35,16 @@ const ClinicServicePackageSelect = ({
   const [dataStore, setDataStore] = useState([]);
   const [text, setText] = useState(textProps || '');
   useEffect(() => {
-    fetch(1, undefined, valueState, false, false, false);
+    if (!filter) {
+      fetch(1, undefined, valueState, filterField, false, false, false);
+    }
   }, []);
+
+  useEffect(() => {
+    if (filter) {
+      fetch(1, undefined, valueState, filterField, true, false, false);
+    }
+  }, [filterField]);
 
   const onFocus = () => {
     setIcon(<i className="fa fa-search" />);
@@ -55,7 +65,7 @@ const ClinicServicePackageSelect = ({
         dataArr.find((x) => x.valueState === valueState) &&
           dataArr.find((x) => x.valueState === valueState).text
       );
-      fetch(1, undefined, valueState, false, false, true);
+      fetch(1, undefined, valueState, filterField, false, false, true);
     }
     if (onChange)
       onChange(
@@ -68,6 +78,7 @@ const ClinicServicePackageSelect = ({
     current,
     flag,
     valueState,
+    filterField2,
     ChangeFilter,
     checkAddItem,
     checkDataAll
@@ -77,6 +88,7 @@ const ClinicServicePackageSelect = ({
     const tfilter = {
       clinicServicePackageName: searchValue,
       healthFacilityId: healthFacilityId,
+      clinicTypeId: filterField2 ? filterField2 : '',
       status: 1,
     };
     if (getAll) {
@@ -130,6 +142,12 @@ const ClinicServicePackageSelect = ({
               ]);
               addItem(valueState);
             }
+          } else if (ChangeFilter) {
+            setDataArr(data);
+            setDataStore(data);
+            setText('');
+            setValueState('');
+            setNumOfScroll(2);
           } else if (checkDataAll) {
             setDataArr([..._.uniqBy([...dataStore, ...data], 'valueState')]);
             setDataStore([..._.uniqBy([...dataStore, ...data], 'valueState')]);
@@ -158,7 +176,15 @@ const ClinicServicePackageSelect = ({
     ) {
       setNumOfScroll(numOfScroll + 1);
       setCheckState(false);
-      fetch(numOfScroll, undefined, valueState, false, false, false);
+      fetch(
+        numOfScroll,
+        undefined,
+        valueState,
+        filterField,
+        false,
+        false,
+        false
+      );
     }
   };
 
@@ -190,7 +216,7 @@ const ClinicServicePackageSelect = ({
     }
     clearTimeout(timer);
     timer = setTimeout(
-      fetch.bind(this, 1, string, valueState, false, true, false),
+      fetch.bind(this, 1, string, valueState, filterField, false, true, false),
       500
     );
   };
@@ -228,6 +254,7 @@ const ClinicServicePackageSelect = ({
         onPopupScroll={handleScroll}
         onDropdownVisibleChange={handleMouseLeave}
         style={style}
+        className={className}
       >
         {dataRender}
       </Select>

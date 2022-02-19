@@ -21,6 +21,7 @@ const ClinicServiceSelect = ({
   onChange,
   getAll,
   filterField,
+  className,
 }) => {
   const dispatch = useDispatch();
 
@@ -73,9 +74,14 @@ const ClinicServiceSelect = ({
         dataArr.find((x) => x.valueState === valueState) &&
           dataArr.find((x) => x.valueState === valueState).text,
         dataArr.find((x) => x.valueState === valueState) &&
-          dataArr.find((x) => x.valueState === valueState).time
+          dataArr.find((x) => x.valueState === valueState).time,
+        dataArr.find((x) => x.valueState === valueState) &&
+          dataArr.find((x) => x.valueState === valueState).userId,
+        dataArr.find((x) => x.valueState === valueState) &&
+          dataArr.find((x) => x.valueState === valueState).price
       );
   };
+
   const fetch = (
     current,
     flag,
@@ -88,7 +94,7 @@ const ClinicServiceSelect = ({
     const pagesize = 20;
     const tfilter = {
       clinicServiceName: searchValue,
-      clinicServicePackageId: filterField2 ? filterField2 : 'a',
+      clinicServicePackageId: filterField2 ? filterField2 : '',
       status: 1,
     };
     if (!filter) {
@@ -104,7 +110,7 @@ const ClinicServiceSelect = ({
       filter: JSON.stringify(tfilter),
       range: JSON.stringify([pagesize * (current - 1), current * pagesize]),
       sort: JSON.stringify(['clinicServiceName', 'ASC']),
-      attributes: 'id,clinicServiceName,time',
+      attributes: 'id,clinicServiceName,time,userId,price',
     };
     dispatch({
       type: 'clinicService/fetchLazyLoading',
@@ -119,6 +125,8 @@ const ClinicServiceSelect = ({
               valueState: data.id,
               text: data.clinicServiceName,
               time: data.time,
+              userId: data.userId,
+              price: data.price,
             }));
           setTotalItems(
             result &&
@@ -258,6 +266,7 @@ const ClinicServiceSelect = ({
         onPopupScroll={handleScroll}
         onDropdownVisibleChange={handleMouseLeave}
         style={style}
+        className={className}
       >
         {dataRender}
       </Select>

@@ -20,6 +20,7 @@ const UserGroupSelect = ({
   style,
   onChange,
   getAll,
+  className,
 }) => {
   const dispatch = useDispatch();
 
@@ -227,6 +228,7 @@ const UserGroupSelect = ({
         onPopupScroll={handleScroll}
         onDropdownVisibleChange={handleMouseLeave}
         style={style}
+        className={className}
       >
         {dataRender}
       </Select>

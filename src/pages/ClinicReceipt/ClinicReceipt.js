@@ -12,45 +12,51 @@ import {
   Menu,
   notification,
   Tooltip,
-  Popconfirm,
   Result,
 } from 'antd';
 import { Link } from 'react-router-dom';
 import HeaderContent from '../../layouts/HeaderContent';
 import Table from '../../components/Table';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { warehouse, filter } from '../../features/warehouse/warehouseSlice';
+import {
+  clinicReceipt,
+  filter,
+} from '../../features/clinicReceipt/clinicReceiptSlice';
 import '../../utils/css/styleList.scss';
 import moment from 'moment';
 import filterIcon from '../../static/web/images/filter.svg';
 import dropdownWhite from '../../static/web/images/dropDown_white.svg';
 import dropdownBlack from '../../static/web/images/dropDown_black.svg';
 import { formatNumber } from '../../utils/utils';
-import WarehouseDrawer from '../../components/DrawerPage/WarehouseDrawer';
-import { useParams } from 'react-router-dom';
-import ProvinceSelect from '../../components/Common/ProvinceSelect';
-import DistrictSelect from '../../components/Common/DistrictSelect';
-import WardSelect from '../../components/Common/WardSelect';
+import { Redirect } from 'react-router-dom';
+import ClinicReceiptModal from '../../components/ModalPage/ClinicReceiptModal';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
-const PAGE_SIZE = process.env.REACT_APP_PAGE_SIZE;
-const Warehouse = ({ isMobile, intl, headerPage }) => {
+
+const ClinicReceipt = ({ isMobile, intl, headerPage }) => {
   let { id } = useParams();
   const userGroupId = localStorage.getItem('userGroupId');
+  const healthFacilityId = localStorage.getItem('healthFacilityId');
   const dispatch = useDispatch();
-  const list = useSelector(warehouse);
+  const list = useSelector(clinicReceipt);
   const [loading, setLoading] = useState(false);
-  const [visibleDrawer, setVisibleDrawer] = useState(false);
+  const [visibleModal, setVisibleModal] = useState(false);
   const [visibleFilter, setVisibleFilter] = useState(false);
   const [dataEdit, setDataEdit] = useState({});
+  const [redirect, setRedirect] = useState('');
   const [permissions, setPermissions] = useState({});
 
   useEffect(() => {
-    getList();
     getPermission();
+    getList();
   }, []);
+
+  if (redirect) {
+    return <Redirect to={redirect} />;
+  }
 
   const getPermission = () => {
     const params = {
@@ -72,16 +78,16 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
       },
     });
   };
+
   const getList = () => {
     const { query } = list;
     const queryFilter = list.filter;
     setLoading(true);
     let params = {
-      filter: JSON.stringify({}),
-      range: JSON.stringify([0, PAGE_SIZE]),
+      filter: JSON.stringify({ healthFacilityId: healthFacilityId }),
+      range: JSON.stringify([0, 100]),
       sort: JSON.stringify(['createdAt', 'DESC']),
-      attributes:
-        'id,warehouseName,provinceId,districtId,wardId,status,createdAt',
+      attributes: '',
     };
     let values = {};
     if (query && query.filter && query.filter !== '{}') {
@@ -107,7 +113,7 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
     }
     dispatch(filter(values));
     dispatch({
-      type: 'warehouse/fetch',
+      type: 'clinicReceipt/fetch',
       payload: params,
       callback: (res) => {
         setLoading(false);
@@ -115,40 +121,6 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
           openNotification('error', res && res.message, '#fff1f0');
         }
       },
-    });
-  };
-
-  const handleStatus = (value, row) => {
-    const status = value;
-    const item = {
-      status,
-    };
-    dispatch({
-      type: 'warehouse/updateStatus',
-      payload: {
-        id: row.id,
-        params: item,
-      },
-      callback: (res) => {
-        if (res?.success === true) {
-          openNotification(
-            'success',
-            intl.formatMessage({ id: 'app.common.edit.success' }),
-            '#f6ffed'
-          );
-          getList();
-        } else if (res?.success === false) {
-          openNotification('error', res && res.message, '#fff1f0');
-        }
-      },
-    });
-  };
-
-  const openNotification = (type, message, color) => {
-    notification[type]({
-      message: message,
-      placement: 'bottomRight',
-      style: { background: color },
     });
   };
 
@@ -164,26 +136,22 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
         ? rangeValue[1].set({ hour: 23, minute: 59, second: 59 })
         : '';
     const queryName = {
-      warehouseName:
-        queryFilter.warehouseName && queryFilter.warehouseName.trim(),
-      provinceId: queryFilter && queryFilter.provinceId,
-      districtId: queryFilter && queryFilter.districtId,
-      wardId: queryFilter && queryFilter.wardId,
+      clinicReceiptCode: queryFilter && queryFilter.clinicReceiptCode.trim(),
+      customerName: queryFilter && queryFilter.customerName.trim(),
+      mobile: queryFilter && queryFilter.mobile,
       status: queryFilter && queryFilter.status,
       fromDate: fromDate,
       toDate: toDate,
+      healthFacilityId,
     };
-    if (!(queryFilter.warehouseName && queryFilter.warehouseName.trim())) {
-      delete queryName.warehouseName;
+    if (!queryFilter.customerName) {
+      delete queryName.customerName;
     }
-    if (!queryFilter.provinceId) {
-      delete queryName.provinceId;
+    if (!queryFilter.clinicReceiptCode) {
+      delete queryName.clinicReceiptCode;
     }
-    if (!queryFilter.districtId) {
-      delete queryName.districtId;
-    }
-    if (!queryFilter.wardId) {
-      delete queryName.wardId;
+    if (!queryFilter.mobile) {
+      delete queryName.mobile;
     }
     if (!queryFilter.status) {
       delete queryName.status;
@@ -203,12 +171,11 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
         pagination.current * pagination.pageSize,
       ]),
       sort: JSON.stringify(sort),
-      attributes:
-        'id,warehouseName,provinceId,districtId,wardId,status,createdAt',
+      attributes: '',
     };
     dispatch(filter(queryFilter));
     dispatch({
-      type: 'warehouse/fetch',
+      type: 'clinicReceipt/fetch',
       payload: query,
       callback: (res) => {
         setLoading(false);
@@ -228,25 +195,22 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
         ? rangeValue[1].set({ hour: 23, minute: 59, second: 59 })
         : '';
     const queryName = {
-      warehouseName: values.warehouseName && values.warehouseName.trim(),
-      provinceId: values && values.provinceId,
-      districtId: values && values.districtId,
-      wardId: values && values.wardId,
+      clinicReceiptCode: values && values.clinicReceiptCode.trim(),
+      customerName: values && values.customerName.trim(),
+      mobile: values && values.mobile,
       status: values && values.status,
       fromDate: fromDate,
       toDate: toDate,
+      healthFacilityId,
     };
-    if (!(values.warehouseName && values.warehouseName.trim())) {
-      delete queryName.warehouseName;
+    if (!values.customerName) {
+      delete queryName.customerName;
     }
-    if (!values.provinceId) {
-      delete queryName.provinceId;
+    if (!values.clinicReceiptCode) {
+      delete queryName.clinicReceiptCode;
     }
-    if (!values.districtId) {
-      delete queryName.districtId;
-    }
-    if (!values.wardId) {
-      delete queryName.wardId;
+    if (!values.mobile) {
+      delete queryName.mobile;
     }
     if (!values.status) {
       delete queryName.status;
@@ -257,18 +221,25 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
     }
     const query = {
       filter: JSON.stringify(queryName),
-      range: JSON.stringify([0, PAGE_SIZE]),
+      range: JSON.stringify([0, 100]),
       sort: JSON.stringify(['createdAt', 'DESC']),
-      attributes:
-        'id,warehouseName,provinceId,districtId,wardId,status,createdAt',
+      attributes: '',
     };
     dispatch(filter(values));
     dispatch({
-      type: 'warehouse/fetch',
+      type: 'clinicReceipt/fetch',
       payload: query,
       callback: (res) => {
         setLoading(false);
       },
+    });
+  };
+
+  const openNotification = (type, message, color) => {
+    notification[type]({
+      message: message,
+      placement: 'bottomRight',
+      style: { background: color },
     });
   };
 
@@ -300,10 +271,9 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
       <Form
         onFinish={handleSearch}
         initialValues={{
-          warehouseName: filter.warehouseName || '',
-          provinceId: filter.provinceId || '',
-          districtId: filter.districtId || '',
-          wardId: filter.wardId || '',
+          mobile: filter.mobile || '',
+          customerName: filter.customerName || '',
+          clinicReceiptCode: filter.clinicReceiptCode || '',
           status: filter.status || undefined,
           dateCreated: filter.dateCreated || [],
         }}
@@ -311,13 +281,13 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
         <Row gutter={{ md: 0, lg: 8, xl: 16 }}>
           <Col xs={24} md={12} xl={8}>
             <FormItem
-              name="warehouseName"
-              label={<FormattedMessage id="app.warehouse.list.col1" />}
+              name="clinicReceiptCode"
+              label={<FormattedMessage id="app.clinicReceipt.list.col0" />}
               {...formItemLayout}
             >
               <Input
                 placeholder={intl.formatMessage({
-                  id: 'app.warehouse.search.col0',
+                  id: 'app.clinicReceipt.search.col1',
                 })}
                 size="small"
               />
@@ -325,75 +295,36 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
           </Col>
           <Col xs={24} md={12} xl={8}>
             <FormItem
-              name="provinceId"
-              label={<FormattedMessage id="app.warehouse.list.col2" />}
+              name="customerName"
+              label={<FormattedMessage id="app.clinicReceipt.list.col2" />}
               {...formItemLayout}
             >
-              <ProvinceSelect
+              <Input
                 placeholder={intl.formatMessage({
-                  id: 'app.warehouse.search.col2',
+                  id: 'app.clinicReceipt.search.col3',
                 })}
-                allowClear
                 size="small"
               />
             </FormItem>
           </Col>
           <Col xs={24} md={12} xl={8}>
             <FormItem
-              shouldUpdate={(prevValues, currentValues) =>
-                prevValues.provinceId !== currentValues.provinceId
-              }
-              noStyle
+              name="mobile"
+              label={<FormattedMessage id="app.clinicReceipt.list.col1" />}
+              {...formItemLayout}
             >
-              {({ getFieldValue }) => (
-                <FormItem
-                  name="districtId"
-                  label={<FormattedMessage id="app.healthFacility.list.col7" />}
-                  {...formItemLayout}
-                >
-                  <DistrictSelect
-                    placeholder={intl.formatMessage({
-                      id: 'app.healthFacility.search.col4',
-                    })}
-                    filter
-                    filterField={getFieldValue('provinceId') || 'a'}
-                    allowClear
-                    size="small"
-                  />
-                </FormItem>
-              )}
-            </FormItem>
-          </Col>
-          <Col xs={24} md={12} xl={8}>
-            <FormItem
-              shouldUpdate={(prevValues, currentValues) =>
-                prevValues.districtId !== currentValues.districtId
-              }
-              noStyle
-            >
-              {({ getFieldValue }) => (
-                <FormItem
-                  name="wardId"
-                  label={<FormattedMessage id="app.healthFacility.list.col8" />}
-                  {...formItemLayout}
-                >
-                  <WardSelect
-                    placeholder={intl.formatMessage({
-                      id: 'app.healthFacility.search.col5',
-                    })}
-                    filter
-                    filterField={getFieldValue('districtId') || 'a'}
-                    allowClear
-                    size="small"
-                  />
-                </FormItem>
-              )}
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'app.clinicReceipt.search.col0',
+                })}
+                size="small"
+              />
             </FormItem>
           </Col>
           <Col xl={8} md={12} xs={24}>
             <FormItem
               name="status"
-              label={<FormattedMessage id="app.search.status" />}
+              label={<FormattedMessage id="app.medicalRegister.list.col9" />}
               {...formItemLayout}
             >
               <Select
@@ -415,7 +346,7 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
               </Select>
             </FormItem>
           </Col>
-          <Col xl={6} md={12} xs={24}>
+          <Col xl={8} md={12} xs={24}>
             <FormItem
               name="dateCreated"
               label={
@@ -442,8 +373,8 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
             </FormItem>
           </Col>
           <Col
-            xl={2}
-            md={24}
+            xl={8}
+            md={12}
             xs={24}
             style={
               isMobile
@@ -470,17 +401,22 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
     );
   };
 
-  const deleteRecord = (id) => {
+  const handleStatus = (value, row) => {
+    const status = value;
+    const item = {
+      status,
+    };
     dispatch({
-      type: 'warehouse/delete',
+      type: 'clinicReceipt/updateStatus',
       payload: {
-        id: id,
+        id: row.id,
+        params: item,
       },
       callback: (res) => {
         if (res?.success === true) {
           openNotification(
             'success',
-            intl.formatMessage({ id: 'app.common.delete.success' }),
+            intl.formatMessage({ id: 'app.common.edit.success' }),
             '#f6ffed'
           );
           getList();
@@ -523,6 +459,7 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
                   <div>{item.name}</div>
                 </Menu.Item>
               );
+
             if (item.status === 0)
               return (
                 permissions.isBlock && (
@@ -534,6 +471,7 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
                   </Menu.Item>
                 )
               );
+
             if (item.status === -1)
               return (
                 permissions.isDelete && (
@@ -579,6 +517,7 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
         </Button>
       );
     }
+
     return (
       <Dropdown
         overlay={menu}
@@ -591,8 +530,10 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
       </Dropdown>
     );
   };
+
   const data = (list.data && list.data.list) || [];
   const pagination = (list.data && list.data.pagination) || [];
+
   const columns = [
     {
       dataIndex: null,
@@ -606,40 +547,74 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
       fixed: isMobile,
     },
     {
-      dataIndex: 'warehouseName',
-      name: 'warehouseName',
-      width: isMobile ? 100 : '10%',
-      title: <FormattedMessage id="app.warehouse.list.col2" />,
+      dataIndex: 'clinicReceiptCode',
+      name: 'clinicReceiptCode',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.clinicReceipt.list.col0" />,
       align: 'left',
       sorter: () => {},
       fixed: isMobile,
     },
     {
-      dataIndex: 'ward',
-      name: 'ward',
+      dataIndex: 'customer',
+      name: 'customer',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.warehouse.list.col4" />,
+      title: <FormattedMessage id="app.clinicReceipt.list.col2" />,
       align: 'center',
       sorter: () => {},
-      render: (cell) => <span>{cell.wardName}</span>,
+      render: (cell) => <span>{cell.customerName}</span>,
     },
     {
-      dataIndex: 'district',
-      name: 'district',
+      dataIndex: 'customer',
+      name: 'customer',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.warehouse.list.col4" />,
+      title: <FormattedMessage id="app.clinicReceipt.list.col1" />,
       align: 'center',
       sorter: () => {},
-      render: (cell) => <span>{cell.districtName}</span>,
+      render: (cell) => <span>{cell.mobile}</span>,
     },
     {
-      dataIndex: 'province',
-      name: 'province',
+      dataIndex: 'total',
+      name: 'total',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.warehouse.list.col3" />,
+      title: <FormattedMessage id="app.clinicReceipt.list.col6" />,
       align: 'center',
       sorter: () => {},
-      render: (cell) => <span>{cell.provinceName}</span>,
+      render: (text) => formatNumber(text),
+    },
+    {
+      dataIndex: 'giveBack',
+      title: '+Thu/-Trả',
+      align: 'left',
+      name: 'giveBack',
+      // align: 'center',
+      width: !isMobile && '10%',
+      render: (text) => {
+        if (text > 0) {
+          return (
+            <span
+              style={{
+                fontSize: '18px',
+                color: 'red',
+                fontWeight: '600',
+              }}
+            >
+              +{formatNumber(text)}
+            </span>
+          );
+        }
+        return (
+          <span
+            style={{
+              fontSize: '18px',
+              color: 'green',
+              fontWeight: '600',
+            }}
+          >
+            {formatNumber(text)}
+          </span>
+        );
+      },
     },
     {
       dataIndex: 'createdAt',
@@ -656,9 +631,9 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
     {
       dataIndex: 'status',
       name: 'status',
-      title: <FormattedMessage id="app.warehouse.list.col6" />,
+      title: <FormattedMessage id="app.clinicReceipt.list.col12" />,
       align: 'center',
-      width: !isMobile ? '12%' : 170,
+      width: !isMobile ? '9%' : 170,
       sorter: () => {},
       render: (cell, row) => (
         <React.Fragment>{renderStatusButton(cell, row)}</React.Fragment>
@@ -680,7 +655,7 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
               >
                 <Button
                   onClick={() => {
-                    setVisibleDrawer(!visibleDrawer);
+                    setVisibleModal(!visibleModal);
                     setDataEdit(row);
                   }}
                   icon={
@@ -692,34 +667,6 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
                 >
                   <FormattedMessage id="app.tooltip.edit" />
                 </Button>
-              </Tooltip>
-            )}
-            {permissions.isDelete && (
-              <Tooltip
-                title={
-                  !isMobile && intl.formatMessage({ id: 'app.tooltip.remove' })
-                }
-              >
-                <Popconfirm
-                  placement="bottom"
-                  title={<FormattedMessage id="app.confirm.remove" />}
-                  onConfirm={() => deleteRecord(row.id)}
-                >
-                  <Button
-                    icon={
-                      <i
-                        className="fas fa-trash"
-                        style={{ marginRight: '5px' }}
-                      />
-                    }
-                    className="btn_edit"
-                    type="ghost"
-                    shape="circle"
-                    style={{ marginLeft: '5px' }}
-                  >
-                    <FormattedMessage id="app.tooltip.remove" />
-                  </Button>
-                </Popconfirm>
               </Tooltip>
             )}
           </div>
@@ -734,41 +681,38 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
         <>
           {headerPage}
           <HeaderContent
-            title={<FormattedMessage id="app.warehouse.list.header" />}
+            title={<FormattedMessage id="app.clinicReceipt.list.header" />}
             action={
               <React.Fragment>
-                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  {permissions.isAdd && (
-                    <Tooltip
-                      title={
-                        !isMobile &&
-                        intl.formatMessage({
-                          id: 'app.warehouse.create.header',
-                        })
+                {permissions.isAdd && (
+                  <Tooltip
+                    title={
+                      !isMobile &&
+                      intl.formatMessage({
+                        id: 'app.clinicReceipt.create.header',
+                      })
+                    }
+                  >
+                    <Button
+                      icon={
+                        <i
+                          className="fas fa-plus"
+                          style={{ marginRight: '5px' }}
+                        />
                       }
+                      className="buttonThemMoi"
+                      onClick={() => {
+                        setVisibleModal(!visibleModal);
+                        setDataEdit({});
+                      }}
                     >
-                      <Button
-                        style={{ marginLeft: 10 }}
-                        icon={
-                          <i
-                            className="fas fa-plus"
-                            style={{ marginRight: '5px' }}
-                          />
-                        }
-                        className="buttonThemMoi"
-                        onClick={() => {
-                          setVisibleDrawer(!visibleDrawer);
-                          setDataEdit({});
-                        }}
-                      >
-                        {intl.formatMessage(
-                          { id: 'app.title.create' },
-                          { name: '(F2)' }
-                        )}
-                      </Button>
-                    </Tooltip>
-                  )}
-                </div>
+                      {intl.formatMessage(
+                        { id: 'app.title.create' },
+                        { name: '(F2)' }
+                      )}
+                    </Button>
+                  </Tooltip>
+                )}
               </React.Fragment>
             }
           >
@@ -794,7 +738,6 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
             >
               {renderForm()}
             </Modal>
-
             <Table
               loading={loading}
               rowKey="id"
@@ -818,11 +761,11 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
           }
         />
       )}
-      <WarehouseDrawer
+      <ClinicReceiptModal
         intl={intl}
         isMobile={isMobile}
-        visible={visibleDrawer}
-        titleDrawer={intl.formatMessage({ id: 'app.warehouse.list.title' })}
+        visible={visibleModal}
+        titleModal={intl.formatMessage({ id: 'app.clinicReceipt.list.title' })}
         dataEdit={dataEdit}
         getList={getList}
       />
@@ -830,4 +773,4 @@ const Warehouse = ({ isMobile, intl, headerPage }) => {
   );
 };
 
-export default Warehouse;
+export default ClinicReceipt;

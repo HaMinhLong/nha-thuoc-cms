@@ -20,6 +20,7 @@ const UserSelect = ({
   style,
   onChange,
   getAll,
+  className,
 }) => {
   const dispatch = useDispatch();
 
@@ -34,6 +35,11 @@ const UserSelect = ({
   const [dataStore, setDataStore] = useState([]);
   const [text, setText] = useState(textProps || '');
   const healthFacilityId = localStorage.getItem('healthFacilityId');
+
+  useEffect(() => {
+    setValueState(value);
+  }, [value]);
+
   useEffect(() => {
     fetch(1, undefined, valueState, false, false, false);
   }, []);
@@ -208,6 +214,7 @@ const UserSelect = ({
       </Select.Option>
     ));
   const dataRender = renderData(dataArr);
+
   return (
     <React.Fragment>
       <Select
@@ -230,6 +237,7 @@ const UserSelect = ({
         onPopupScroll={handleScroll}
         onDropdownVisibleChange={handleMouseLeave}
         style={style}
+        className={className}
       >
         {dataRender}
       </Select>

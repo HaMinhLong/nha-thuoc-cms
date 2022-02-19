@@ -38,6 +38,8 @@ import MedicineIssue from '../pages/MedicineIssue/MedicineIssue';
 import Consumable from '../pages/Consumable/Consumable';
 import MedicineTransfer from '../pages/MedicineTransfer/MedicineTransfer';
 import MedicalRegister from '../pages/MedicalRegister/MedicalRegister';
+import ClinicReceipt from '../pages/ClinicReceipt/ClinicReceipt';
+
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
 const AppRoutes = ({ headerPage }) => {
@@ -203,6 +205,13 @@ const AppRoutes = ({ headerPage }) => {
         </Route>
         <Route path="/nt-medicine-transfer/:id">
           <MedicineTransfer
+            isMobile={isMobile}
+            intl={intl}
+            headerPage={headerPage}
+          />
+        </Route>
+        <Route path="/pk-receipt/:id">
+          <ClinicReceipt
             isMobile={isMobile}
             intl={intl}
             headerPage={headerPage}

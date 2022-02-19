@@ -530,9 +530,12 @@ const MedicalRegisterModal = ({
                                     getFieldValue('clinicServicePackageId') ||
                                     'a'
                                   }
-                                  onChange={(id, name, time) => {
+                                  onChange={(id, name, time, userId) => {
                                     setClinicServiceId(id);
                                     setWorkTime(time);
+                                    formRef.current.setFieldsValue({
+                                      userId: userId,
+                                    });
                                     handleChangeClinicService(id, time, false);
                                   }}
                                 />

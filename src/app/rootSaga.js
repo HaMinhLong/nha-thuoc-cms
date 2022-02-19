@@ -46,6 +46,8 @@ import { consumableSaga } from '../features/consumable/consumableSaga';
 import { medicineTransferSaga } from '../features/medicineTransfer/medicineTransferSaga';
 import { clinicTimeSaga } from '../features/clinicTime/clinicTimeSaga';
 import { medicalRegisterSaga } from '../features/medicalRegister/medicalRegisterSaga';
+import { clinicReceiptSaga } from '../features/clinicReceipt/clinicReceiptSaga';
+import { clinicReceiptServiceSaga } from '../features/clinicReceiptService/clinicReceiptServiceSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -96,5 +98,7 @@ export default function* rootSaga() {
     medicineTransferSaga(),
     clinicTimeSaga(),
     medicalRegisterSaga(),
+    clinicReceiptSaga(),
+    clinicReceiptServiceSaga(),
   ]);
 }

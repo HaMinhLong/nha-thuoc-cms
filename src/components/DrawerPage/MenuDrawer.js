@@ -158,6 +158,9 @@ const MenuDrawer = ({
     });
     return count;
   };
+
+  console.log('formRef', formRef);
+
   return (
     <Drawer
       title={

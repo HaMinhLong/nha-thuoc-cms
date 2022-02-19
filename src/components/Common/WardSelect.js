@@ -86,7 +86,7 @@ const UserGroupSelect = ({
     const pagesize = 20;
     const tfilter = {
       wardName: searchValue,
-      districtId: filterField2 ? filterField2 : 'a',
+      districtId: filterField2 ? filterField2 : '',
       status: 1,
     };
     if (!filter) {

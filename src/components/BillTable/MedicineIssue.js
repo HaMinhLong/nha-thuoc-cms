@@ -122,7 +122,6 @@ const MedicineIssue = ({
       medicines: dataMedicines,
       exitsCustomer,
     };
-
     if (warehouseId === undefined) {
       setLoading(false);
       openNotification('error', 'Vui lòng chọn kho bán thuốc!', '#fff1f0');

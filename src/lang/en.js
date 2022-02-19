@@ -36,6 +36,7 @@ const MedicineIssue = require('./en-US/MedicineIssue');
 const Consumable = require('./en-US/Consumable');
 const MedicineTransfer = require('./en-US/MedicineTransfer');
 const MedicalRegister = require('./en-US/MedicalRegister');
+const ClinicReceipt = require('./en-US/ClinicReceipt');
 
 module.exports = {
   'app.common.validate.max300':
@@ -156,4 +157,5 @@ module.exports = {
   ...Consumable,
   ...MedicineTransfer,
   ...MedicalRegister,
+  ...ClinicReceipt,
 };

@@ -151,6 +151,7 @@ const CustomerModal = ({
       setData({});
     }
   };
+
   return (
     <Modal
       width={isMobile ? '100%' : '70%'}

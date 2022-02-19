@@ -11,8 +11,6 @@ import {
   Modal,
   Popover,
   Tag,
-  Dropdown,
-  Menu,
   notification,
   Tooltip,
   Popconfirm,
@@ -591,34 +589,6 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
                 >
                   <FormattedMessage id="app.tooltip.edit" />
                 </Button>
-              </Tooltip>
-            )}
-            {permissions.isDelete && (
-              <Tooltip
-                title={
-                  !isMobile && intl.formatMessage({ id: 'app.tooltip.remove' })
-                }
-              >
-                <Popconfirm
-                  placement="bottom"
-                  title={<FormattedMessage id="app.confirm.remove" />}
-                  onConfirm={() => deleteRecord(row)}
-                >
-                  <Button
-                    icon={
-                      <i
-                        className="fas fa-trash"
-                        style={{ marginRight: '5px' }}
-                      />
-                    }
-                    className="btn_edit"
-                    type="ghost"
-                    shape="circle"
-                    style={{ marginLeft: '5px' }}
-                  >
-                    <FormattedMessage id="app.tooltip.remove" />
-                  </Button>
-                </Popconfirm>
               </Tooltip>
             )}
           </div>

@@ -86,7 +86,7 @@ const UserGroupSelect = ({
     const pagesize = 20;
     const tfilter = {
       districtName: searchValue,
-      provinceId: filterField2 ? filterField2 : 'a',
+      provinceId: filterField2 ? filterField2 : '',
       status: 1,
     };
     if (!filter) {
