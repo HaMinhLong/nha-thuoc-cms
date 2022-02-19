@@ -21,6 +21,9 @@ module.exports = {
   'app.medicalRegister.list.col12': 'Examining',
   'app.medicalRegister.list.col13': 'Checked',
   'app.medicalRegister.list.col14': 'Directly at the clinic',
+  'app.medicalRegister.list.col15': 'Create result',
+  'app.medicalRegister.list.col16': 'Add clinic receipt',
+  'app.medicalRegister.list.col17': 'Edit clinic receipt',
 
   // search
   'app.medicalRegister.search.col0': 'Search by patient name',

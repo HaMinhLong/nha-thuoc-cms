@@ -32,6 +32,9 @@ const ClinicReceiptModal = ({
   titleModal,
   isMobile,
   getList,
+  dataClinicReceiptServices,
+  dataClinicRegister,
+  getListMedicalRegister,
 }) => {
   const dispatch = useDispatch();
   const componentRef = React.useRef();
@@ -55,6 +58,10 @@ const ClinicReceiptModal = ({
       changeModal('show');
       getReceiptCode();
       getOne(dataEdit?.id);
+    }
+    if (dataClinicReceiptServices) {
+      setClinicReceiptServices(dataClinicReceiptServices);
+      setTotalMoney(dataClinicReceiptServices?.[0]?.total);
     }
   }, [visible]);
 
@@ -204,7 +211,7 @@ const ClinicReceiptModal = ({
       };
       setDataForm(addItem);
       const modal = Modal.confirm({
-        title: 'Lưu thông tin',
+        title: intl.formatMessage({ id: 'app.receipt.list.col13' }),
         content: (
           <React.Fragment>
             <i
@@ -219,11 +226,11 @@ const ClinicReceiptModal = ({
                 modal.destroy();
               }}
             />
-            Bạn có muốn in phiếu ?
+            {intl.formatMessage({ id: 'app.receipt.list.col12' })}
           </React.Fragment>
         ),
-        okText: 'Có',
-        cancelText: 'Không',
+        okText: intl.formatMessage({ id: 'app.common.yes' }),
+        cancelText: intl.formatMessage({ id: 'app.common.no' }),
         onOk: () => handleSubmitAndPrint(true, values),
         onCancel: () => handleSubmitAndPrint(false, values),
       });
@@ -245,6 +252,8 @@ const ClinicReceiptModal = ({
       clinicReceiptServices,
       healthFacilityId,
       exitsCustomer,
+      exitsClinicRegister: dataClinicReceiptServices ? true : false,
+      medicalRegisterId: dataClinicRegister?.id,
     };
     if (clinicReceiptServices.length === 0) {
       openNotification(
@@ -272,7 +281,12 @@ const ClinicReceiptModal = ({
                   intl.formatMessage({ id: 'app.common.edit.success' }),
                   '#f6ffed'
                 );
-                getList();
+                if (getList) {
+                  getList();
+                }
+                if (getListMedicalRegister) {
+                  getListMedicalRegister();
+                }
                 changeModal('close');
               } else {
                 openNotification('error', res.message, '#fff1f0');
@@ -295,7 +309,12 @@ const ClinicReceiptModal = ({
                   '#f6ffed'
                 );
                 updateReceiptCode();
-                getList();
+                if (getList) {
+                  getList();
+                }
+                if (getListMedicalRegister) {
+                  getListMedicalRegister();
+                }
                 changeModal('close');
               } else {
                 openNotification('error', res.message, '#fff1f0');
@@ -842,7 +861,7 @@ const ClinicReceiptModal = ({
               style={{ marginLeft: 8 }}
               // loading={submitting}
             >
-              Lưu và in phiếu thu
+              {intl.formatMessage({ id: 'app.receipt.list.col12' })}
             </Button>
           )}
           content={() => componentRef.current}

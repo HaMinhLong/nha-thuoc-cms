@@ -382,7 +382,9 @@ const ClinicServicePackageModal = ({
                             style={{ marginLeft: 8 }}
                             // loading={submitting}
                           >
-                            Lưu và in phiếu thu
+                            {intl.formatMessage({
+                              id: 'app.receipt.list.col12',
+                            })}
                           </Button>
                         )}
                         content={() => componentRef.current}

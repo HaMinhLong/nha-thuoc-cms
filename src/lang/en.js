@@ -37,6 +37,7 @@ const Consumable = require('./en-US/Consumable');
 const MedicineTransfer = require('./en-US/MedicineTransfer');
 const MedicalRegister = require('./en-US/MedicalRegister');
 const ClinicReceipt = require('./en-US/ClinicReceipt');
+const ClinicReceiptService = require('./en-US/ClinicReceiptService');
 
 module.exports = {
   'app.common.validate.max300':
@@ -58,6 +59,8 @@ module.exports = {
   'app.search.button': 'Search',
   'app.search.status': 'Status',
   'app.common.action': '#',
+  'app.common.yes': 'Yes',
+  'app.common.no': 'No',
   'app.common.deleteBtn.cancelText': 'Cancel',
   'app.common.statusTag.-1': 'Delete',
   'app.common.statusTag.-2': 'Not activated',
@@ -158,4 +161,5 @@ module.exports = {
   ...MedicineTransfer,
   ...MedicalRegister,
   ...ClinicReceipt,
+  ...ClinicReceiptService,
 };

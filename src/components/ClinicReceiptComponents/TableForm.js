@@ -164,7 +164,7 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
             marginTop: isMobile ? '0 20px' : '0',
           }}
         >
-          Danh sách dịch vụ
+          {intl.formatMessage({ id: 'app.clinicReceiptService.list.title1' })}
         </h2>
         <Button
           type="primary"
@@ -177,7 +177,10 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
             position: 'absolute',
           }}
         >
-          Thêm dịch vụ (F2)
+          {intl.formatMessage({
+            id: 'app.clinicReceiptService.create1.header',
+          })}{' '}
+          (F2)
         </Button>
       </div>
       <Row
@@ -189,25 +192,25 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
         }}
       >
         <Col offset={1} span={5} xs={5}>
-          Loại dv
+          {intl.formatMessage({ id: 'app.clinicReceiptService.list.col0' })}
         </Col>
         <Col span={6} xs={6}>
-          Tên dịch vụ
+          {intl.formatMessage({ id: 'app.clinicReceiptService.list.col1' })}
         </Col>
         <Col span={2} xs={2}>
-          SL
+          {intl.formatMessage({ id: 'app.clinicReceiptService.list.col2' })}
         </Col>
         <Col span={2} xs={2}>
-          Đơn giá
+          {intl.formatMessage({ id: 'app.clinicReceiptService.list.col3' })}
         </Col>
         <Col span={2} xs={2}>
-          Giảm
+          {intl.formatMessage({ id: 'app.clinicReceiptService.list.col4' })}
         </Col>
         <Col span={2} xs={2}>
-          VAT
+          {intl.formatMessage({ id: 'app.clinicReceiptService.list.col6' })}
         </Col>
         <Col span={4} xs={4}>
-          Tổng
+          {intl.formatMessage({ id: 'app.clinicReceiptService.list.col6' })}
         </Col>
       </Row>
       <div
@@ -238,9 +241,13 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                         style={{ color: 'red', cursor: 'pointer' }}
                         onClick={() =>
                           Modal.confirm({
-                            title: 'Có chắc muốn xoá ?',
+                            title: intl.formatMessage({
+                              id: 'app.confirm.remove',
+                            }),
                             okText: 'Ok',
-                            cancelText: 'Hủy',
+                            cancelText: intl.formatMessage({
+                              id: 'app.common.deleteBtn.cancelText',
+                            }),
                             onOk: () => {
                               remove(item.id, item.flag);
                             },
@@ -305,7 +312,13 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
       <Modal
         key="Detail"
         title={`${
-          editOrCreate < 0 ? 'Thêm dịch vụ vào phiếu' : 'Sửa thông tin dịch vụ'
+          editOrCreate < 0
+            ? intl.formatMessage({
+                id: 'app.clinicReceiptService.create.header',
+              })
+            : intl.formatMessage({
+                id: 'app.clinicReceiptService.update.header',
+              })
         }`}
         visible={visible}
         width={isMobile ? '100%' : '50%'}
@@ -372,7 +385,10 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                   {...formItemLayout1}
                   label={
                     <span>
-                      <span style={{ color: 'red' }}>*</span>&nbsp; Loại dịch vụ
+                      <span style={{ color: 'red' }}>*</span>&nbsp;{' '}
+                      {intl.formatMessage({
+                        id: 'app.clinicReceiptService.list.col0',
+                      })}
                     </span>
                   }
                   name="clinicTypeId"
@@ -387,7 +403,9 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                 >
                   <ClinicTypeSelect
                     className="selectHiddenBorder"
-                    placeholder="Chọn loại dịch vụ"
+                    placeholder={intl.formatMessage({
+                      id: 'app.clinicReceiptService.list.type',
+                    })}
                     onChange={(id, name) => {
                       formRef.current.setFieldsValue({
                         clinicTypeName: name,
@@ -411,8 +429,10 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                       {...formItemLayout1}
                       label={
                         <span>
-                          <span style={{ color: 'red' }}>*</span>&nbsp; Gói dịch
-                          vụ
+                          <span style={{ color: 'red' }}>*</span>&nbsp;{' '}
+                          {intl.formatMessage({
+                            id: 'app.clinicReceiptService.list.col7',
+                          })}
                         </span>
                       }
                       name="clinicServicePackageId"
@@ -427,7 +447,9 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                     >
                       <ClinicServicePackageSelect
                         className="selectHiddenBorder"
-                        placeholder="Chọn gói dịch vụ"
+                        placeholder={intl.formatMessage({
+                          id: 'app.clinicReceiptService.list.servicePackage',
+                        })}
                         filter
                         filterField={getFieldValue('clinicTypeId') || 'a'}
                         onChange={() => {
@@ -452,7 +474,10 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                       {...formItemLayout1}
                       label={
                         <span>
-                          <span style={{ color: 'red' }}>*</span>&nbsp; Dịch vụ
+                          <span style={{ color: 'red' }}>*</span>&nbsp;
+                          {intl.formatMessage({
+                            id: 'app.clinicReceiptService.list.col1',
+                          })}
                         </span>
                       }
                       name="clinicServiceId"
@@ -467,7 +492,9 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                     >
                       <ClinicServiceSelect
                         className="selectHiddenBorder"
-                        placeholder="Chọn dịch vụ"
+                        placeholder={intl.formatMessage({
+                          id: 'app.clinicReceiptService.list.service',
+                        })}
                         filter
                         filterField={
                           getFieldValue('clinicServicePackageId') || 'a'
@@ -489,7 +516,10 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                   {...formItemLayout1}
                   label={
                     <span>
-                      <span style={{ color: 'red' }}>*</span>&nbsp; Bác sĩ
+                      <span style={{ color: 'red' }}>*</span>&nbsp;
+                      {intl.formatMessage({
+                        id: 'app.clinicReceiptService.list.col8',
+                      })}
                     </span>
                   }
                   name="userId"
@@ -504,7 +534,9 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                 >
                   <DoctorSelect
                     className="selectHiddenBorder"
-                    placeholder="Chọn bác sĩ"
+                    placeholder={intl.formatMessage({
+                      id: 'app.clinicReceiptService.list.doctor',
+                    })}
                     // onChange={this.handleChangeClinicTypeId}
                   />
                 </FormItem>
@@ -523,7 +555,10 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                     {...formItemLayout1}
                     label={
                       <span>
-                        <span style={{ color: 'red' }}>*</span>&nbsp;Đơn giá
+                        <span style={{ color: 'red' }}>*</span>&nbsp;
+                        {intl.formatMessage({
+                          id: 'app.clinicReceiptService.list.col3',
+                        })}
                       </span>
                     }
                     name="price"
@@ -539,7 +574,9 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                     <NumberInput
                       className="inputNumberHiddenBorder1"
                       onBlur={total}
-                      placeholder="Nhập đơn giá"
+                      placeholder={intl.formatMessage({
+                        id: 'app.clinicReceiptService.list.price',
+                      })}
                     />
                   </FormItem>
                 </Col>
@@ -548,7 +585,10 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                     {...formItemLayout1}
                     label={
                       <span>
-                        <span style={{ color: 'red' }}>*</span>&nbsp;Số lượng
+                        <span style={{ color: 'red' }}>*</span>&nbsp;
+                        {intl.formatMessage({
+                          id: 'app.clinicReceiptService.list.col2',
+                        })}
                       </span>
                     }
                     name="amount"
@@ -564,7 +604,9 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                     <NumberInput
                       className="inputNumberHiddenBorder1"
                       onBlur={total}
-                      placeholder="Nhập số lượng"
+                      placeholder={intl.formatMessage({
+                        id: 'app.clinicReceiptService.list.amount',
+                      })}
                     />
                   </FormItem>
                 </Col>
@@ -572,13 +614,21 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                   <FormItem
                     {...formItemLayout1}
                     name="discount"
-                    label={<span>Giảm giá</span>}
+                    label={
+                      <span>
+                        {intl.formatMessage({
+                          id: 'app.clinicReceiptService.list.col4',
+                        })}
+                      </span>
+                    }
                   >
                     <Discount
                       className1="inputNumberHiddenBorder1"
                       className2="selectHiddenBorder2"
                       onBlur={total}
-                      placeholder="Nhập giảm giá"
+                      placeholder={intl.formatMessage({
+                        id: 'app.clinicReceiptService.list.discount',
+                      })}
                       key="discount"
                     />
                   </FormItem>
@@ -587,13 +637,21 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                   <FormItem
                     {...formItemLayout1}
                     name="tax"
-                    label={<span>VAT</span>}
+                    label={
+                      <span>
+                        {intl.formatMessage({
+                          id: 'app.clinicReceiptService.list.col5',
+                        })}
+                      </span>
+                    }
                   >
                     <Discount
                       className1="inputNumberHiddenBorder1"
                       className2="selectHiddenBorder2"
                       onBlur={total}
-                      placeholder="Nhập VAT"
+                      placeholder={intl.formatMessage({
+                        id: 'app.clinicReceiptService.list.vat',
+                      })}
                       key="tax"
                     />
                   </FormItem>
@@ -602,7 +660,13 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                   <FormItem
                     {...formItemLayout1}
                     name="total"
-                    label={<span>THÀNH TIỀN</span>}
+                    label={
+                      <span>
+                        {intl.formatMessage({
+                          id: 'app.clinicReceiptService.list.col9',
+                        })}
+                      </span>
+                    }
                   >
                     <NumberInput
                       min={0}

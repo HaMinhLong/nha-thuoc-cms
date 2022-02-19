@@ -21,6 +21,9 @@ module.exports = {
   'app.medicalRegister.list.col12': 'Đang khám',
   'app.medicalRegister.list.col13': 'Đã khám',
   'app.medicalRegister.list.col14': 'Trực tiếp tại phòng khám',
+  'app.medicalRegister.list.col15': 'Tạo kết quả',
+  'app.medicalRegister.list.col16': 'Thêm phiếu thu',
+  'app.medicalRegister.list.col17': 'Sửa phiếu thu',
 
   // search
   'app.medicalRegister.search.col0': 'Tìm kiếm theo tên bệnh nhân',

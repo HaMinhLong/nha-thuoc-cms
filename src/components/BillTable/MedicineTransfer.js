@@ -154,7 +154,7 @@ const MedicineTransferPage = ({
       setDataForm(values);
       if (dataMedicines.length > 0 && warehouseId !== undefined) {
         const modal = Modal.confirm({
-          title: 'Lưu thông tin',
+          title: intl.formatMessage({ id: 'app.receipt.list.col13' }),
           content: (
             <React.Fragment>
               <i
@@ -169,11 +169,11 @@ const MedicineTransferPage = ({
                   modal.destroy();
                 }}
               />
-              Bạn có muốn in phiếu ?
+              {intl.formatMessage({ id: 'app.receipt.list.col12' })}
             </React.Fragment>
           ),
-          okText: 'Có',
-          cancelText: 'Không',
+          okText: intl.formatMessage({ id: 'app.common.yes' }),
+          cancelText: intl.formatMessage({ id: 'app.common.no' }),
           onOk: () => handleSubmitAndPrint(true, values),
           onCancel: () => handleSubmitAndPrint(false, values),
         });
@@ -506,7 +506,7 @@ const MedicineTransferPage = ({
                     style={{ marginLeft: 8 }}
                     // loading={submitting}
                   >
-                    Lưu và in phiếu thu
+                    {intl.formatMessage({ id: 'app.receipt.list.col12' })}
                   </Button>
                 )}
                 content={() => componentRef.current}

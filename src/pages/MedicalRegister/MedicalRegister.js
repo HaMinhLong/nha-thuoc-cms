@@ -9,12 +9,12 @@ import {
   DatePicker,
   Button,
   Modal,
-  Popover,
   Tag,
   notification,
   Tooltip,
-  Popconfirm,
   Result,
+  Menu,
+  Dropdown,
 } from 'antd';
 import { Link } from 'react-router-dom';
 import HeaderContent from '../../layouts/HeaderContent';
@@ -33,6 +33,7 @@ import { formatNumber } from '../../utils/utils';
 import { Redirect } from 'react-router-dom';
 import DoctorSelect from '../../components/Common/DoctorSelect';
 import MedicalRegisterModal from '../../components/ModalPage/MedicalRegisterModal';
+import ClinicReceiptModal from '../../components/ModalPage/ClinicReceiptModal';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -50,6 +51,11 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
   const [dataEdit, setDataEdit] = useState({});
   const [redirect, setRedirect] = useState('');
   const [permissions, setPermissions] = useState({});
+  const [visibleClinicReceipt, setVisibleClinicReceipt] = useState(false);
+  const [dataEditClinicReceiptServices, setDataEditClinicReceiptServices] =
+    useState([]);
+  const [dataClinicRegister, setDataClinicRegister] = useState({});
+  const [dataClinicReceipt, setDataClinicReceipt] = useState({});
 
   useEffect(() => {
     getPermission();
@@ -118,6 +124,7 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
       payload: params,
       callback: (res) => {
         setLoading(false);
+        setDataGroupByList(res?.results?.pagination?.dataGroupByList);
         if (res.success === false) {
           openNotification('error', res && res.message, '#fff1f0');
         }
@@ -439,6 +446,127 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
     );
   };
 
+  const handleButton = (cell, row) => {
+    const menu = (
+      <Menu className="menu_icon">
+        {permissions.isResult && row.status !== 0 && (
+          <Menu.Item key="1">
+            {intl.formatMessage({ id: 'app.medicalRegister.list.col15' })}
+          </Menu.Item>
+        )}
+        {permissions.isUpdate && row.status === 0 && (
+          <Menu.Item
+            key="2"
+            onClick={() => {
+              setDataClinicRegister(row);
+              setDataClinicReceipt({});
+
+              setDataEditClinicReceiptServices([
+                {
+                  id: row?.clinicService?.id,
+                  clinicTypeId:
+                    row?.clinicService?.clinicServicePackage?.clinicType?.id,
+                  clinicTypeName:
+                    row?.clinicService?.clinicServicePackage?.clinicType
+                      ?.clinicTypeName,
+                  clinicServicePackageId:
+                    row?.clinicService?.clinicServicePackage?.id,
+                  clinicServiceId: row?.clinicService?.id,
+                  clinicServiceName: row?.clinicService?.clinicServiceName,
+                  userId: row?.userId,
+                  price: Number(row?.clinicService?.price),
+                  amount: 1,
+                  total: Number(row?.clinicService?.price),
+                  discount: 0,
+                  discountType: 1,
+                  tax: 0,
+                  taxType: 1,
+                  flag: -1,
+                },
+              ]);
+              setVisibleClinicReceipt(!visibleClinicReceipt);
+            }}
+          >
+            {intl.formatMessage({ id: 'app.medicalRegister.list.col16' })}
+          </Menu.Item>
+        )}
+        {permissions.isUpdate && row.status !== 0 && (
+          <Menu.Item
+            key="3"
+            onClick={() => {
+              setDataClinicRegister(row);
+              setDataClinicReceipt({ id: row?.clinicReceipts?.[0].id });
+              setDataEditClinicReceiptServices([
+                {
+                  id: row?.clinicService?.id,
+                  clinicTypeId:
+                    row?.clinicService?.clinicServicePackage?.clinicType?.id,
+                  clinicTypeName:
+                    row?.clinicService?.clinicServicePackage?.clinicType
+                      ?.clinicTypeName,
+                  clinicServicePackageId:
+                    row?.clinicService?.clinicServicePackage?.id,
+                  clinicServiceId: row?.clinicService?.id,
+                  clinicServiceName: row?.clinicService?.clinicServiceName,
+                  userId: row?.userId,
+                  price: Number(row?.clinicService?.price),
+                  amount: 1,
+                  total: Number(row?.clinicService?.price),
+                  discount: 0,
+                  discountType: 1,
+                  tax: 0,
+                  taxType: 1,
+                  flag: 1,
+                },
+              ]);
+              setVisibleClinicReceipt(!visibleClinicReceipt);
+            }}
+          >
+            {intl.formatMessage({ id: 'app.medicalRegister.list.col17' })}
+          </Menu.Item>
+        )}
+      </Menu>
+    );
+
+    return (
+      <>
+        {permissions.isUpdate && (
+          <Tooltip
+            title={!isMobile && intl.formatMessage({ id: 'app.tooltip.edit' })}
+          >
+            <Button
+              onClick={() => {
+                setVisibleModal(!visibleModal);
+                setDataEdit(row);
+              }}
+              icon={<i className="fas fa-pen" style={{ marginRight: '5px' }} />}
+              className="btn_edit"
+              type="ghost"
+              shape="circle"
+              style={{ marginRight: 8 }}
+            >
+              <FormattedMessage id="app.tooltip.edit" />
+            </Button>
+          </Tooltip>
+        )}
+        <Dropdown
+          overlay={menu}
+          trigger={['click']}
+          placement="bottomLeft"
+          arrow
+        >
+          <Button className="btn_edit" shape="circle">
+            Khác
+            <i
+              className="fas fa-caret-down"
+              style={{ marginLeft: '5px', fontSize: '16px' }}
+            />
+          </Button>
+        </Dropdown>
+      </>
+    );
+  };
+
   // Xử lý tên trạng thái
   const renderChangeStatus = (activeTab) => {
     // log('activeTab', activeTab);
@@ -476,8 +604,6 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
     }
     return label;
   };
-
-  const menu = (data) => <Table dataSource={data} columns={columns2} />;
 
   const data = (list.data && list.data.list) || [];
   const pagination = (list.data && list.data.pagination) || [];
@@ -567,55 +693,8 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
       align: 'center',
       width: !isMobile ? '15%' : 170,
       render: (cell, row) => (
-        <React.Fragment>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            {permissions.isUpdate && (
-              <Tooltip
-                title={
-                  !isMobile && intl.formatMessage({ id: 'app.tooltip.edit' })
-                }
-              >
-                <Button
-                  onClick={() => {
-                    setVisibleModal(!visibleModal);
-                    setDataEdit(row);
-                  }}
-                  icon={
-                    <i className="fas fa-pen" style={{ marginRight: '5px' }} />
-                  }
-                  className="btn_edit"
-                  type="ghost"
-                  shape="circle"
-                >
-                  <FormattedMessage id="app.tooltip.edit" />
-                </Button>
-              </Tooltip>
-            )}
-          </div>
-        </React.Fragment>
+        <React.Fragment>{handleButton(cell, row)}</React.Fragment>
       ),
-    },
-  ];
-
-  const columns2 = [
-    {
-      dataIndex: null,
-      title: intl.formatMessage({ id: 'app.table.column.no' }),
-      align: 'center',
-      render: (text, record, index) => formatNumber(index + 1),
-    },
-    {
-      dataIndex: ['services', 'name'],
-      name: 'services.name',
-      title: 'Dịch vụ',
-      align: 'left',
-    },
-    {
-      dataIndex: 'count',
-      name: 'count',
-      title: 'Số người',
-      align: 'center',
-      render: (text) => formatNumber(text),
     },
   ];
 
@@ -674,7 +753,6 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
                     style={{
                       marginLeft: 'unset',
                       marginRight: 'unset',
-                      backgroundColor: '#fff',
                       padding: '0 5px',
                       borderBottom: '1px solid #00000033',
                       borderLeft: '1px solid #00000033',
@@ -682,17 +760,14 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
                       borderRadius: '4px 4px 0 0',
                     }}
                   >
-                    {dataGroupByList.map((item) => {
+                    {dataGroupByList?.map((item) => {
                       const label = renderChangeStatus(item.status.toString());
-                      const total = item.detail
-                        .map((item2) => Number(item2.count || 0))
-                        .reduce((a, b) => a + b);
                       return (
-                        <Col xl={12} xs={24}>
-                          <span style={{ fontWeight: 500, fontSize: '14px' }}>
-                            {label.status}:
-                          </span>
-                          <Popover content={menu(item.detail)} trigger="click">
+                        <React.Fragment key={item.status}>
+                          <Col xl={12} xs={24}>
+                            <span style={{ fontWeight: 500, fontSize: '14px' }}>
+                              {label.status}:
+                            </span>
                             <span
                               style={{
                                 color: label.color,
@@ -701,13 +776,13 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
                                 cursor: 'pointer',
                               }}
                             >
-                              &nbsp;{total}&nbsp;
+                              &nbsp;{item.count}&nbsp;
                               <CaretDownOutlined
                                 style={{ fontSize: '14px', marginTop: '10px' }}
                               />
                             </span>
-                          </Popover>
-                        </Col>
+                          </Col>
+                        </React.Fragment>
                       );
                     })}
                   </Row>
@@ -767,6 +842,16 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
         titleModal={intl.formatMessage({
           id: 'app.medicalRegister.list.title',
         })}
+      />
+      <ClinicReceiptModal
+        intl={intl}
+        isMobile={isMobile}
+        titleModal={intl.formatMessage({ id: 'app.clinicReceipt.list.title' })}
+        visible={visibleClinicReceipt}
+        dataClinicReceiptServices={dataEditClinicReceiptServices}
+        dataClinicRegister={dataClinicRegister}
+        getListMedicalRegister={getList}
+        dataEdit={dataClinicReceipt}
       />
     </Fragment>
   );

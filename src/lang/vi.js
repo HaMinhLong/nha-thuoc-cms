@@ -37,6 +37,7 @@ const Consumable = require('./vi-VN/Consumable');
 const MedicineTransfer = require('./vi-VN/MedicineTransfer');
 const MedicalRegister = require('./vi-VN/MedicalRegister');
 const ClinicReceipt = require('./vi-VN/ClinicReceipt');
+const ClinicReceiptService = require('./vi-VN/ClinicReceiptService');
 
 module.exports = {
   'app.common.validate.max300':
@@ -76,6 +77,8 @@ module.exports = {
   'app.common.crudBtns.3': 'Xuất báo cáo',
   'app.common.crudBtns.4': 'Lưu',
   'app.common.searchBtn': 'Tìm kiếm',
+  'app.common.yes': 'Có',
+  'app.common.no': 'Không',
   'app.common.different': 'Khác',
   'app.common.inDay': 'Trong ngày',
   'app.common.inWeek': 'Trong tuần',
@@ -159,4 +162,5 @@ module.exports = {
   ...MedicineTransfer,
   ...MedicalRegister,
   ...ClinicReceipt,
+  ...ClinicReceiptService,
 };
