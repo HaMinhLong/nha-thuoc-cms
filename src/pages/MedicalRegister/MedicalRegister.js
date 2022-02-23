@@ -34,6 +34,7 @@ import { Redirect } from 'react-router-dom';
 import DoctorSelect from '../../components/Common/DoctorSelect';
 import MedicalRegisterModal from '../../components/ModalPage/MedicalRegisterModal';
 import ClinicReceiptModal from '../../components/ModalPage/ClinicReceiptModal';
+import ClinicResultModal from '../../components/ModalPage/ClinicResultModal';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
@@ -56,6 +57,8 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
     useState([]);
   const [dataClinicRegister, setDataClinicRegister] = useState({});
   const [dataClinicReceipt, setDataClinicReceipt] = useState({});
+  const [visibleClinicResult, setVisibleClinicResult] = useState(false);
+  const [dataEditClinicResult, setDataEditClinicResult] = useState({});
 
   useEffect(() => {
     getPermission();
@@ -450,7 +453,23 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
     const menu = (
       <Menu className="menu_icon">
         {permissions.isResult && row.status !== 0 && (
-          <Menu.Item key="1">
+          <Menu.Item
+            key="1"
+            onClick={() => {
+              setVisibleClinicResult(!visibleClinicResult);
+              setDataEditClinicResult({
+                id: row?.clinicResults?.[0]?.id,
+                customer: {
+                  customerName: row?.customer?.customerName,
+                  mobile: row?.customer?.mobile,
+                  dateOfBirth: row?.customer?.dateOfBirth,
+                },
+                date: row?.date,
+                userId: row?.userId,
+                medicalRegisterId: row?.id,
+              });
+            }}
+          >
             {intl.formatMessage({ id: 'app.medicalRegister.list.col15' })}
           </Menu.Item>
         )}
@@ -460,7 +479,6 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
             onClick={() => {
               setDataClinicRegister(row);
               setDataClinicReceipt({});
-
               setDataEditClinicReceiptServices([
                 {
                   id: row?.clinicService?.id,
@@ -852,6 +870,14 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
         dataClinicRegister={dataClinicRegister}
         getListMedicalRegister={getList}
         dataEdit={dataClinicReceipt}
+      />
+      <ClinicResultModal
+        isMobile={isMobile}
+        intl={intl}
+        titleModal={intl.formatMessage({ id: 'app.clinicResult.list.header' })}
+        visible={visibleClinicResult}
+        dataEdit={dataEditClinicResult}
+        getList={getList}
       />
     </Fragment>
   );

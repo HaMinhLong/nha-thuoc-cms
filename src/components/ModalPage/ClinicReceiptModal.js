@@ -21,6 +21,7 @@ import '../../utils/css/styleIssu.scss';
 import TableForm from '../ClinicReceiptComponents/TableForm';
 import ReactToPrint from 'react-to-print';
 import Receipt from '../PrintTemplate/Clinic/Receipt';
+import CkEditor from '../CkEditor/CkEditor';
 
 const { isPhone, invoiceCode } = regexHelper;
 const FormItem = Form.Item;

@@ -9,7 +9,7 @@ module.exports = {
   // Tiêu đề các cột
   'app.clinicReceipt.list.col0': 'Mã phiếu',
   'app.clinicReceipt.list.col1': 'Số điện thoại',
-  'app.clinicReceipt.list.col2': 'Tên khách hàng',
+  'app.clinicReceipt.list.col2': 'Tên bệnh nhân',
   'app.clinicReceipt.list.col3': 'Ngày sinh',
   'app.clinicReceipt.list.col4': 'Phương thức thanh toán',
   'app.clinicReceipt.list.col5': 'Ghi chú',
@@ -23,16 +23,16 @@ module.exports = {
   'app.clinicReceipt.list.col13': 'Thông tin phiếu',
 
   // search
-  'app.clinicReceipt.search.col0': 'Tìm kiếm theo tên khách hàng',
+  'app.clinicReceipt.search.col0': 'Tìm kiếm theo tên bệnh nhân',
   'app.clinicReceipt.search.col1': 'Tìm kiếm theo mã phiếu thu',
   'app.clinicReceipt.search.col2': 'Tìm kiếm theo phương thức thanh toán',
-  'app.clinicReceipt.search.col3': 'Tìm kiếm theo tên khách hàng',
+  'app.clinicReceipt.search.col3': 'Tìm kiếm theo tên bệnh nhân',
 
   // placeholder
   'app.clinicReceipt.list.name': 'Nhập mã phiếu',
   'app.clinicReceipt.list.mobile':
-    'Nhập số điện thoại để tìm kiếm thông tin khách hàng',
-  'app.clinicReceipt.list.customerName': 'Nhập tên khách hàng',
+    'Nhập số điện thoại để tìm kiếm thông tin bệnh nhân',
+  'app.clinicReceipt.list.customerName': 'Nhập tên bệnh nhân',
   'app.clinicReceipt.list.dateOfBirth': 'Chọn ngày sinh',
   'app.clinicReceipt.list.paymentMethod': 'Chọn phương thức thanh toán',
   'app.clinicReceipt.list.description': 'Nhập ghi chú',

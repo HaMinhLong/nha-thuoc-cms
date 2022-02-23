@@ -4,15 +4,11 @@ import {
   Input,
   Row,
   Col,
-  Select,
   DatePicker,
   Button,
   Modal,
-  Dropdown,
-  Menu,
   notification,
   Tooltip,
-  Popconfirm,
   Result,
 } from 'antd';
 import { Link } from 'react-router-dom';
@@ -21,32 +17,33 @@ import Table from '../../components/Table';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { customer, filter } from '../../features/customer/customerSlice';
+import {
+  clinicResult,
+  filter,
+} from '../../features/clinicResult/clinicResultSlice';
 import '../../utils/css/styleList.scss';
 import moment from 'moment';
 import filterIcon from '../../static/web/images/filter.svg';
-import dropdownWhite from '../../static/web/images/dropDown_white.svg';
-import dropdownBlack from '../../static/web/images/dropDown_black.svg';
 import { formatNumber } from '../../utils/utils';
-import CustomerModal from '../../components/ModalPage/CustomerModal';
-import CustomerGroupSelect from '../../components/Common/CustomerGroupSelect';
+import ClinicResultModal from '../../components/ModalPage/ClinicResultModal';
 import { Redirect } from 'react-router-dom';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 const PAGE_SIZE = process.env.REACT_APP_PAGE_SIZE;
-const Customer = ({ isMobile, intl, headerPage }) => {
+const ClinicResult = ({ isMobile, intl, headerPage }) => {
   let { id } = useParams();
   const userGroupId = localStorage.getItem('userGroupId');
   const healthFacilityId = localStorage.getItem('healthFacilityId');
   const dispatch = useDispatch();
-  const list = useSelector(customer);
+  const list = useSelector(clinicResult);
   const [loading, setLoading] = useState(false);
   const [visibleModal, setVisibleModal] = useState(false);
   const [visibleFilter, setVisibleFilter] = useState(false);
   const [dataEdit, setDataEdit] = useState({});
   const [redirect, setRedirect] = useState('');
   const [permissions, setPermissions] = useState({});
+
   useEffect(() => {
     getList();
     getPermission();
@@ -55,6 +52,7 @@ const Customer = ({ isMobile, intl, headerPage }) => {
   if (redirect) {
     return <Redirect to={redirect} />;
   }
+
   const getPermission = () => {
     const params = {
       filter: JSON.stringify({ userGroupId: userGroupId }),
@@ -84,8 +82,7 @@ const Customer = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify({ healthFacilityId: healthFacilityId }),
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
-      attributes:
-        'id,customerName,customerGroupId,mobile,email,status,createdAt',
+      attributes: '',
     };
     let values = {};
     if (query && query.filter && query.filter !== '{}') {
@@ -111,7 +108,7 @@ const Customer = ({ isMobile, intl, headerPage }) => {
     }
     dispatch(filter(values));
     dispatch({
-      type: 'customer/fetch',
+      type: 'clinicResult/fetch',
       payload: params,
       callback: (res) => {
         setLoading(false);
@@ -119,40 +116,6 @@ const Customer = ({ isMobile, intl, headerPage }) => {
           openNotification('error', res && res.message, '#fff1f0');
         }
       },
-    });
-  };
-
-  const handleStatus = (value, row) => {
-    const status = value;
-    const item = {
-      status,
-    };
-    dispatch({
-      type: 'customer/updateStatus',
-      payload: {
-        id: row.id,
-        params: item,
-      },
-      callback: (res) => {
-        if (res?.success === true) {
-          openNotification(
-            'success',
-            intl.formatMessage({ id: 'app.common.edit.success' }),
-            '#f6ffed'
-          );
-          getList();
-        } else if (res?.success === false) {
-          openNotification('error', res && res.message, '#fff1f0');
-        }
-      },
-    });
-  };
-
-  const openNotification = (type, message, color) => {
-    notification[type]({
-      message: message,
-      placement: 'bottomRight',
-      style: { background: color },
     });
   };
 
@@ -169,24 +132,15 @@ const Customer = ({ isMobile, intl, headerPage }) => {
         : '';
     const queryName = {
       customerName: queryFilter.customerName && queryFilter.customerName.trim(),
-      customerGroupId: queryFilter && queryFilter.customerGroupId,
-      status: queryFilter && queryFilter.status,
-      gender: queryFilter && queryFilter.gender,
+      mobile: queryFilter && queryFilter.mobile,
       fromDate: fromDate,
       toDate: toDate,
-      healthFacilityId,
     };
     if (!(queryFilter.customerName && queryFilter.customerName.trim())) {
       delete queryName.customerName;
     }
-    if (!queryFilter.customerGroupId) {
-      delete queryName.customerGroupId;
-    }
-    if (!queryFilter.status) {
-      delete queryName.status;
-    }
-    if (!queryFilter.gender) {
-      delete queryName.gender;
+    if (!queryFilter.mobile) {
+      delete queryName.mobile;
     }
     if (rangeValue.length === 0) {
       delete queryName.fromDate;
@@ -203,12 +157,11 @@ const Customer = ({ isMobile, intl, headerPage }) => {
         pagination.current * pagination.pageSize,
       ]),
       sort: JSON.stringify(sort),
-      attributes:
-        'id,customerName,customerGroupId,mobile,email,status,createdAt',
+      attributes: '',
     };
     dispatch(filter(queryFilter));
     dispatch({
-      type: 'customer/fetch',
+      type: 'clinicResult/fetch',
       payload: query,
       callback: (res) => {
         setLoading(false);
@@ -229,24 +182,15 @@ const Customer = ({ isMobile, intl, headerPage }) => {
         : '';
     const queryName = {
       customerName: values.customerName && values.customerName.trim(),
-      customerGroupId: values && values.customerGroupId,
-      status: values && values.status,
-      gender: values && values.gender,
+      mobile: values && values.mobile,
       fromDate: fromDate,
       toDate: toDate,
-      healthFacilityId,
     };
     if (!(values.customerName && values.customerName.trim())) {
       delete queryName.customerName;
     }
-    if (!values.customerGroupId) {
-      delete queryName.customerGroupId;
-    }
-    if (!values.status) {
-      delete queryName.status;
-    }
-    if (!values.gender) {
-      delete queryName.gender;
+    if (!values.mobile) {
+      delete queryName.mobile;
     }
     if (rangeValue.length === 0) {
       delete queryName.fromDate;
@@ -256,12 +200,11 @@ const Customer = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify(queryName),
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
-      attributes:
-        'id,customerName,customerGroupId,mobile,email,status,createdAt',
+      attributes: '',
     };
     dispatch(filter(values));
     dispatch({
-      type: 'customer/fetch',
+      type: 'clinicResult/fetch',
       payload: query,
       callback: (res) => {
         setLoading(false);
@@ -298,9 +241,7 @@ const Customer = ({ isMobile, intl, headerPage }) => {
         onFinish={handleSearch}
         initialValues={{
           customerName: filter.customerName || '',
-          customerGroupId: filter.customerGroupId || '',
-          status: filter.status || undefined,
-          gender: filter.gender || undefined,
+          mobile: filter.mobile || '',
           dateCreated: filter.dateCreated || [],
         }}
       >
@@ -308,12 +249,12 @@ const Customer = ({ isMobile, intl, headerPage }) => {
           <Col xs={24} md={12} xl={8}>
             <FormItem
               name="customerName"
-              label={<FormattedMessage id="app.customer.list.col0" />}
+              label={<FormattedMessage id="app.clinicResult.list.col1" />}
               {...formItemLayout}
             >
               <Input
                 placeholder={intl.formatMessage({
-                  id: 'app.customer.search.col0',
+                  id: 'app.clinicResult.search.col0',
                 })}
                 size="small"
               />
@@ -321,67 +262,19 @@ const Customer = ({ isMobile, intl, headerPage }) => {
           </Col>
           <Col xs={24} md={12} xl={8}>
             <FormItem
-              name="customerGroupId"
-              label={<FormattedMessage id="app.customer.list.col1" />}
+              name="mobile"
+              label={<FormattedMessage id="app.clinicResult.list.col2" />}
               {...formItemLayout}
             >
-              <CustomerGroupSelect
+              <Input
                 placeholder={intl.formatMessage({
-                  id: 'app.customer.search.col1',
+                  id: 'app.clinicResult.search.col1',
                 })}
-                allowClear
                 size="small"
               />
             </FormItem>
           </Col>
-          <Col xl={8} md={12} xs={24}>
-            <FormItem
-              name="gender"
-              label={<FormattedMessage id="app.customer.list.col4" />}
-              {...formItemLayout}
-            >
-              <Select
-                allowClear
-                placeholder={intl.formatMessage({
-                  id: 'app.common.status.placeholder',
-                })}
-                size="small"
-              >
-                <Select.Option key={1}>
-                  {intl.formatMessage({ id: 'app.customer.list.col11' })}
-                </Select.Option>
-                <Select.Option key={2}>
-                  {intl.formatMessage({ id: 'app.customer.list.col12' })}
-                </Select.Option>
-              </Select>
-            </FormItem>
-          </Col>
-          <Col xl={8} md={12} xs={24}>
-            <FormItem
-              name="status"
-              label={<FormattedMessage id="app.customer.list.col10" />}
-              {...formItemLayout}
-            >
-              <Select
-                allowClear
-                placeholder={intl.formatMessage({
-                  id: 'app.common.status.placeholder',
-                })}
-                size="small"
-              >
-                <Select.Option key={1}>
-                  {intl.formatMessage({ id: 'app.common.statusTag.1' })}
-                </Select.Option>
-                <Select.Option key={0}>
-                  {intl.formatMessage({ id: 'app.common.statusTag.0' })}
-                </Select.Option>
-                <Select.Option key={-1}>
-                  {intl.formatMessage({ id: 'app.common.statusTag.-1' })}
-                </Select.Option>
-              </Select>
-            </FormItem>
-          </Col>
-          <Col xl={8} md={12} xs={24}>
+          <Col xl={6} md={12} xs={24}>
             <FormItem
               name="dateCreated"
               label={
@@ -408,7 +301,7 @@ const Customer = ({ isMobile, intl, headerPage }) => {
             </FormItem>
           </Col>
           <Col
-            xl={8}
+            xl={2}
             md={12}
             xs={24}
             style={
@@ -436,132 +329,17 @@ const Customer = ({ isMobile, intl, headerPage }) => {
     );
   };
 
-  const deleteRecord = (id) => {
-    dispatch({
-      type: 'customer/delete',
-      payload: {
-        id: id,
-      },
-      callback: (res) => {
-        if (res?.success === true) {
-          openNotification(
-            'success',
-            intl.formatMessage({ id: 'app.common.delete.success' }),
-            '#f6ffed'
-          );
-          getList();
-        } else if (res?.success === false) {
-          openNotification('error', res && res.message, '#fff1f0');
-        }
-      },
+  const openNotification = (type, message, color) => {
+    notification[type]({
+      message: message,
+      placement: 'bottomRight',
+      style: { background: color },
     });
   };
 
-  const renderStatusButton = (cell, row) => {
-    const menuStatus = [
-      {
-        status: 1,
-        name: intl.formatMessage({ id: 'app.common.statusTag.1' }),
-      },
-      {
-        status: 0,
-        name: intl.formatMessage({ id: 'app.common.statusTag.0' }),
-      },
-      {
-        status: -1,
-        name: intl.formatMessage({ id: 'app.common.statusTag.-1' }),
-      },
-    ];
-
-    const statusList = menuStatus.filter((x) => x.status !== cell);
-
-    const menu = (
-      <Menu className="menu_icon">
-        {statusList &&
-          statusList.length > 0 &&
-          statusList.map((item) => {
-            if (item.status === 1)
-              return (
-                <Menu.Item
-                  key={item.status}
-                  onClick={() => handleStatus(item.status, row)}
-                >
-                  <div>{item.name}</div>
-                </Menu.Item>
-              );
-
-            if (item.status === 0)
-              return (
-                permissions.isBlock && (
-                  <Menu.Item
-                    key={item.status}
-                    onClick={() => handleStatus(item.status, row)}
-                  >
-                    <div>{item.name}</div>
-                  </Menu.Item>
-                )
-              );
-
-            if (item.status === -1)
-              return (
-                permissions.isDelete && (
-                  <Menu.Item
-                    key={item.status}
-                    onClick={() => handleStatus(item.status, row)}
-                  >
-                    <div>{item.name}</div>
-                  </Menu.Item>
-                )
-              );
-
-            return (
-              <Menu.Item
-                key={item.status}
-                onClick={() => handleStatus(item.status, row)}
-              >
-                <div>{item.name}</div>
-              </Menu.Item>
-            );
-          })}
-      </Menu>
-    );
-
-    let btn = (
-      <Button className="btn_status1">
-        {intl.formatMessage({ id: 'app.common.statusTag.1' })}
-        <img src={dropdownWhite} alt="icon drop down" />
-      </Button>
-    );
-    if (cell === 0) {
-      btn = (
-        <Button className="btn_status0">
-          {intl.formatMessage({ id: 'app.common.statusTag.0' })}
-          <img src={dropdownBlack} alt="icon drop down" />
-        </Button>
-      );
-    } else if (cell === -1) {
-      btn = (
-        <Button className="btn_statusAn">
-          {intl.formatMessage({ id: 'app.common.statusTag.-1' })}
-          <img src={dropdownBlack} alt="icon drop down" />
-        </Button>
-      );
-    }
-
-    return (
-      <Dropdown
-        overlay={menu}
-        trigger={['click']}
-        placement="bottomCenter"
-        arrow
-        className="dropDownCustom"
-      >
-        {btn}
-      </Dropdown>
-    );
-  };
   const data = (list.data && list.data.list) || [];
   const pagination = (list.data && list.data.pagination) || [];
+
   const columns = [
     {
       dataIndex: null,
@@ -575,38 +353,41 @@ const Customer = ({ isMobile, intl, headerPage }) => {
       fixed: isMobile,
     },
     {
-      dataIndex: 'customerName',
-      name: 'customerName',
+      dataIndex: 'medicalRegister',
+      name: 'medicalRegister',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.customer.list.col0" />,
+      title: <FormattedMessage id="app.clinicResult.list.col1" />,
       align: 'left',
       sorter: () => {},
       fixed: isMobile,
+      render: (cell) => <span>{cell?.customer?.customerName}</span>,
     },
     {
-      dataIndex: 'customerGroup',
-      name: 'customerGroup',
+      dataIndex: 'medicalRegister',
+      name: 'medicalRegister',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.customer.list.col1" />,
+      title: <FormattedMessage id="app.clinicResult.list.col2" />,
       align: 'center',
       sorter: () => {},
-      render: (cell) => <span>{cell.customerGroupName}</span>,
+      render: (cell) => <span>{cell?.customer?.mobile}</span>,
     },
     {
-      dataIndex: 'mobile',
-      name: 'mobile',
+      dataIndex: 'medicalRegister',
+      name: 'medicalRegister',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.customer.list.col2" />,
+      title: <FormattedMessage id="app.clinicResult.list.col3" />,
       align: 'center',
       sorter: () => {},
+      render: (cell) => <span>{cell?.clinicService?.clinicServiceName}</span>,
     },
     {
-      dataIndex: 'email',
-      name: 'email',
+      dataIndex: 'medicalRegister',
+      name: 'medicalRegister',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.customer.list.col5" />,
+      title: <FormattedMessage id="app.clinicResult.list.col5" />,
       align: 'center',
       sorter: () => {},
+      render: (cell) => <span>{cell?.user?.fullName}</span>,
     },
     {
       dataIndex: 'createdAt',
@@ -618,17 +399,6 @@ const Customer = ({ isMobile, intl, headerPage }) => {
         <React.Fragment>
           {moment(cell && cell).format('HH:mm DD/MM/YYYY')}
         </React.Fragment>
-      ),
-    },
-    {
-      dataIndex: 'status',
-      name: 'status',
-      title: <FormattedMessage id="app.customer.list.col10" />,
-      align: 'center',
-      width: !isMobile ? '9%' : 170,
-      sorter: () => {},
-      render: (cell, row) => (
-        <React.Fragment>{renderStatusButton(cell, row)}</React.Fragment>
       ),
     },
     {
@@ -648,7 +418,19 @@ const Customer = ({ isMobile, intl, headerPage }) => {
                 <Button
                   onClick={() => {
                     setVisibleModal(!visibleModal);
-                    setDataEdit(row);
+                    setDataEdit({
+                      id: row.id,
+                      customer: {
+                        customerName:
+                          row?.medicalRegister?.customer?.customerName,
+                        mobile: row?.medicalRegister?.customer?.mobile,
+                        dateOfBirth:
+                          row?.medicalRegister?.customer?.dateOfBirth,
+                      },
+                      userId: row?.medicalRegister?.user?.id,
+                      date: row?.medicalRegister?.date,
+                      medicalRegisterId: row?.medicalRegister?.id,
+                    });
                   }}
                   icon={
                     <i className="fas fa-pen" style={{ marginRight: '5px' }} />
@@ -661,77 +443,19 @@ const Customer = ({ isMobile, intl, headerPage }) => {
                 </Button>
               </Tooltip>
             )}
-            {permissions.isDelete && (
-              <Tooltip
-                title={
-                  !isMobile && intl.formatMessage({ id: 'app.tooltip.remove' })
-                }
-              >
-                <Popconfirm
-                  placement="bottom"
-                  title={<FormattedMessage id="app.confirm.remove" />}
-                  onConfirm={() => deleteRecord(row.id)}
-                >
-                  <Button
-                    icon={
-                      <i
-                        className="fas fa-trash"
-                        style={{ marginRight: '5px' }}
-                      />
-                    }
-                    className="btn_edit"
-                    type="ghost"
-                    shape="circle"
-                    style={{ marginLeft: '5px' }}
-                  >
-                    <FormattedMessage id="app.tooltip.remove" />
-                  </Button>
-                </Popconfirm>
-              </Tooltip>
-            )}
           </div>
         </React.Fragment>
       ),
     },
   ];
+
   return (
     <>
       {permissions ? (
         <>
           {headerPage}
           <HeaderContent
-            title={<FormattedMessage id="app.customer.list.header" />}
-            action={
-              <React.Fragment>
-                {permissions.isAdd && (
-                  <Tooltip
-                    title={
-                      !isMobile &&
-                      intl.formatMessage({ id: 'app.customer.create.header' })
-                    }
-                  >
-                    <Button
-                      icon={
-                        <i
-                          className="fas fa-plus"
-                          style={{ marginRight: '5px' }}
-                        />
-                      }
-                      className="buttonThemMoi"
-                      onClick={() => {
-                        setVisibleModal(!visibleModal);
-                        setDataEdit({});
-                      }}
-                    >
-                      {intl.formatMessage(
-                        { id: 'app.title.create' },
-                        { name: '(F2)' }
-                      )}
-                    </Button>
-                  </Tooltip>
-                )}
-              </React.Fragment>
-            }
+            title={<FormattedMessage id="app.clinicResult.list.header" />}
           >
             <div className="tableListForm">{renderForm()}</div>
             <div
@@ -778,16 +502,15 @@ const Customer = ({ isMobile, intl, headerPage }) => {
           }
         />
       )}
-      <CustomerModal
-        intl={intl}
+      <ClinicResultModal
         isMobile={isMobile}
+        intl={intl}
         visible={visibleModal}
-        titleModal={intl.formatMessage({ id: 'app.customer.list.title' })}
         dataEdit={dataEdit}
-        getList={getList}
+        titleModal={intl.formatMessage({ id: 'app.clinicResult.list.header' })}
       />
     </>
   );
 };
 
-export default Customer;
+export default ClinicResult;

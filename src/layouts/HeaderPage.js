@@ -44,7 +44,7 @@ const HeaderPage = ({ localLanguage, setLocalLanguage }) => {
           <img width="30" height="30" className="logo" src={logo} alt="" />
         </Link>
         {/* defaultSelectedKeys={['1']} */}
-        <Menu mode="horizontal">
+        <Menu mode="horizontal" inlineCollapsed={true}>
           <Menu.Item
             key="1"
             icon={

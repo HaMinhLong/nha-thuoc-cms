@@ -131,7 +131,7 @@ export const template_1 = (
       <td
         style={{ fontSize: 12 }}
         dangerouslySetInnerHTML={{
-          __html: dataPrint && dataPrint.descriptions,
+          __html: dataPrint?.description,
         }}
         colSpan={5}
       />
@@ -313,7 +313,7 @@ export const template_2 = (
         </span>
         <div
           dangerouslySetInnerHTML={{
-            __html: dataPrint && dataPrint.descriptions,
+            __html: dataPrint?.description,
           }}
         />
       </td>
@@ -489,7 +489,7 @@ export const template_3 = (
         <div
           style={{ fontSize: 12 }}
           dangerouslySetInnerHTML={{
-            __html: dataPrint && dataPrint.descriptions,
+            __html: dataPrint?.description,
           }}
         />
       </td>
@@ -682,7 +682,7 @@ export const template_4 = (
         <div
           style={{ fontSize: 12 }}
           dangerouslySetInnerHTML={{
-            __html: dataPrint && dataPrint.descriptions,
+            __html: dataPrint?.description,
           }}
         />
       </td>
@@ -860,7 +860,7 @@ export const template_5 = (
         </div>
         <div
           dangerouslySetInnerHTML={{
-            __html: dataPrint && dataPrint.descriptions,
+            __html: dataPrint?.description,
           }}
           className="descriptions"
         />
