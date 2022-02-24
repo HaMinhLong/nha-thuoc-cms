@@ -91,11 +91,11 @@ const ClinicServicePackageModal = ({
           clinicServicePackageNameOld: data.clinicServicePackageName,
           healthFacilityId,
         };
-        if (data.id) {
+        if (data?.id) {
           dispatch({
             type: 'clinicServicePackage/update',
             payload: {
-              id: data.id,
+              id: data?.id,
               params: {
                 ...addItem,
               },
@@ -182,7 +182,7 @@ const ClinicServicePackageModal = ({
               textTransform: 'uppercase',
             }}
           >
-            {data.id
+            {data?.id
               ? intl.formatMessage(
                   { id: 'app.title.update' },
                   { name: data.clinicServicePackageName }
@@ -231,11 +231,11 @@ const ClinicServicePackageModal = ({
                 clinicTypeId: data.clinicTypeId || '',
                 printFormId: data.printFormId || '',
                 sampleResults: data.sampleResults || '',
-                status: data.id ? data.status : 1,
+                status: data?.id ? data.status : 1,
               }}
               ref={formRef}
               layout="vertical"
-              key={`${data.id}_${key}` || '0'}
+              key={`${data?.id}_${key}` || '0'}
             >
               <Row gutter={20}>
                 <Col xs={24} md={24}>

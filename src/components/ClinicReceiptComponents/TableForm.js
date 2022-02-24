@@ -67,7 +67,6 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
         discountType: values.discount.currency || 1,
         tax: values.tax.number || 0,
         taxType: values.tax.currency || 1,
-        flag: 1,
       };
       if (editOrCreate < 0) {
         addMedicine.flag = -1;
@@ -109,6 +108,27 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
 
   const remove = (id, flag) => {
     if (flag > 0) {
+      dispatch({
+        type: 'clinicReceiptService/delete',
+        payload: {
+          id: id,
+        },
+        callback: (res) => {
+          if (res?.success === true) {
+            openNotification(
+              'success',
+              intl.formatMessage({ id: 'app.common.delete.success' }),
+              '#f6ffed'
+            );
+            setData(data?.filter((item) => item.id !== id));
+            if (onChange) {
+              onChange(data?.filter((item) => item.id !== id));
+            }
+          } else if (res?.success === false) {
+            openNotification('error', res && res.message, '#fff1f0');
+          }
+        },
+      });
     } else {
       setData(data?.filter((item) => item.id !== id));
       if (onChange) {
@@ -179,8 +199,7 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
         >
           {intl.formatMessage({
             id: 'app.clinicReceiptService.create1.header',
-          })}{' '}
-          (F2)
+          })}
         </Button>
       </div>
       <Row
@@ -366,9 +385,10 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                 number: dataEdit.tax || 0,
                 currency: dataEdit.taxType || 1,
               },
+              flag: dataEdit.flag || -1,
             }}
             ref={formRef}
-            key={`${data.id}_${key}` || '0'}
+            key={`${data?.id}_${key}` || '0'}
           >
             <FormItem hidden name="id">
               <Input />
@@ -377,6 +397,9 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
               <Input />
             </FormItem>
             <FormItem hidden name="clinicServiceName">
+              <Input />
+            </FormItem>
+            <FormItem hidden name="flag">
               <Input />
             </FormItem>
             <Row gutter={20}>

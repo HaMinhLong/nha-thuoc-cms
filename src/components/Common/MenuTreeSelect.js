@@ -90,7 +90,7 @@ const MenuTreeSelect = ({
             result.results &&
             result.results.list.map((data) => ({
               menuName: data.menuName,
-              id: data.id,
+              id: data?.id,
               children: data.children,
             }));
           setTotalItems(

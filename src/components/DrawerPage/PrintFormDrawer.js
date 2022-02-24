@@ -78,11 +78,11 @@ const PrintFormDrawer = ({
           printFormName: values.printFormName && values.printFormName.trim(),
           printFormNameOld: data.printFormName,
         };
-        if (data.id) {
+        if (data?.id) {
           dispatch({
             type: 'printForm/update',
             payload: {
-              id: data.id,
+              id: data?.id,
               params: {
                 ...addItem,
               },
@@ -147,7 +147,7 @@ const PrintFormDrawer = ({
     <Drawer
       title={
         <h3 style={{ color: '#196CA6', marginBottom: '0px' }}>
-          {data.id
+          {data?.id
             ? intl.formatMessage(
                 { id: 'app.title.update' },
                 { name: data.printFormName }
@@ -197,11 +197,11 @@ const PrintFormDrawer = ({
           initialValues={{
             printFormName: data.printFormName || '',
             paperSizeTypeId: data.paperSizeTypeId || '',
-            status: data.id ? data.status : 1,
+            status: data?.id ? data.status : 1,
           }}
           ref={formRef}
           layout="vertical"
-          key={`${data.id}_${key}` || '0'}
+          key={`${data?.id}_${key}` || '0'}
         >
           <FormItem
             label={

@@ -1,20 +1,15 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import {
-  Button,
-  Modal,
-  Popconfirm,
-  Form,
-  Row,
-  Col,
-  notification,
-  Spin,
-} from 'antd';
+import { Button, Modal, Form, Row, Col, notification, Spin } from 'antd';
 import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import DoctorSelect from '../Common/DoctorSelect';
 import ReactToPrint from 'react-to-print';
 import CkEditor from '../CkEditor/CkEditor';
+import MedicalRegisterModal from './MedicalRegisterModal';
+import ClinicReceiptModal from './ClinicReceiptModal';
+import ClinicPrescriptionModal from './ClinicPrescriptionModal';
+
 import '../../utils/css/styleList.scss';
 
 const FormItem = Form.Item;
@@ -26,6 +21,7 @@ const ClinicResultModal = ({
   titleModal,
   dataEdit,
   getList,
+  isRegisterPage,
 }) => {
   const formRef = React.createRef();
 
@@ -35,6 +31,9 @@ const ClinicResultModal = ({
   const [visibleModal, setVisibleModal] = useState(false);
   const [data, setData] = useState({});
   const [key, setKey] = useState(Math.random());
+  const [visibleRegister, setVisibleRegister] = useState(false);
+  const [visibleReceipt, setVisibleReceipt] = useState(false);
+  const [visiblePrescription, setVisiblePrescription] = useState(false);
 
   useEffect(() => {
     if (!visible && checkFirst) {
@@ -71,7 +70,7 @@ const ClinicResultModal = ({
         },
       });
     } else {
-      setData(dataEdit);
+      setData({ ...dataEdit });
     }
   };
 
@@ -82,11 +81,11 @@ const ClinicResultModal = ({
         description: data.description,
         medicalRegisterId: data?.medicalRegisterId,
       };
-      if (data.id) {
+      if (data?.id) {
         dispatch({
           type: 'clinicResult/update',
           payload: {
-            id: data.id,
+            id: data?.id,
             params: {
               ...addItem,
             },
@@ -144,11 +143,6 @@ const ClinicResultModal = ({
     });
   };
 
-  const handleReset = () => {
-    formRef.current.resetFields();
-    setData({});
-  };
-
   const formItemLayout = {
     labelCol: {
       xs: { span: 10 },
@@ -192,21 +186,9 @@ const ClinicResultModal = ({
               textAlign: 'right',
             }}
           >
-            <Popconfirm
-              placement="bottom"
-              title={<FormattedMessage id="app.confirm.reset" />}
-              onConfirm={handleReset}
-            >
-              <Button type="primary" style={{ marginLeft: 8 }}>
-                <i className="fa fa-ban" />
-                &nbsp;
-                <FormattedMessage id="app.common.crudBtns.1" />
-              </Button>
-            </Popconfirm>
             <Button
               type="primary"
               htmlType="submit"
-              style={{ marginLeft: 8, marginRight: 30 }}
               loading={loading}
               onClick={() => handleSubmit()}
             >
@@ -214,6 +196,34 @@ const ClinicResultModal = ({
               &nbsp;
               <FormattedMessage id="app.common.crudBtns.2" />
             </Button>
+            {isRegisterPage && (
+              <Button
+                type="primary"
+                style={{ marginLeft: 8 }}
+                loading={loading}
+                onClick={() => setVisibleRegister(!visibleRegister)}
+              >
+                Thêm lịch tái khám
+              </Button>
+            )}
+            {isRegisterPage && (
+              <Button
+                style={{ marginLeft: 8 }}
+                loading={loading}
+                onClick={() => setVisibleReceipt(!visibleReceipt)}
+              >
+                Cận lâm sàng
+              </Button>
+            )}
+            {isRegisterPage && (
+              <Button
+                style={{ marginLeft: 8 }}
+                loading={loading}
+                onClick={() => setVisiblePrescription(!visiblePrescription)}
+              >
+                Kê đơn thuốc
+              </Button>
+            )}
           </div>
         }
       >
@@ -227,7 +237,7 @@ const ClinicResultModal = ({
               >
                 <FormItem>
                   <CkEditor
-                    value={data.id ? data.description : ''}
+                    value={data?.id ? data.description : ''}
                     onChangeData={(value) =>
                       setData({ ...data, description: value })
                     }
@@ -333,6 +343,29 @@ const ClinicResultModal = ({
           </Spin>
         </Form>
       </Modal>
+      <MedicalRegisterModal
+        isMobile={isMobile}
+        intl={intl}
+        visible={visibleRegister}
+        dataCustomer={data}
+      />
+      <ClinicReceiptModal
+        isMobile={isMobile}
+        intl={intl}
+        visible={visibleReceipt}
+        dataCustomer={data?.customer}
+      />
+      <ClinicPrescriptionModal
+        isMobile={isMobile}
+        intl={intl}
+        titleModal={intl.formatMessage({
+          id: 'app.clinicPrescription.list.header',
+        })}
+        getList={getList}
+        visible={visiblePrescription}
+        dataCustomer={data}
+        dataEdit={{ id: data?.clinicPrescriptionId }}
+      />
     </Fragment>
   );
 };

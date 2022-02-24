@@ -100,7 +100,7 @@ const PaperSizeTypeSelect = ({
             result &&
             result.results &&
             result.results.list.map((data) => ({
-              valueState: data.id,
+              valueState: data?.id,
               text: data.paperSizeTypeName,
             }));
           setTotalItems(

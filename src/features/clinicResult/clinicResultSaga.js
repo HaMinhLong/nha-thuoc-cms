@@ -5,7 +5,6 @@ import {
   getOneClinicResult,
   createClinicResult,
   updateClinicResult,
-  updateStatusClinicResult,
   deleteClinicResult,
 } from '../../api/clinicResult';
 

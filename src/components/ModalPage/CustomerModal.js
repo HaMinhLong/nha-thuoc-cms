@@ -86,11 +86,11 @@ const CustomerModal = ({
           customerNameOld: data.customerName,
           healthFacilityId,
         };
-        if (data.id) {
+        if (data?.id) {
           dispatch({
             type: 'customer/update',
             payload: {
-              id: data.id,
+              id: data?.id,
               params: {
                 ...addItem,
               },
@@ -178,7 +178,7 @@ const CustomerModal = ({
               textTransform: 'uppercase',
             }}
           >
-            {data.id
+            {data?.id
               ? intl.formatMessage(
                   { id: 'app.title.update' },
                   { name: data.customerName }
@@ -230,11 +230,11 @@ const CustomerModal = ({
                 gender: data.gender || undefined,
                 email: data.email || '',
                 address: data.address || '',
-                status: data.id ? data.status : 1,
+                status: data?.id ? data.status : 1,
               }}
               ref={formRef}
               layout="vertical"
-              key={`${data.id}_${key}` || '0'}
+              key={`${data?.id}_${key}` || '0'}
             >
               <Row gutter={20}>
                 <Col xs={24} md={8}>

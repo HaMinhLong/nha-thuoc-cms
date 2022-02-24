@@ -85,11 +85,11 @@ const ClinicServiceDrawer = ({
           time: values.time.format('HH:mm:ss').toString() || '',
           healthFacilityId,
         };
-        if (data.id) {
+        if (data?.id) {
           dispatch({
             type: 'clinicService/update',
             payload: {
-              id: data.id,
+              id: data?.id,
               params: {
                 ...addItem,
               },
@@ -154,7 +154,7 @@ const ClinicServiceDrawer = ({
     <Drawer
       title={
         <h3 style={{ color: '#196CA6', marginBottom: '0px' }}>
-          {data.id
+          {data?.id
             ? intl.formatMessage(
                 { id: 'app.title.update' },
                 { name: data.clinicServiceName }
@@ -207,14 +207,14 @@ const ClinicServiceDrawer = ({
             clinicServiceName: data.clinicServiceName || '',
             clinicServicePackageId: data.clinicServicePackageId || '',
             price: data.price || 0,
-            time: data.id ? moment(data?.time, 'HH:mm:ss') : '',
+            time: data?.id ? moment(data?.time, 'HH:mm:ss') : '',
             userId: data.userId || '',
             description: data.description || '',
-            status: data.id ? data.status : 1,
+            status: data?.id ? data.status : 1,
           }}
           ref={formRef}
           layout="vertical"
-          key={`${data.id}_${key}` || '0'}
+          key={`${data?.id}_${key}` || '0'}
         >
           <FormItem
             label={

@@ -120,9 +120,7 @@ const CkEditor = ({ value, onChangeData }) => {
       z-index: -1;
     }
   `;
-  const onChange = (e) => {
-    console.log(e.target.getContent());
-  };
+ 
   return (
     <Fragment>
       <div

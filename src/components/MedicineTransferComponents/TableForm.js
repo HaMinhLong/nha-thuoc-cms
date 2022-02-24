@@ -179,7 +179,6 @@ const TableForm = (props) => {
         const addMedicine = {
           ...medicines,
           status: 1,
-          flag: 1,
           healthFacilityId,
         };
         addMedicine.medicineTransferMedicines = {
@@ -596,6 +595,7 @@ const TableForm = (props) => {
               price: medicineTransferMedicines?.price,
               total: medicineTransferMedicines?.total,
               unitId: medicineTransferMedicines.unitId || undefined,
+              flag: medicineTransferMedicines.flag || -1,
             }}
             ref={formRef}
             key={key}
@@ -606,7 +606,9 @@ const TableForm = (props) => {
             <FormItem hidden name="consumableMedicineId">
               <Input />
             </FormItem>
-
+            <FormItem hidden name="flag">
+              <Input />
+            </FormItem>
             <Row gutter={20} justify="center" style={{ marginTop: '10px' }}>
               <Col
                 sm={16}

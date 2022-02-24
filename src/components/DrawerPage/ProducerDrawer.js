@@ -79,11 +79,11 @@ const ProducerDrawer = ({
           provinceNameOld: data.producerName,
           healthFacilityId,
         };
-        if (data.id) {
+        if (data?.id) {
           dispatch({
             type: 'producer/update',
             payload: {
-              id: data.id,
+              id: data?.id,
               params: {
                 ...addItem,
               },
@@ -148,7 +148,7 @@ const ProducerDrawer = ({
     <Drawer
       title={
         <h3 style={{ color: '#196CA6', marginBottom: '0px' }}>
-          {data.id
+          {data?.id
             ? intl.formatMessage(
                 { id: 'app.title.update' },
                 { name: data.producerName }
@@ -201,11 +201,11 @@ const ProducerDrawer = ({
             mobile: data.mobile || '',
             email: data.email || '',
             address: data.address || '',
-            status: data.id ? data.status : 1,
+            status: data?.id ? data.status : 1,
           }}
           ref={formRef}
           layout="vertical"
-          key={`${data.id}_${key}` || '0'}
+          key={`${data?.id}_${key}` || '0'}
         >
           <FormItem
             label={

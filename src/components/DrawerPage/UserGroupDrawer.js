@@ -77,11 +77,11 @@ const UserGroupDrawer = ({
           userGroupName: values.userGroupName && values.userGroupName.trim(),
           userGroupNameOld: data.userGroupName,
         };
-        if (data.id) {
+        if (data?.id) {
           dispatch({
             type: 'userGroup/update',
             payload: {
-              id: data.id,
+              id: data?.id,
               params: {
                 ...addItem,
               },
@@ -146,7 +146,7 @@ const UserGroupDrawer = ({
     <Drawer
       title={
         <h3 style={{ color: '#196CA6', marginBottom: '0px' }}>
-          {data.id
+          {data?.id
             ? intl.formatMessage(
                 { id: 'app.title.update' },
                 { name: data.userGroupName }
@@ -196,11 +196,11 @@ const UserGroupDrawer = ({
           initialValues={{
             userGroupName: data.userGroupName || '',
             userGroupDescriptions: data.userGroupDescriptions || '',
-            status: data.id ? data.status : 1,
+            status: data?.id ? data.status : 1,
           }}
           ref={formRef}
           layout="vertical"
-          key={`${data.id}_${key}` || '0'}
+          key={`${data?.id}_${key}` || '0'}
         >
           <FormItem
             label={

@@ -138,11 +138,11 @@ const MedicineModal = ({
           healthFacilityId,
           medicineUnits,
         };
-        if (data.id) {
+        if (data?.id) {
           dispatch({
             type: 'medicine/update',
             payload: {
-              id: data.id,
+              id: data?.id,
               params: {
                 ...addItem,
               },
@@ -213,7 +213,7 @@ const MedicineModal = ({
             textTransform: 'uppercase',
           }}
         >
-          {data.id
+          {data?.id
             ? intl.formatMessage(
                 { id: 'app.title.update' },
                 { name: data.medicineName }
@@ -275,11 +275,11 @@ const MedicineModal = ({
             packageId: data.packageId || undefined,
             producerId: data.producerId || undefined,
             unitId: medicineUnits[0]?.unitId || undefined,
-            status: data.id ? data.status : 1,
+            status: data?.id ? data.status : 1,
           }}
           ref={formRef}
           layout="vertical"
-          key={`${data.id}_${key}` || '0'}
+          key={`${data?.id}_${key}` || '0'}
         >
           <Row gutter={20}>
             <Col
@@ -309,7 +309,7 @@ const MedicineModal = ({
                     ]}
                   >
                     <Input
-                      disabled={data.id ? true : false}
+                      disabled={data?.id ? true : false}
                       placeholder={intl.formatMessage({
                         id: 'app.medicine.list.name',
                       })}
@@ -343,7 +343,7 @@ const MedicineModal = ({
                     ]}
                   >
                     <Input
-                      disabled={data.id ? true : false}
+                      disabled={data?.id ? true : false}
                       placeholder={intl.formatMessage({
                         id: 'app.medicine.list.registrationNumber',
                       })}
@@ -429,7 +429,7 @@ const MedicineModal = ({
                     ]}
                   >
                     <ShortCutSelectPackage
-                      disabled={data.id ? true : false}
+                      disabled={data?.id ? true : false}
                       isMobile={isMobile}
                       intl={intl}
                       placeholder={intl.formatMessage({

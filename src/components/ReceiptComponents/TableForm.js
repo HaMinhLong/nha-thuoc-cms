@@ -187,7 +187,6 @@ const TableFormReceipt = (props) => {
         producerId: values.producerId,
         unitId: values.unitId,
         status: 1,
-        flag: 1,
         healthFacilityId,
         medicineUnits,
       };
@@ -627,6 +626,7 @@ const TableFormReceipt = (props) => {
                 currency: receiptMedicines?.taxType,
               },
               total: receiptMedicines?.total,
+              flag: medicines.flag || -1,
             }}
             ref={formRef}
             layout="vertical"
@@ -638,7 +638,9 @@ const TableFormReceipt = (props) => {
             <FormItem hidden name="receiptMedicineId">
               <Input />
             </FormItem>
-
+            <FormItem hidden name="flag">
+              <Input />
+            </FormItem>
             <Row gutter={20}>
               <Col
                 lg={14}

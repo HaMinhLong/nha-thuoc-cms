@@ -459,10 +459,13 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
               setVisibleClinicResult(!visibleClinicResult);
               setDataEditClinicResult({
                 id: row?.clinicResults?.[0]?.id,
+                clinicPrescriptionId: row?.clinicPrescriptions?.[0]?.id,
                 customer: {
+                  id: row?.customer?.id,
                   customerName: row?.customer?.customerName,
                   mobile: row?.customer?.mobile,
                   dateOfBirth: row?.customer?.dateOfBirth,
+                  address: row?.customer?.address,
                 },
                 date: row?.date,
                 userId: row?.userId,
@@ -878,6 +881,7 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
         visible={visibleClinicResult}
         dataEdit={dataEditClinicResult}
         getList={getList}
+        isRegisterPage={true}
       />
     </Fragment>
   );

@@ -84,11 +84,11 @@ const MenuDrawer = ({
           menuNameOld: data.menuName,
           parentId: values.parentId || null,
         };
-        if (data.id) {
+        if (data?.id) {
           dispatch({
             type: 'menu/update',
             payload: {
-              id: data.id,
+              id: data?.id,
               params: {
                 ...addItem,
               },
@@ -159,13 +159,11 @@ const MenuDrawer = ({
     return count;
   };
 
-  console.log('formRef', formRef);
-
   return (
     <Drawer
       title={
         <h3 style={{ color: '#196CA6', marginBottom: '0px' }}>
-          {data.id
+          {data?.id
             ? intl.formatMessage(
                 { id: 'app.title.update' },
                 { name: data.menuName }
@@ -218,11 +216,11 @@ const MenuDrawer = ({
             orderBy: (data.orderBy && Number(data.orderBy)) || '',
             icon: data.icon || '',
             url: data.url || '',
-            status: data.id ? data.status : 1,
+            status: data?.id ? data.status : 1,
           }}
           ref={formRef}
           layout="vertical"
-          key={`${data.id}_${key}` || '0'}
+          key={`${data?.id}_${key}` || '0'}
         >
           <FormItem
             label={

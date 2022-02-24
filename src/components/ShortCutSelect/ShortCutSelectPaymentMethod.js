@@ -157,7 +157,7 @@ const ShortCutSelectPaymentMethod = ({
             result &&
             result.results &&
             result.results.list.map((data) => ({
-              valueState: data.id,
+              valueState: data?.id,
               text: data.paymentMethodName,
             }));
           setTotalItems(

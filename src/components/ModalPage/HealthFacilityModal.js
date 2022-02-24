@@ -90,11 +90,11 @@ const HealthFacilityModal = ({
           healthFacilityNameOld:
             values.healthFacilityName && values.healthFacilityName.trim(),
         };
-        if (data.id) {
+        if (data?.id) {
           dispatch({
             type: 'healthFacility/update',
             payload: {
-              id: data.id,
+              id: data?.id,
               params: {
                 ...addItem,
               },
@@ -181,7 +181,7 @@ const HealthFacilityModal = ({
               textTransform: 'uppercase',
             }}
           >
-            {data.id
+            {data?.id
               ? intl.formatMessage(
                   { id: 'app.title.update' },
                   { name: data.healthFacilityName }
@@ -236,11 +236,11 @@ const HealthFacilityModal = ({
                 representativeName: data.representativeName || '',
                 representativeMobile: data.representativeMobile || '',
                 medicalFacilityGroupId: data.medicalFacilityGroupId || '',
-                status: data.id ? data.status : 1,
+                status: data?.id ? data.status : 1,
               }}
               ref={formRef}
               layout="vertical"
-              key={`${data.id}_${key}` || '0'}
+              key={`${data?.id}_${key}` || '0'}
             >
               <Row gutter={[20, 20]}>
                 <Col xs={24} md={24} lg={24}>

@@ -36,6 +36,7 @@ const ClinicReceiptModal = ({
   dataClinicReceiptServices,
   dataClinicRegister,
   getListMedicalRegister,
+  dataCustomer,
 }) => {
   const dispatch = useDispatch();
   const componentRef = React.useRef();
@@ -106,7 +107,19 @@ const ClinicReceiptModal = ({
         },
       });
     } else {
-      setData({});
+      if (dataCustomer) {
+        setData({
+          customer: {
+            id: dataCustomer?.id,
+            mobile: dataCustomer?.mobile,
+            customerName: dataCustomer?.customerName,
+            dateOfBirth: dataCustomer?.dateOfBirth,
+            address: dataCustomer?.address,
+          },
+        });
+      } else {
+        setData({});
+      }
     }
   };
 
@@ -131,10 +144,10 @@ const ClinicReceiptModal = ({
             const { list } = res.results;
             if (list.length > 0) {
               formRef.current.setFieldsValue({
-                customerId: list[0].id,
-                customerName: `${list[0].customerName}`,
-                dateOfBirth: list[0].dateOfBirth,
-                address: list[0].address,
+                customerId: list[0]?.id,
+                customerName: `${list[0]?.customerName}`,
+                dateOfBirth: list[0]?.dateOfBirth,
+                address: list[0]?.address,
               });
               setExitsCustomer(true);
             } else {
@@ -187,7 +200,7 @@ const ClinicReceiptModal = ({
   const handleCustomerBrought = () => {
     const customerBrought = formRef.current.getFieldValue('customerBrought');
 
-    const total = data.id ? data.total : totalMoney;
+    const total = data?.id ? data.total : totalMoney;
     if (customerBrought >= total) {
       formRef.current.setFieldsValue({
         paid: total,
@@ -266,11 +279,11 @@ const ClinicReceiptModal = ({
       if (!addItem.payLater && addItem.paid < addItem.total) {
         openNotification('error', 'Vui lòng thanh toán phiếu thu!', '#fff1f0');
       } else {
-        if (data.id) {
+        if (data?.id) {
           dispatch({
             type: 'clinicReceipt/update',
             payload: {
-              id: data.id,
+              id: data?.id,
               params: {
                 ...addItem,
               },
@@ -349,7 +362,7 @@ const ClinicReceiptModal = ({
       total += item.total;
     });
     setTotalMoney(total);
-    if (data.id) {
+    if (data?.id) {
       setData({ ...data, total: total });
     }
   };
@@ -413,7 +426,7 @@ const ClinicReceiptModal = ({
               textTransform: 'uppercase',
             }}
           >
-            {data.id
+            {data?.id
               ? intl.formatMessage({ id: 'app.clinicReceipt.update.header' })
               : intl.formatMessage({ id: 'app.clinicReceipt.create.header' })}
           </p>
@@ -461,22 +474,22 @@ const ClinicReceiptModal = ({
             hideRequiredMark
             // onSubmit={this.handleSubmit}
             initialValues={{
-              clinicReceiptCode: data.id
+              clinicReceiptCode: data?.id
                 ? data.clinicReceiptCode
                 : clinicReceiptCode.receiptCode,
+              customerId: data?.customer?.id,
               mobile: data?.customer?.mobile,
               address: data?.customer?.address,
               dateOfBirth: data?.customer?.dateOfBirth,
               customerName: data?.customer?.customerName,
               clinicReceiptId: data?.id,
-              customerId: data?.customer?.id,
-              paymentMethodId: data.id ? data.paymentMethodId : '',
-              description: data.id ? data.description : '',
-              paid: data.id ? data.paid : 0,
-              customerBrought: data.id ? data.customerBrought : 0,
-              giveBack: data.id ? data.giveBack : 0,
-              payLater: data.id ? data.payLater : false,
-              status: data.id ? data.status : 1,
+              paymentMethodId: data?.paymentMethodId,
+              description: data?.description,
+              paid: data?.id ? data.paid : 0,
+              customerBrought: data?.id ? data.customerBrought : 0,
+              giveBack: data?.id ? data.giveBack : 0,
+              payLater: data?.id ? data.payLater : false,
+              status: data?.id ? data.status : 1,
             }}
             ref={formRef}
             key={`${data?.id}_${key}` || '0'}
@@ -549,7 +562,7 @@ const ClinicReceiptModal = ({
                             <NumberInput
                               disabled
                               className="inputNumberHiddenBorder1"
-                              value={data.id ? data.total : totalMoney}
+                              value={data?.id ? data.total : totalMoney}
                               style={{
                                 fontWeight: 'bold',
                                 fontSize: '18px',

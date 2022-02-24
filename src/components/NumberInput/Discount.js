@@ -21,7 +21,7 @@ const Discount = (props) => {
 
   const handleNumberChange = (value) => {
     // const number = parseInt(value || 0, 10);
-    // console.log(value)
+
     if (isNaN(value)) {
       return;
     }

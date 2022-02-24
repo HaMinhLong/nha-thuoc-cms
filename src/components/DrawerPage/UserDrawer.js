@@ -85,11 +85,11 @@ const UserGroupDrawer = ({
           usernameOld: data.username,
           fullName: values.fullName && values.fullName.trim(),
         };
-        if (data.id) {
+        if (data?.id) {
           dispatch({
             type: 'user/update',
             payload: {
-              id: data.id,
+              id: data?.id,
               params: {
                 ...addItem,
               },
@@ -154,7 +154,7 @@ const UserGroupDrawer = ({
     <Drawer
       title={
         <h3 style={{ color: '#196CA6', marginBottom: '0px' }}>
-          {data.id
+          {data?.id
             ? intl.formatMessage(
                 { id: 'app.title.update' },
                 { name: data.username }
@@ -212,11 +212,11 @@ const UserGroupDrawer = ({
             districtId: data.districtId || '',
             address: data.address || '',
             wardId: data.wardId || '',
-            status: data.id ? data.status : -2,
+            status: data?.id ? data.status : -2,
           }}
           ref={formRef}
           layout="vertical"
-          key={`${data.id}_${key}` || '0'}
+          key={`${data?.id}_${key}` || '0'}
         >
           <Row gutter={[20, 20]}>
             <Col xs={24} md={12}>
@@ -246,13 +246,13 @@ const UserGroupDrawer = ({
                 ]}
               >
                 <Input
-                  disabled={data.id}
+                  disabled={data?.id}
                   placeholder={intl.formatMessage({
                     id: 'app.user.list.username',
                   })}
                 />
               </FormItem>
-              {!data.id && (
+              {!data?.id && (
                 <FormItem
                   label={
                     <span>

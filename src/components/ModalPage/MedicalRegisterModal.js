@@ -33,6 +33,7 @@ const MedicalRegisterModal = ({
   isMobile,
   getList,
   titleModal,
+  dataCustomer,
 }) => {
   const dispatch = useDispatch();
   const formRef = React.createRef();
@@ -47,6 +48,7 @@ const MedicalRegisterModal = ({
   const [exitsCustomer, setExitsCustomer] = useState(false);
   const [keyStyle, setKeyStyle] = useState({});
   const [key, setKey] = useState(Math.random());
+
   useEffect(() => {
     if (!visible && checkFirst) {
       setCheckFirst(false);
@@ -78,7 +80,19 @@ const MedicalRegisterModal = ({
         },
       });
     } else {
-      setData({});
+      if (dataCustomer) {
+        setData({
+          customer: {
+            id: dataCustomer?.customer?.id,
+            mobile: dataCustomer?.customer?.mobile,
+            customerName: dataCustomer?.customer?.customerName,
+            dateOfBirth: dataCustomer?.customer?.dateOfBirth,
+          },
+          userId: dataCustomer?.userId,
+        });
+      } else {
+        setData({});
+      }
     }
   };
 
@@ -199,7 +213,7 @@ const MedicalRegisterModal = ({
             clinicTimeId: keyStyle.id,
             exitsCustomer,
           };
-          if (data.id) {
+          if (data?.id) {
             const item = {
               isClose: true,
             };
@@ -223,7 +237,7 @@ const MedicalRegisterModal = ({
             dispatch({
               type: 'medicalRegister/update',
               payload: {
-                id: data.id,
+                id: data?.id,
                 params: {
                   ...addItem,
                 },
@@ -381,7 +395,7 @@ const MedicalRegisterModal = ({
               textTransform: 'uppercase',
             }}
           >
-            {data.id
+            {data?.id
               ? intl.formatMessage({ id: 'app.medicalRegister.update.header' })
               : intl.formatMessage({ id: 'app.medicalRegister.create.header' })}
           </p>
@@ -429,25 +443,23 @@ const MedicalRegisterModal = ({
             hideRequiredMark
             style={{ marginTop: 8 }}
             initialValues={{
-              clinicServicePackageId: data.id
+              clinicServicePackageId: data?.id
                 ? data?.clinicService?.clinicServicePackage?.id
                 : undefined,
-              clinicServiceId: data.id ? data?.clinicService?.id : undefined,
-              date: data.id ? moment(data?.date) : moment(),
-              mobile: data.id ? data?.customer?.mobile : '',
-              customerId: data.id ? data.customerId : undefined,
-              customerName: data.id ? data?.customer?.customerName : '',
-              dateOfBirth: data.id
-                ? moment(data?.customer?.dateOfBirth)
-                : moment(),
+              clinicServiceId: data?.id ? data?.clinicService?.id : undefined,
+              date: data?.id ? moment(data?.date) : moment(),
+              customerId: data?.customer?.id,
+              mobile: data?.customer?.mobile,
+              customerName: data?.customer?.customerName,
+              dateOfBirth: moment(data?.customer?.dateOfBirth),
               contactChannel: 0,
-              userId: data.id ? data?.userId : undefined,
-              description: data.id ? data?.description : '',
-              status: data.id ? data.status : 0,
+              userId: data?.userId,
+              description: data?.id ? data?.description : '',
+              status: data?.id ? data.status : 0,
             }}
             ref={formRef}
             layout="vertical"
-            key={`${data.id}_${key}` || '0'}
+            key={`${data?.id}_${key}` || '0'}
           >
             <FormItem hidden name="customerId">
               <Input />

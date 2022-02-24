@@ -135,6 +135,7 @@ const ClinicResult = ({ isMobile, intl, headerPage }) => {
       mobile: queryFilter && queryFilter.mobile,
       fromDate: fromDate,
       toDate: toDate,
+      healthFacilityId,
     };
     if (!(queryFilter.customerName && queryFilter.customerName.trim())) {
       delete queryName.customerName;
@@ -185,6 +186,7 @@ const ClinicResult = ({ isMobile, intl, headerPage }) => {
       mobile: values && values.mobile,
       fromDate: fromDate,
       toDate: toDate,
+      healthFacilityId,
     };
     if (!(values.customerName && values.customerName.trim())) {
       delete queryName.customerName;
@@ -421,11 +423,13 @@ const ClinicResult = ({ isMobile, intl, headerPage }) => {
                     setDataEdit({
                       id: row.id,
                       customer: {
+                        id: row?.medicalRegister?.customer?.id,
                         customerName:
                           row?.medicalRegister?.customer?.customerName,
                         mobile: row?.medicalRegister?.customer?.mobile,
                         dateOfBirth:
                           row?.medicalRegister?.customer?.dateOfBirth,
+                        address: row?.medicalRegister?.customer?.address,
                       },
                       userId: row?.medicalRegister?.user?.id,
                       date: row?.medicalRegister?.date,

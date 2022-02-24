@@ -122,7 +122,7 @@ const ClinicServiceSelect = ({
             result &&
             result.results &&
             result.results.list.map((data) => ({
-              valueState: data.id,
+              valueState: data?.id,
               text: data.clinicServiceName,
               time: data.time,
               userId: data.userId,

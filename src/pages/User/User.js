@@ -160,10 +160,6 @@ const User = ({ isMobile, intl, headerPage }) => {
     });
   };
 
-  const onChangeFile = (newFileList) => {
-    console.log('fileList', newFileList.fileList);
-  };
-
   const handleTableChange = (pagination, filters, sorter) => {
     const queryFilter = list.filter;
     const rangeValue = queryFilter.dateCreated || [];

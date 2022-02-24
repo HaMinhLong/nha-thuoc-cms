@@ -48,6 +48,8 @@ import medicalRegisterReducer from '../features/medicalRegister/medicalRegisterS
 import clinicReceiptReducer from '../features/clinicReceipt/clinicReceiptSlice';
 import clinicReceiptServiceReducer from '../features/clinicReceiptService/clinicReceiptServiceSlice';
 import clinicResultReducer from '../features/clinicResult/clinicResultSlice';
+import clinicPrescriptionReducer from '../features/clinicPrescription/clinicPrescriptionSlice';
+import clinicPreMedicineReducer from '../features/clinicPreMedicine/clinicPreMedicineSlice';
 
 export const rootReducer = {
   userGroup: userGroupReducer,
@@ -100,4 +102,6 @@ export const rootReducer = {
   clinicReceipt: clinicReceiptReducer,
   clinicReceiptService: clinicReceiptServiceReducer,
   clinicResult: clinicResultReducer,
+  clinicPrescription: clinicPrescriptionReducer,
+  clinicPreMedicine: clinicPreMedicineReducer,
 };
