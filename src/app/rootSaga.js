@@ -51,6 +51,7 @@ import { clinicReceiptServiceSaga } from '../features/clinicReceiptService/clini
 import { clinicResultSaga } from '../features/clinicResult/clinicResultSaga';
 import { clinicPrescriptionSaga } from '../features/clinicPrescription/clinicPrescriptionSaga';
 import { clinicPreMedicineSaga } from '../features/clinicPreMedicine/clinicPreMedicineSaga';
+import { clinicReportSaga } from '../features/clinicReport/clinicReportSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -106,5 +107,6 @@ export default function* rootSaga() {
     clinicResultSaga(),
     clinicPrescriptionSaga(),
     clinicPreMedicineSaga(),
+    clinicReportSaga(),
   ]);
 }

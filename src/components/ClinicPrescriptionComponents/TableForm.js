@@ -223,7 +223,7 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
             marginTop: isMobile ? '0 20px' : '0',
           }}
         >
-          Danh sách thuốc
+          {intl.formatMessage({ id: 'app.clinicPreMedicine.list.col0' })}
         </h2>
         <Button
           type="primary"
@@ -236,7 +236,7 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
             position: 'absolute',
           }}
         >
-          Thêm thuốc
+          {intl.formatMessage({ id: 'app.clinicPreMedicine.list.col1' })}
         </Button>
       </div>
       <Row
@@ -248,13 +248,13 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
         }}
       >
         <Col offset={2} span={14} xs={14}>
-          Tên thuốc
+          {intl.formatMessage({ id: 'app.clinicPreMedicine.list.col2' })}
         </Col>
         <Col span={4} xs={4}>
-          Số lượng
+          {intl.formatMessage({ id: 'app.clinicPreMedicine.list.col3' })}
         </Col>
         <Col span={4} xs={4}>
-          Đơn vị
+          {intl.formatMessage({ id: 'app.clinicPreMedicine.list.col4' })}
         </Col>
       </Row>
       <div
@@ -333,7 +333,9 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
       <Modal
         key="Detail"
         title={`${
-          editOrCreate < 0 ? 'Thêm thuốc vào phiếu' : 'Sửa thuốc tại phiếu'
+          editOrCreate < 0
+            ? intl.formatMessage({ id: 'app.clinicPreMedicine.list.col5' })
+            : intl.formatMessage({ id: 'app.clinicPreMedicine.list.col6' })
         }`}
         visible={visible}
         width={isMobile ? '100%' : '50%'}
@@ -488,7 +490,10 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                   {...formItemLayout1}
                   label={
                     <span>
-                      <span style={{ color: 'red' }}>*</span>&nbsp; Đơn vị tính
+                      <span style={{ color: 'red' }}>*</span>&nbsp;
+                      {intl.formatMessage({
+                        id: 'app.clinicPreMedicine.list.col4',
+                      })}
                     </span>
                   }
                   name="unitId"
@@ -502,7 +507,9 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                   ]}
                 >
                   <UnitSelectV2
-                    placeholder="Chọn đơn vị tính"
+                    placeholder={intl.formatMessage({
+                      id: 'app.clinicPreMedicine.list.unit',
+                    })}
                     dataArr={medicineUnits || []}
                     onChange={(value, text) => {
                       formRef.current.setFieldsValue({ unitName: text });

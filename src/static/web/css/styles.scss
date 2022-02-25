@@ -28,6 +28,20 @@ body {
 p {
   margin-bottom: 0px;
 }
+.ant-layout-header .ant-menu {
+  width: 90%;
+}
+.ant-menu-item .ant-menu-item-icon,
+.ant-menu-submenu-title .ant-menu-item-icon,
+.ant-menu-item .anticon,
+.ant-menu-submenu-title .anticon {
+  color: #fff;
+}
+.tableListForm .ant-form-item > .ant-form-item-label label {
+  text-transform: uppercase;
+  color: #666 !important;
+  font-weight: 700;
+}
 .ant-form-item-label {
   label {
     span {
