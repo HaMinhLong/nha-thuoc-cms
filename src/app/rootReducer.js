@@ -51,6 +51,7 @@ import clinicResultReducer from '../features/clinicResult/clinicResultSlice';
 import clinicPrescriptionReducer from '../features/clinicPrescription/clinicPrescriptionSlice';
 import clinicPreMedicineReducer from '../features/clinicPreMedicine/clinicPreMedicineSlice';
 import clinicReportReducer from '../features/clinicReport/clinicReportSlice';
+import medicineReportReducer from '../features/medicineReport/medicineReportSlice';
 
 export const rootReducer = {
   userGroup: userGroupReducer,
@@ -106,4 +107,5 @@ export const rootReducer = {
   clinicPrescription: clinicPrescriptionReducer,
   clinicPreMedicine: clinicPreMedicineReducer,
   clinicReport: clinicReportReducer,
+  medicineReport: medicineReportReducer,
 };

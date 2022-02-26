@@ -25,7 +25,7 @@ import { Redirect } from 'react-router-dom';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 
-const DoctorReport = ({ isMobile, intl, headerPage }) => {
+const CustomerReport = ({ isMobile, intl, headerPage }) => {
   let { id } = useParams();
   const userGroupId = localStorage.getItem('userGroupId');
   const healthFacilityId = localStorage.getItem('healthFacilityId');
@@ -72,7 +72,7 @@ const DoctorReport = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify({ healthFacilityId: healthFacilityId }),
     };
     dispatch({
-      type: 'clinicReport/doctorReport',
+      type: 'medicineReport/customerReport',
       payload: params,
       callback: (res) => {
         setLoading(false);
@@ -99,12 +99,16 @@ const DoctorReport = ({ isMobile, intl, headerPage }) => {
         : '';
     const queryName = {
       doctorName: values.doctorName && values.doctorName.trim(),
+      mobile: values.mobile,
       fromDate: fromDate,
       toDate: toDate,
       healthFacilityId,
     };
     if (!(values.doctorName && values.doctorName.trim())) {
       delete queryName.doctorName;
+    }
+    if (!values.mobile) {
+      delete queryName.mobile;
     }
     if (rangeValue.length === 0) {
       delete queryName.fromDate;
@@ -114,7 +118,7 @@ const DoctorReport = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify(queryName),
     };
     dispatch({
-      type: 'clinicReport/doctorReport',
+      type: 'medicineReport/customerReport',
       payload: query,
       callback: (res) => {
         setLoading(false);
@@ -150,6 +154,7 @@ const DoctorReport = ({ isMobile, intl, headerPage }) => {
         onFinish={handleSearch}
         initialValues={{
           doctorName: '',
+          mobile: '',
           dateCreated: [],
         }}
       >
@@ -157,18 +162,32 @@ const DoctorReport = ({ isMobile, intl, headerPage }) => {
           <Col xs={24} md={12} xl={8}>
             <FormItem
               name="doctorName"
-              label={<FormattedMessage id="app.doctorReport.list.col10" />}
+              label={<FormattedMessage id="app.customerReport.list.col11" />}
               {...formItemLayout}
             >
               <Input
                 placeholder={intl.formatMessage({
-                  id: 'app.doctorReport.search.col1',
+                  id: 'app.customerReport.search.col1',
                 })}
                 size="small"
               />
             </FormItem>
           </Col>
-          <Col xl={8} md={12} xs={24}>
+          <Col xs={24} md={12} xl={8}>
+            <FormItem
+              name="mobile"
+              label={<FormattedMessage id="app.customerReport.list.col2" />}
+              {...formItemLayout}
+            >
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'app.customerReport.search.col2',
+                })}
+                size="small"
+              />
+            </FormItem>
+          </Col>
+          <Col xl={6} md={12} xs={24}>
             <FormItem
               name="dateCreated"
               label={
@@ -195,8 +214,8 @@ const DoctorReport = ({ isMobile, intl, headerPage }) => {
             </FormItem>
           </Col>
           <Col
-            xl={8}
-            md={24}
+            xl={2}
+            md={12}
             xs={24}
             style={
               isMobile
@@ -231,292 +250,172 @@ const DoctorReport = ({ isMobile, intl, headerPage }) => {
     });
   };
 
-  const stylesColumn = {
-    fontWeight: 600,
-    marginBottom: 0,
-  };
+  let totalRevenue = 0;
+  let total = 0;
+  let profit = 0;
+
+  for (let index = 0; index < data.length; index++) {
+    totalRevenue += data[index].totalRevenue;
+    total += data[index].total;
+    profit += data[index].profit;
+  }
+
+  if (data && data.length && data[data.length - 1].id !== '-1') {
+    data.push({
+      id: '-1',
+      customerName: intl.formatMessage({ id: 'app.customerReport.list.col10' }),
+      price: '',
+      amount: '',
+      discount: '',
+      tax: '',
+      totalRevenue: totalRevenue,
+      total: total,
+      profit: profit,
+    });
+  }
 
   const columns = [
     {
       dataIndex: null,
       title: intl.formatMessage({ id: 'app.table.column.no' }),
       align: 'center',
-      width: '6%',
-      fixed: isMobile,
+      width: isMobile ? 50 : '5%',
       render: (value, row, index) => {
         const obj = {
           children: (
-            <p style={stylesColumn}>
-              {intl.formatMessage({ id: 'app.doctorReport.list.col9' })}
-            </p>
+            <p style={{ fontWeight: 600, marginBottom: 0 }}>Tổng cộng</p>
           ),
-          props: { colSpan: 4 },
+          props: {},
         };
-        if (row.children) {
+        if (index === data.length - 1) {
+          obj.props.colSpan = 4;
+        } else {
           obj.props.colSpan = 1;
-          obj.children = (
-            <span style={stylesColumn}>{formatNumber(index + 1)}</span>
-          );
-        }
-        if (!row.children && row.id !== '-1') {
-          obj.children = null;
-          obj.props.colSpan = 1;
+          obj.children = formatNumber(index + 1);
         }
         return obj;
       },
-    },
-    {
-      dataIndex: 'clinicReceiptCode',
-      width: '13%',
-      title: intl.formatMessage({ id: 'app.doctorReport.list.col1' }),
-      align: 'left',
       fixed: isMobile,
-      render: (value, row) => {
-        const obj = {
-          children: <span style={stylesColumn}>{value}</span>,
-          props: { colSpan: 0 },
-        };
-        if (!row.children && row.id !== '-1') {
-          obj.props.colSpan = 1;
-          obj.children = value;
-        }
-        if (row.id === '-1') {
-          obj.props.colSpan = 0;
-        }
-        return obj;
-      },
     },
     {
-      dataIndex: 'clinicServiceName',
-      width: '20%',
-      title: intl.formatMessage({ id: 'app.doctorReport.list.col2' }),
-      align: 'center',
-      render: (value, row) => {
-        const obj = {
-          children: <span style={stylesColumn}>{value}</span>,
-          props: { colSpan: 3 },
-        };
-        if (!row.children && row.id !== '-1') {
-          obj.props.colSpan = 1;
-          obj.children = value;
-        }
-        if (row.id === '-1') {
-          obj.props.colSpan = 0;
-        }
-        return obj;
-      },
-    },
-    {
-      dataIndex: 'date',
-      width: '13%',
-      title: intl.formatMessage({ id: 'app.doctorReport.list.col3' }),
+      dataIndex: 'customerName',
+      name: 'customerName',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.customerReport.list.col1" />,
       align: 'left',
-      render: (value, row) => {
+      sorter: () => {},
+      fixed: isMobile,
+      render: (value, row, index) => {
         const obj = {
-          children: (
-            <span style={stylesColumn}>
-              {moment(value).format('HH:mm DD/MM/YYYY')}
-            </span>
-          ),
-          props: { colSpan: 0 },
+          children: value,
+          props: {},
         };
-        if (!row.children && row.id !== '-1') {
-          obj.props.colSpan = 1;
-          obj.children = value;
-        }
-        if (row.id === '-1') {
+        if (index === data.length - 1) {
           obj.props.colSpan = 0;
         }
         return obj;
       },
     },
     {
-      dataIndex: 'amount',
-      title: intl.formatMessage({ id: 'app.doctorReport.list.col4' }),
+      dataIndex: 'mobile',
+      name: 'mobile',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.customerReport.list.col2" />,
       align: 'left',
-      width: '9%',
-      render: (value, row) => {
+      sorter: () => {},
+      render: (value, row, index) => {
         const obj = {
-          children: (
-            <span style={stylesColumn}>{formatNumber(value || 0)}</span>
-          ),
-          props: { colSpan: 1 },
+          children: value,
+          props: {},
         };
-        if (!row.children && row.id !== '-1') {
-          obj.children = formatNumber(value || 0);
+        if (index === data.length - 1) {
+          obj.props.colSpan = 0;
         }
-        if (row.id === '-1') {
-          obj.children = (
-            <span style={stylesColumn}>{formatNumber(value || 0)}</span>
-          );
+        return obj;
+      },
+    },
+    {
+      dataIndex: 'medicineName',
+      name: 'medicineName',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.customerReport.list.col3" />,
+      align: 'left',
+      sorter: () => {},
+      render: (value, row, index) => {
+        const obj = {
+          children: value,
+          props: {},
+        };
+        if (index === data.length - 1) {
+          obj.props.colSpan = 0;
         }
         return obj;
       },
     },
     {
       dataIndex: 'price',
-      title: intl.formatMessage({ id: 'app.doctorReport.list.col5' }),
+      name: 'price',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.customerReport.list.col4" />,
       align: 'left',
-      width: '11%',
-      render: (value, row) => {
-        const obj = {
-          children: (
-            <span style={stylesColumn}>{formatNumber(value || 0)}</span>
-          ),
-          props: { colSpan: 1 },
-        };
-        if (!row.children && row.id !== '-1') {
-          obj.children = formatNumber(value || 0);
-        }
-        if (row.id === '-1') {
-          obj.children = (
-            <span style={stylesColumn}>{formatNumber(value || 0)}</span>
-          );
-        }
-        return obj;
-      },
+      sorter: () => {},
+      render: (text) => <span>{formatNumber(text)}</span>,
+    },
+    {
+      dataIndex: 'amount',
+      name: 'amount',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.customerReport.list.col5" />,
+      align: 'left',
+      sorter: () => {},
+      render: (text) => <span>{formatNumber(text)}</span>,
     },
     {
       dataIndex: 'discount',
-      title: intl.formatMessage({ id: 'app.doctorReport.list.col6' }),
+      name: 'discount',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.customerReport.list.col6" />,
       align: 'left',
-      width: '9%',
-      render: (value, row) => {
-        const obj = {
-          children: (
-            <span style={stylesColumn}>{formatNumber(value || 0)}</span>
-          ),
-          props: { colSpan: 1 },
-        };
-        if (!row.children && row.id !== '-1') {
-          obj.children = formatNumber(value || 0);
-        }
-        if (row.id === '-1') {
-          obj.children = (
-            <span style={stylesColumn}>{formatNumber(value || 0)}</span>
-          );
-        }
-        return obj;
-      },
+      sorter: () => {},
+      render: (text) => <span>{formatNumber(text)}</span>,
     },
     {
       dataIndex: 'tax',
-      title: intl.formatMessage({ id: 'app.doctorReport.list.col7' }),
+      name: 'tax',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.customerReport.list.col7" />,
       align: 'left',
-      width: '8%',
-      render: (value, row) => {
-        const obj = {
-          children: (
-            <span style={stylesColumn}>{formatNumber(value || 0)}</span>
-          ),
-          props: { colSpan: 1 },
-        };
-        if (!row.children && row.id !== '-1') {
-          obj.children = formatNumber(value || 0);
-        }
-        if (row.id === '-1') {
-          obj.children = (
-            <span style={stylesColumn}>{formatNumber(value || 0)}</span>
-          );
-        }
-        return obj;
-      },
+      sorter: () => {},
+      render: (text) => <span>{formatNumber(text)}</span>,
+    },
+    {
+      dataIndex: 'totalRevenue',
+      name: 'totalRevenue',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.customerReport.list.col8" />,
+      align: 'left',
+      sorter: () => {},
+      render: (text) => <span>{formatNumber(text)}</span>,
     },
     {
       dataIndex: 'total',
-      title: intl.formatMessage({ id: 'app.doctorReport.list.col8' }),
+      name: 'total',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.customerReport.list.col9" />,
       align: 'left',
-      width: '12%',
-      render: (value, row) => {
-        const obj = {
-          children: (
-            <span style={stylesColumn}>{formatNumber(value || 0)}</span>
-          ),
-          props: { colSpan: 1 },
-        };
-        if (!row.children && row.id !== '-1') {
-          obj.children = formatNumber(value || 0);
-        }
-        if (row.id === '-1') {
-          obj.children = (
-            <span style={stylesColumn}>{formatNumber(value || 0)}</span>
-          );
-        }
-        return obj;
-      },
+      sorter: () => {},
+      render: (text) => <span>{formatNumber(text)}</span>,
+    },
+    {
+      dataIndex: 'profit',
+      name: 'profit',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.customerReport.list.col12" />,
+      align: 'left',
+      sorter: () => {},
+      render: (text) => <span>{formatNumber(text)}</span>,
     },
   ];
-
-  const reducer = (a, b) => Number(a) + Number(b);
-
-  let result = data.reduce((r, { fullName: clinicServiceName, ...object }) => {
-    let temp = r.find((o) => o.clinicServiceName === clinicServiceName);
-    if (!temp) r.push((temp = { clinicServiceName, children: [] }));
-    temp.children.push(object);
-    return r;
-  }, []);
-
-  let totalAmount = 0;
-  let totalTax = 0;
-  let totalMoney1 = 0;
-  let totalDiscount = 0;
-  let totalPrice = 0;
-
-  let totalPrice2 = 0;
-  let totalAmount2 = 0;
-  let totalDiscount2 = 0;
-  let totalTax2 = 0;
-
-  result =
-    (result &&
-      result.length > 0 &&
-      result.map((item, index) => {
-        const amount = item.children.map((child) => child.amount);
-        totalAmount = amount.reduce(reducer);
-        totalAmount2 += Number(totalAmount);
-
-        const price = item.children.map((child) => child.price);
-        totalPrice = price.reduce(reducer);
-        totalPrice2 += Number(totalPrice);
-
-        const tax = item.children.map((child) => child.tax);
-        totalTax = tax.reduce(reducer);
-        totalTax2 += Number(totalTax);
-
-        const discount = item.children.map((child) => child.discount);
-        totalDiscount = discount.reduce(reducer);
-        totalDiscount2 += Number(totalDiscount);
-
-        const total = item.children.map((child) => child.total);
-        totalMoney1 = total.reduce(reducer);
-
-        return {
-          ...item,
-          id: index,
-          amount: totalAmount,
-          price: totalPrice,
-          discount: totalDiscount,
-          tax: totalTax,
-          total: totalMoney1,
-          children: item.children.map((child, number) => ({
-            ...child,
-            id: `${index}_${number}`,
-          })),
-        };
-      })) ||
-    [];
-
-  if (result && result.length && result[result.length - 1].id !== '-1') {
-    result.push({
-      id: '-1',
-      clinicServiceName: 'Tổng cộng',
-      amount: totalAmount2,
-      price: totalPrice2,
-      discount: totalDiscount2,
-      tax: totalTax2,
-      total: totalMoney1,
-    });
-  }
 
   return (
     <React.Fragment>
@@ -524,7 +423,7 @@ const DoctorReport = ({ isMobile, intl, headerPage }) => {
         <>
           {headerPage}
           <HeaderContent
-            title={<FormattedMessage id="app.doctorReport.header.col1" />}
+            title={<FormattedMessage id="app.customerReport.header.col1" />}
           >
             <div className="tableListForm">{renderForm()}</div>
             <div
@@ -549,16 +448,12 @@ const DoctorReport = ({ isMobile, intl, headerPage }) => {
               {renderForm()}
             </Modal>
             <Table
-              bordered
               loading={loading}
               rowKey="id"
-              dataSource={result || []}
+              dataSource={data}
               pagination="none"
-              scroll={{ x: '1200px', y: '58vh' }}
+              scroll={{ x: isMobile ? 1200 : '100vh', y: '60vh' }}
               columns={columns}
-              onExpand={(expanded) => (expanded = true)}
-              expandedRowKeys={result.map((item) => item.id)}
-              expandIcon={() => ''}
             />
           </HeaderContent>
         </>
@@ -578,4 +473,4 @@ const DoctorReport = ({ isMobile, intl, headerPage }) => {
   );
 };
 
-export default DoctorReport;
+export default CustomerReport;
