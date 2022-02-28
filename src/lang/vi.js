@@ -43,6 +43,8 @@ const ClinicPrescription = require('./vi-VN/ClinicPrescription');
 const ClinicPreMedicine = require('./vi-VN/ClinicPreMedicine');
 const DoctorReport = require('./vi-VN/DoctorReport');
 const CustomerReport = require('./vi-VN/CustomerReport');
+const EmployeeReport = require('./vi-VN/EmployeeReport');
+const SupplierReport = require('./vi-VN/SupplierReport');
 
 module.exports = {
   'app.common.validate.max300':
@@ -173,4 +175,6 @@ module.exports = {
   ...ClinicPreMedicine,
   ...DoctorReport,
   ...CustomerReport,
+  ...EmployeeReport,
+  ...SupplierReport,
 };

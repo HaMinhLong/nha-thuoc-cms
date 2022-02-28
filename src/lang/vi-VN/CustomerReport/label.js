@@ -12,11 +12,11 @@ module.exports = {
   'app.customerReport.list.col8': 'Tổng',
   'app.customerReport.list.col9': 'Tổng thu',
   'app.customerReport.list.col10': 'TỔNG CỘNG',
-  'app.customerReport.list.col11': 'Bác sĩ',
+  'app.customerReport.list.col11': 'Khách hàng',
   'app.customerReport.list.col12': 'Lợi nhuận',
 
   // search
-  'app.customerReport.search.col1': 'Tìm kiếm theo tên bác sĩ',
+  'app.customerReport.search.col1': 'Tìm kiếm theo tên khách hàng',
   'app.customerReport.search.col2': 'Tìm kiếm theo số điện thoại',
   'app.customerReport.search.col3': 'Tìm kiếm theo ngày tạo',
 };

@@ -43,6 +43,8 @@ import ClinicResult from '../pages/ClinicResult/ClinicResult';
 import ClinicPrescription from '../pages/ClinicPrescription/ClinicPrescription';
 import DoctorReport from '../pages/ClinicReport/DoctorReport';
 import CustomerReport from '../pages/MedicineReport/CustomerReport';
+import EmployeeReport from '../pages/MedicineReport/EmployeeReport';
+import SupplierReport from '../pages/MedicineReport/SupplierReport';
 
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
@@ -251,6 +253,20 @@ const AppRoutes = ({ headerPage }) => {
         </Route>
         <Route path="/medicine-customer/:id">
           <CustomerReport
+            isMobile={isMobile}
+            intl={intl}
+            headerPage={headerPage}
+          />
+        </Route>
+        <Route path="/medicine-employee/:id">
+          <EmployeeReport
+            isMobile={isMobile}
+            intl={intl}
+            headerPage={headerPage}
+          />
+        </Route>
+        <Route path="/medicine-supplier/:id">
+          <SupplierReport
             isMobile={isMobile}
             intl={intl}
             headerPage={headerPage}

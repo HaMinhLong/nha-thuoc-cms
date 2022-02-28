@@ -12,11 +12,11 @@ module.exports = {
   'app.customerReport.list.col8': 'Total',
   'app.customerReport.list.col9': 'Total revenue',
   'app.customerReport.list.col10': 'TOTAL',
-  'app.customerReport.list.col11': 'Doctor',
+  'app.customerReport.list.col11': 'Customer',
   'app.customerReport.list.col12': 'Profit',
 
   // search
-  'app.customerReport.search.col1': 'Search by doctor name',
+  'app.customerReport.search.col1': 'Search by customer name',
   'app.customerReport.search.col2': 'Search by mobile',
   'app.customerReport.search.col3': 'Search by date created',
 };

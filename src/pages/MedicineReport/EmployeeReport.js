@@ -25,7 +25,7 @@ import { Redirect } from 'react-router-dom';
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 
-const CustomerReport = ({ isMobile, intl, headerPage }) => {
+const EmployeeReport = ({ isMobile, intl, headerPage }) => {
   let { id } = useParams();
   const userGroupId = localStorage.getItem('userGroupId');
   const healthFacilityId = localStorage.getItem('healthFacilityId');
@@ -72,7 +72,7 @@ const CustomerReport = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify({ healthFacilityId: healthFacilityId }),
     };
     dispatch({
-      type: 'medicineReport/customerReport',
+      type: 'medicineReport/employeeReport',
       payload: params,
       callback: (res) => {
         setLoading(false);
@@ -98,14 +98,14 @@ const CustomerReport = ({ isMobile, intl, headerPage }) => {
         ? rangeValue[1].set({ hour: 23, minute: 59, second: 59 })
         : '';
     const queryName = {
-      customerName: values.customerName && values.customerName.trim(),
+      fullName: values.fullName && values.fullName.trim(),
       mobile: values.mobile,
       fromDate: fromDate,
       toDate: toDate,
       healthFacilityId,
     };
-    if (!(values.customerName && values.customerName.trim())) {
-      delete queryName.customerName;
+    if (!(values.fullName && values.fullName.trim())) {
+      delete queryName.fullName;
     }
     if (!values.mobile) {
       delete queryName.mobile;
@@ -118,7 +118,7 @@ const CustomerReport = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify(queryName),
     };
     dispatch({
-      type: 'medicineReport/customerReport',
+      type: 'medicineReport/employeeReport',
       payload: query,
       callback: (res) => {
         setLoading(false);
@@ -153,7 +153,7 @@ const CustomerReport = ({ isMobile, intl, headerPage }) => {
       <Form
         onFinish={handleSearch}
         initialValues={{
-          customerName: '',
+          fullName: '',
           mobile: '',
           dateCreated: [],
         }}
@@ -161,13 +161,13 @@ const CustomerReport = ({ isMobile, intl, headerPage }) => {
         <Row gutter={{ md: 0, lg: 8, xl: 16 }}>
           <Col xs={24} md={12} xl={8}>
             <FormItem
-              name="customerName"
-              label={<FormattedMessage id="app.customerReport.list.col11" />}
+              name="fullName"
+              label={<FormattedMessage id="app.employeeReport.list.col11" />}
               {...formItemLayout}
             >
               <Input
                 placeholder={intl.formatMessage({
-                  id: 'app.customerReport.search.col1',
+                  id: 'app.employeeReport.search.col1',
                 })}
                 size="small"
               />
@@ -176,12 +176,12 @@ const CustomerReport = ({ isMobile, intl, headerPage }) => {
           <Col xs={24} md={12} xl={8}>
             <FormItem
               name="mobile"
-              label={<FormattedMessage id="app.customerReport.list.col2" />}
+              label={<FormattedMessage id="app.employeeReport.list.col2" />}
               {...formItemLayout}
             >
               <Input
                 placeholder={intl.formatMessage({
-                  id: 'app.customerReport.search.col2',
+                  id: 'app.employeeReport.search.col2',
                 })}
                 size="small"
               />
@@ -252,27 +252,24 @@ const CustomerReport = ({ isMobile, intl, headerPage }) => {
 
   let totalRevenue = 0;
   let total = 0;
-  let profit = 0;
 
   for (let index = 0; index < data.length; index++) {
     totalRevenue += data[index].totalRevenue;
     total += data[index].total;
-    profit += data[index].profit;
   }
 
   if (data && data.length && data[data.length - 1].id !== '-1') {
     data.push({
       id: '-1',
-      customerName: intl.formatMessage({ id: 'app.customerReport.list.col10' }),
+      fullName: intl.formatMessage({ id: 'app.employeeReport.list.col10' }),
       price: '',
       amount: '',
       discount: '',
       tax: '',
-      taxType: 0,
       discountType: 0,
+      taxType: 0,
       totalRevenue: totalRevenue,
       total: total,
-      profit: profit,
     });
   }
 
@@ -300,10 +297,10 @@ const CustomerReport = ({ isMobile, intl, headerPage }) => {
       fixed: isMobile,
     },
     {
-      dataIndex: 'customerName',
-      name: 'customerName',
+      dataIndex: 'fullName',
+      name: 'fullName',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.customerReport.list.col1" />,
+      title: <FormattedMessage id="app.employeeReport.list.col1" />,
       align: 'left',
       sorter: () => {},
       fixed: isMobile,
@@ -322,7 +319,7 @@ const CustomerReport = ({ isMobile, intl, headerPage }) => {
       dataIndex: 'mobile',
       name: 'mobile',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.customerReport.list.col2" />,
+      title: <FormattedMessage id="app.employeeReport.list.col2" />,
       align: 'left',
       sorter: () => {},
       render: (value, row, index) => {
@@ -340,7 +337,7 @@ const CustomerReport = ({ isMobile, intl, headerPage }) => {
       dataIndex: 'medicineName',
       name: 'medicineName',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.customerReport.list.col3" />,
+      title: <FormattedMessage id="app.employeeReport.list.col3" />,
       align: 'left',
       sorter: () => {},
       render: (value, row, index) => {
@@ -358,7 +355,7 @@ const CustomerReport = ({ isMobile, intl, headerPage }) => {
       dataIndex: 'price',
       name: 'price',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.customerReport.list.col4" />,
+      title: <FormattedMessage id="app.employeeReport.list.col4" />,
       align: 'left',
       sorter: () => {},
       render: (text) => <span>{formatNumber(text)}</span>,
@@ -367,7 +364,7 @@ const CustomerReport = ({ isMobile, intl, headerPage }) => {
       dataIndex: 'amount',
       name: 'amount',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.customerReport.list.col5" />,
+      title: <FormattedMessage id="app.employeeReport.list.col5" />,
       align: 'left',
       sorter: () => {},
       render: (text) => <span>{formatNumber(text)}</span>,
@@ -376,7 +373,7 @@ const CustomerReport = ({ isMobile, intl, headerPage }) => {
       dataIndex: 'discount',
       name: 'discount',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.customerReport.list.col6" />,
+      title: <FormattedMessage id="app.employeeReport.list.col6" />,
       align: 'left',
       sorter: () => {},
       render: (text, row) => (
@@ -390,7 +387,7 @@ const CustomerReport = ({ isMobile, intl, headerPage }) => {
       dataIndex: 'tax',
       name: 'tax',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.customerReport.list.col7" />,
+      title: <FormattedMessage id="app.employeeReport.list.col7" />,
       align: 'left',
       sorter: () => {},
       render: (text, row) => (
@@ -404,7 +401,7 @@ const CustomerReport = ({ isMobile, intl, headerPage }) => {
       dataIndex: 'totalRevenue',
       name: 'totalRevenue',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.customerReport.list.col8" />,
+      title: <FormattedMessage id="app.employeeReport.list.col8" />,
       align: 'left',
       sorter: () => {},
       render: (text) => <span>{formatNumber(text)}</span>,
@@ -413,16 +410,7 @@ const CustomerReport = ({ isMobile, intl, headerPage }) => {
       dataIndex: 'total',
       name: 'total',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.customerReport.list.col9" />,
-      align: 'left',
-      sorter: () => {},
-      render: (text) => <span>{formatNumber(text)}</span>,
-    },
-    {
-      dataIndex: 'profit',
-      name: 'profit',
-      width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.customerReport.list.col12" />,
+      title: <FormattedMessage id="app.employeeReport.list.col9" />,
       align: 'left',
       sorter: () => {},
       render: (text) => <span>{formatNumber(text)}</span>,
@@ -435,7 +423,7 @@ const CustomerReport = ({ isMobile, intl, headerPage }) => {
         <>
           {headerPage}
           <HeaderContent
-            title={<FormattedMessage id="app.customerReport.header.col1" />}
+            title={<FormattedMessage id="app.employeeReport.header.col1" />}
           >
             <div className="tableListForm">{renderForm()}</div>
             <div
@@ -485,4 +473,4 @@ const CustomerReport = ({ isMobile, intl, headerPage }) => {
   );
 };
 
-export default CustomerReport;
+export default EmployeeReport;
