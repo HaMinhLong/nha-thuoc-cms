@@ -544,7 +544,7 @@ const ReceiptPage = ({ isMobile, intl, headerPage }) => {
                   columns={columns}
                   onChange={handleTableChange}
                   rowClassName={(record) =>
-                    record.id === dataInfo.id ? 'rowChecked' : 'rowUnCheck'
+                    record.id === dataInfo?.id ? 'rowChecked' : 'rowUnCheck'
                   }
                   onRow={(record) => ({
                     onDoubleClick: () => handleClickRow(record),

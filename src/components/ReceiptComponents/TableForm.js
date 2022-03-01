@@ -48,7 +48,7 @@ const TableFormReceipt = (props) => {
   const [data, setData] = useState(value || []);
   const [loading, setLoading] = useState(false);
   const [visibleModalMedicine, setVisibleModalMedicine] = useState(false);
-  const [visibleModalPrice, setVisibleModalPrice] = useState(false);
+  // const [visibleModalPrice, setVisibleModalPrice] = useState(false);
   const [editOrCreate, setEditOrCreate] = useState(-1);
   const [medicineUnits, setMedicineUnits] = useState([]);
   const [medicines, setMedicines] = useState({});
@@ -173,6 +173,7 @@ const TableFormReceipt = (props) => {
   const handleSubmit = () => {
     formRef.current.validateFields().then((values) => {
       const addMedicine = {
+        ...values,
         id: values.id,
         medicineName: values.medicineName,
         medicineNameOld: values.medicineName,
@@ -345,6 +346,8 @@ const TableFormReceipt = (props) => {
       style: { background: color },
     });
   };
+
+  console.log('data', data);
 
   const formItemLayout = {
     labelCol: {

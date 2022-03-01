@@ -455,13 +455,15 @@ const MedicineTransferPage = ({
                             id: 'app.medicineTransfer.list.warehouseTransfer',
                           })}
                           warehouseId={warehouseId}
-                          disabled={!warehouseId || dataDetails.id}
+                          disabled={!warehouseId || dataDetails?.id}
                           onChange={(value, text) => {
                             setWarehouseTransferName(text);
                           }}
                         />
                       </FormItem>
                     </Col>
+                    {console.log('warehouseId', warehouseId)}
+                    {console.log('dataDetails', dataDetails)}
                     <Col sm={12} xs={24}>
                       <FormItem
                         {...formItemLayout}
