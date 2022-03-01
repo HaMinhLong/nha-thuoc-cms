@@ -133,7 +133,7 @@ const Receipt = ({
           <tbody>
             {dataMedicines?.map((item) => (
               <tr>
-                <td> {`${item?.medicineName}`}</td>
+                <td> {`${item?.medicine?.medicineName}`}</td>
                 <td>{`${item?.consumableMedicines?.amount}`}</td>
                 <td>{`${formatNumber(item?.consumableMedicines?.price)}`}</td>
                 <td>{`${formatNumber(

@@ -42,7 +42,8 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
         addMedicine.flag = -1;
         addMedicine.id = values.medicineId;
         const checkExits = data?.find(
-          (item) => item.medicineName === addMedicine.medicineName
+          (item) =>
+            item.medicine.medicineName === addMedicine.medicine.medicineName
         );
         if (checkExits !== undefined) {
           setLoading(false);

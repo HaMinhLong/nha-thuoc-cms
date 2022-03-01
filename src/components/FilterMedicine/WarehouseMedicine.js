@@ -2,6 +2,7 @@ import React, { useState, Fragment } from 'react';
 import { SearchOutlined, CloseOutlined } from '@ant-design/icons';
 import { Input, Col, Row, Button } from 'antd';
 import { formatNumber } from '../../utils/utils';
+import moment from 'moment';
 
 const WarehouseMedicine = (props) => {
   const {
@@ -18,7 +19,7 @@ const WarehouseMedicine = (props) => {
 
   const handleClickMedicine = (item) => {
     if (getListMedicineUnit) {
-      getListMedicineUnit(item.id);
+      getListMedicineUnit(item?.medicine?.id);
     }
     if (resetFields) {
       resetFields();
@@ -26,10 +27,10 @@ const WarehouseMedicine = (props) => {
     if (onChange) {
       onChange(item);
     }
-    setValue(item.id);
+    setValue(item?.medicine?.id);
   };
 
-  if (medicines.id) {
+  if (medicines?.medicine?.id) {
     return (
       <div
         style={{
@@ -48,7 +49,7 @@ const WarehouseMedicine = (props) => {
         key="select"
       >
         <div style={{ fontSize: '22px', fontWeight: 600 }}>
-          {medicines?.medicineName}
+          {medicines?.medicine?.medicineName}
         </div>
         <div
           style={{
@@ -59,7 +60,7 @@ const WarehouseMedicine = (props) => {
             position: 'relative',
           }}
         >
-          {medicines?.registrationNumber}
+          {medicines?.medicine?.registrationNumber}
         </div>
         {!disabled && (
           <div
@@ -90,42 +91,43 @@ const WarehouseMedicine = (props) => {
         <div style={{ marginBottom: 20 }}>
           {intl.formatMessage({ id: 'app.medicine.list.col2' })}:{' '}
           <span style={{ color: '#0079d1', fontWeight: 500 }}>
-            {medicines?.standard}
+            {medicines?.medicine?.standard}
           </span>
         </div>
         <div style={{ marginBottom: 20 }}>
           {intl.formatMessage({ id: 'app.medicine.list.col7' })}:{' '}
           <span style={{ color: '#0079d1', fontWeight: 500 }}>
-            {medicines?.medicineType?.medicineTypeName}
+            {medicines?.medicine?.medicineType?.medicineTypeName}
           </span>
         </div>
         <div style={{ marginBottom: 20 }}>
           {intl.formatMessage({ id: 'app.medicine.list.col3' })}:{' '}
           <span style={{ color: '#0079d1', fontWeight: 500 }}>
-            {medicines?.activeIngredientName}
+            {medicines?.medicine?.activeIngredientName}
           </span>
         </div>
         <div style={{ marginBottom: 20 }}>
           {intl.formatMessage({ id: 'app.medicine.list.col4' })}:{' '}
           <span style={{ color: '#0079d1', fontWeight: 500 }}>
-            {medicines?.concentration}
+            {medicines?.medicine?.concentration}
           </span>
         </div>
         <div style={{ marginBottom: 20 }}>
           {intl.formatMessage({ id: 'app.medicine.list.col10' })}:{' '}
           <span style={{ color: '#0079d1', fontWeight: 500 }}>
-            {medicines?.producer?.producerName || ''}
+            {medicines?.medicine?.producer?.producerName || ''}
           </span>{' '}
         </div>
         <div style={{ marginBottom: 20 }}>
           {intl.formatMessage({ id: 'app.medicine.list.col12' })}:{' '}
           <span style={{ color: '#0079d1', fontWeight: 500 }}>
-            {medicines.country}
+            {medicines?.medicine?.country}
           </span>
         </div>
       </div>
     );
   }
+
   return (
     <Fragment>
       <Row
@@ -174,13 +176,15 @@ const WarehouseMedicine = (props) => {
             key={item.id}
             onClick={() => handleClickMedicine(item)}
           >
-            <span style={{ color: '#20A8D8' }}>{item.medicineName}</span>
-            {item.registrationNumber && (
+            <span style={{ color: '#20A8D8' }}>
+              {item?.medicine?.medicineName}
+            </span>
+            {item?.medicine?.registrationNumber && (
               <>
                 {' '}
                 - Số đăng ký:{' '}
                 <span style={{ color: '#f86c6b' }}>
-                  {item.registrationNumber}
+                  {item?.medicine?.registrationNumber}
                 </span>
               </>
             )}
@@ -189,26 +193,28 @@ const WarehouseMedicine = (props) => {
               <span>
                 Tồn kho:&nbsp;
                 <span style={{ color: '#f86c6b' }}>
-                  {formatNumber(
-                    item?.warehouses?.[0]?.warehouseMedicines?.inStock
-                  ) || 0}{' '}
+                  {formatNumber(item?.inStock) || 0}{' '}
                   {
-                    medicineUnits?.find(
-                      (unit) =>
-                        unit.id ===
-                        item?.warehouses?.[0]?.warehouseMedicines?.unitId
-                    )?.unitName
+                    medicineUnits?.find((unit) => unit.id === item?.unitId)
+                      ?.unitName
                   }
                 </span>
               </span>
             </span>
             <span>
               {' '}
+              - Hạn sử dung:{' '}
+              <span style={{ color: '#4dbd74' }}>
+                {moment(item?.receiptMedicine?.expiry).format('L')}
+              </span>
+            </span>
+            <span>
+              {' '}
               - Nhà sản xuất:{' '}
               <span style={{ color: '#4dbd74' }}>
-                {item?.producer?.producerName || ''}
+                {item?.medicine?.producer?.producerName || ''}
               </span>{' '}
-              - <span>{item?.country}</span>
+              - <span>{item?.medicine?.country}</span>
             </span>
           </div>
         ))}

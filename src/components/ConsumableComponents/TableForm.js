@@ -191,10 +191,13 @@ const TableForm = (props) => {
             medicineUnits?.find((it) => it.unitId === values.unitId)?.amount
           ),
         };
+        console.log('data', data);
+        console.log('addMedicine', addMedicine);
         if (editOrCreate < 0) {
           addMedicine.flag = -1;
           const checkExits = data?.find(
-            (item) => item.medicineName === addMedicine.medicineName
+            (item) =>
+              item.medicine.medicineName === addMedicine.medicine.medicineName
           );
           if (checkExits !== undefined) {
             openNotification(
@@ -441,7 +444,7 @@ const TableForm = (props) => {
                           <span
                             style={{ fontWeight: 'bold', color: '#4dbd74' }}
                           >
-                            {index + 1}. {item?.medicineName}
+                            {index + 1}. {item?.medicine?.medicineName}
                           </span>
                         </Col>
                         <Col span={4} xs={4}>

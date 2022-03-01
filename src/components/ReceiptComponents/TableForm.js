@@ -209,7 +209,8 @@ const TableFormReceipt = (props) => {
       if (editOrCreate < 0) {
         addMedicine.flag = -1;
         const checkExits = data?.find(
-          (item) => item.medicineName === addMedicine.medicineName
+          (item) =>
+            item.medicine.medicineName === addMedicine.medicine.medicineName
         );
         if (checkExits !== undefined) {
           openNotification('error', 'Thuốc đã tồn tại trong phiếu!', '#fff1f0');
@@ -346,8 +347,6 @@ const TableFormReceipt = (props) => {
       style: { background: color },
     });
   };
-
-  console.log('data', data);
 
   const formItemLayout = {
     labelCol: {

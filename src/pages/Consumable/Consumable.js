@@ -214,6 +214,9 @@ const ConsumablePage = ({ intl, isMobile, headerPage }) => {
             list?.medicines?.map((item) => {
               return {
                 ...item,
+                medicine: {
+                  medicineName: item?.medicineName,
+                },
                 flag: 1,
               };
             })

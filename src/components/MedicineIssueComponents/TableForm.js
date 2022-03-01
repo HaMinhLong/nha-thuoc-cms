@@ -188,9 +188,8 @@ const TableFormMedicineIssue = (props) => {
   };
 
   const total = () => {
-    const inStock = medicines?.warehouses?.[0]?.warehouseMedicines?.inStock;
-    const exchangeWarehouse =
-      medicines?.warehouses?.[0]?.warehouseMedicines?.exchange;
+    const inStock = medicines?.inStock;
+    const exchangeWarehouse = medicines?.exchange;
     const amount = formRef.current.getFieldValue('amount');
     const unitId = formRef.current.getFieldValue('unitId');
     const exchange = Number(
@@ -258,7 +257,8 @@ const TableFormMedicineIssue = (props) => {
         if (editOrCreate < 0) {
           addMedicine.flag = -1;
           const checkExits = data?.find(
-            (item) => item.medicineName === addMedicine.medicineName
+            (item) =>
+              item.medicine.medicineName === addMedicine.medicine.medicineName
           );
           if (checkExits !== undefined) {
             openNotification(
@@ -429,7 +429,7 @@ const TableFormMedicineIssue = (props) => {
                           style={{ fontSize: '12px' }}
                           onClick={() => {
                             getListMedicineUnit(item?.id);
-                            setMedicines(item);
+                            setMedicines({ medicine: { ...item } });
                             setMedicineIssueMedicines(
                               item?.medicineIssueMedicines
                             );
@@ -485,7 +485,7 @@ const TableFormMedicineIssue = (props) => {
                           <span
                             style={{ fontWeight: 'bold', color: '#4dbd74' }}
                           >
-                            {index + 1}. {item?.medicineName}
+                            {index + 1}. {item?.medicine?.medicineName}
                           </span>
                         </Col>
                         <Col span={4} xs={4}>
@@ -630,7 +630,7 @@ const TableFormMedicineIssue = (props) => {
             hideRequiredMark
             style={{ marginTop: 8 }}
             initialValues={{
-              id: medicines.id,
+              id: medicines?.medicine?.id,
               medicineIssueMedicineId: medicineIssueMedicines?.id,
               price: medicineIssueMedicines?.price,
               amount: medicineIssueMedicines?.amount,

@@ -127,7 +127,6 @@ const ClinicPrescriptionModal = ({
     }
   };
 
-  console.log('clinicPreMedicines', clinicPreMedicines);
 
   const handleCustomer = () => {
     formRef.current.validateFields(['mobile']).then((values) => {
