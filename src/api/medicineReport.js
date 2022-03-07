@@ -12,5 +12,14 @@ const getListSupplierReport = (params) =>
   axios.get(
     `${process.env.REACT_APP_SERVER}/supplierReport?${stringify(params)}`
   );
+const getListExpiredMedicineReport = (params) =>
+  axios.get(
+    `${process.env.REACT_APP_SERVER}/expiredMedicineReport?${stringify(params)}`
+  );
 
-export { getListCustomerReport, getListEmployeeReport, getListSupplierReport };
+export {
+  getListCustomerReport,
+  getListEmployeeReport,
+  getListSupplierReport,
+  getListExpiredMedicineReport,
+};

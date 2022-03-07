@@ -4,11 +4,11 @@ import {
   Input,
   Row,
   Col,
-  DatePicker,
   Button,
   Modal,
   notification,
   Result,
+  DatePicker,
 } from 'antd';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -17,15 +17,16 @@ import Table from '../../components/Table';
 import { useParams } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import '../../utils/css/styleList.scss';
-import moment from 'moment';
 import filterIcon from '../../static/web/images/filter.svg';
 import { formatNumber } from '../../utils/utils';
+import moment from 'moment';
 import { Redirect } from 'react-router-dom';
+import WarehouseUserSelect from '../../components/Common/WarehouseUserSelect';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 
-const EmployeeReport = ({ isMobile, intl, headerPage }) => {
+const ExpiredMedicineV2 = ({ isMobile, intl, headerPage }) => {
   let { id } = useParams();
   const userGroupId = localStorage.getItem('userGroupId');
   const healthFacilityId = localStorage.getItem('healthFacilityId');
@@ -72,7 +73,7 @@ const EmployeeReport = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify({ healthFacilityId: healthFacilityId }),
     };
     dispatch({
-      type: 'medicineReport/employeeReport',
+      type: 'medicineReport/expiredMedicine',
       payload: params,
       callback: (res) => {
         setLoading(false);
@@ -98,17 +99,17 @@ const EmployeeReport = ({ isMobile, intl, headerPage }) => {
         ? rangeValue[1].set({ hour: 23, minute: 59, second: 59 })
         : '';
     const queryName = {
-      fullName: values.fullName && values.fullName.trim(),
-      mobile: values.mobile,
+      medicineName: values.medicineName && values.medicineName.trim(),
+      warehouseId: values.warehouseId,
+      healthFacilityId,
       fromDate: fromDate,
       toDate: toDate,
-      healthFacilityId,
     };
-    if (!(values.fullName && values.fullName.trim())) {
-      delete queryName.fullName;
+    if (!(values.medicineName && values.medicineName.trim())) {
+      delete queryName.medicineName;
     }
-    if (!values.mobile) {
-      delete queryName.mobile;
+    if (!values.warehouseId) {
+      delete queryName.warehouseId;
     }
     if (rangeValue.length === 0) {
       delete queryName.fromDate;
@@ -118,7 +119,7 @@ const EmployeeReport = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify(queryName),
     };
     dispatch({
-      type: 'medicineReport/employeeReport',
+      type: 'medicineReport/expiredMedicine',
       payload: query,
       callback: (res) => {
         setLoading(false);
@@ -153,21 +154,20 @@ const EmployeeReport = ({ isMobile, intl, headerPage }) => {
       <Form
         onFinish={handleSearch}
         initialValues={{
-          fullName: '',
-          mobile: '',
-          dateCreated: [],
+          medicineName: '',
+          warehouseId: '',
         }}
       >
         <Row gutter={{ md: 0, lg: 8, xl: 16 }}>
           <Col xs={24} md={12} xl={8}>
             <FormItem
-              name="fullName"
-              label={<FormattedMessage id="app.employeeReport.list.col11" />}
+              name="medicineName"
+              label={<FormattedMessage id="app.expiredMedicine.list.col1" />}
               {...formItemLayout}
             >
               <Input
                 placeholder={intl.formatMessage({
-                  id: 'app.employeeReport.search.col1',
+                  id: 'app.expiredMedicine.search.col1',
                 })}
                 size="small"
               />
@@ -175,13 +175,13 @@ const EmployeeReport = ({ isMobile, intl, headerPage }) => {
           </Col>
           <Col xs={24} md={12} xl={8}>
             <FormItem
-              name="mobile"
-              label={<FormattedMessage id="app.employeeReport.list.col2" />}
+              name="warehouseId"
+              label={<FormattedMessage id="app.expiredMedicine.list.col7" />}
               {...formItemLayout}
             >
-              <Input
+              <WarehouseUserSelect
                 placeholder={intl.formatMessage({
-                  id: 'app.employeeReport.search.col2',
+                  id: 'app.expiredMedicine.search.col2',
                 })}
                 size="small"
               />
@@ -215,7 +215,7 @@ const EmployeeReport = ({ isMobile, intl, headerPage }) => {
           </Col>
           <Col
             xl={2}
-            md={12}
+            md={24}
             xs={24}
             style={
               isMobile
@@ -250,29 +250,23 @@ const EmployeeReport = ({ isMobile, intl, headerPage }) => {
     });
   };
 
-  let totalRevenue = 0;
   let total = 0;
 
   for (let index = 0; index < data.length; index++) {
-    totalRevenue += data[index].totalRevenue;
-    total += data[index].total;
+    total += data[index].price * data[index].inStock;
   }
 
   if (data && data.length && data[data.length - 1].id !== '-1') {
     data.push({
       id: '-1',
-      fullName: intl.formatMessage({ id: 'app.employeeReport.list.col10' }),
+      medicineName: intl.formatMessage({
+        id: 'app.expiredMedicine.list.col8',
+      }),
       price: '',
-      amount: '',
-      discount: '',
-      tax: '',
-      discountType: 0,
-      taxType: 0,
-      totalRevenue: totalRevenue,
+      inStock: '',
       total: total,
     });
   }
-
   const columns = [
     {
       dataIndex: null,
@@ -301,10 +295,10 @@ const EmployeeReport = ({ isMobile, intl, headerPage }) => {
       fixed: isMobile,
     },
     {
-      dataIndex: 'fullName',
-      name: 'fullName',
+      dataIndex: 'medicineName',
+      name: 'medicineName',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.employeeReport.list.col1" />,
+      title: <FormattedMessage id="app.expiredMedicine.list.col1" />,
       align: 'left',
       sorter: () => {},
       fixed: isMobile,
@@ -320,101 +314,83 @@ const EmployeeReport = ({ isMobile, intl, headerPage }) => {
       },
     },
     {
-      dataIndex: 'mobile',
-      name: 'mobile',
-      width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.employeeReport.list.col2" />,
-      align: 'left',
-      sorter: () => {},
-      render: (value, row, index) => {
-        const obj = {
-          children: value,
-          props: {},
-        };
-        if (index === data.length - 1) {
-          obj.props.colSpan = 0;
-        }
-        return obj;
-      },
-    },
-    {
-      dataIndex: 'medicineName',
-      name: 'medicineName',
-      width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.employeeReport.list.col3" />,
-      align: 'left',
-      sorter: () => {},
-      render: (value, row, index) => {
-        const obj = {
-          children: value,
-          props: {},
-        };
-        if (index === data.length - 1) {
-          obj.props.colSpan = 0;
-        }
-        return obj;
-      },
-    },
-    {
       dataIndex: 'price',
       name: 'price',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.employeeReport.list.col4" />,
+      title: <FormattedMessage id="app.expiredMedicine.list.col2" />,
       align: 'left',
       sorter: () => {},
-      render: (text) => <span>{formatNumber(text)}</span>,
+      render: (value, row, index) => {
+        const obj = {
+          children: value,
+          props: {},
+        };
+        if (index === data.length - 1) {
+          obj.props.colSpan = 0;
+        }
+        return obj;
+      },
     },
     {
-      dataIndex: 'amount',
-      name: 'amount',
+      dataIndex: 'expiry',
+      name: 'expiry',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.employeeReport.list.col5" />,
+      title: <FormattedMessage id="app.expiredMedicine.list.col3" />,
       align: 'left',
       sorter: () => {},
-      render: (text) => <span>{formatNumber(text)}</span>,
+      render: (value, row, index) => {
+        const obj = {
+          children: value,
+          props: {},
+        };
+        if (index === data.length - 1) {
+          obj.props.colSpan = 0;
+        }
+        return obj;
+      },
     },
     {
-      dataIndex: 'discount',
-      name: 'discount',
+      dataIndex: 'inStock',
+      name: 'inStock',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.employeeReport.list.col6" />,
+      title: <FormattedMessage id="app.expiredMedicine.list.col4" />,
       align: 'left',
       sorter: () => {},
       render: (text, row) => (
         <span>
-          {formatNumber(text || '')}{' '}
-          {row?.discountType === 1 ? 'VNĐ' : row?.discountType !== 0 ? '%' : ''}
+          {formatNumber(text)} {row?.unitName}
         </span>
       ),
     },
     {
-      dataIndex: 'tax',
-      name: 'tax',
+      dataIndex: 'registrationNumber',
+      name: 'registrationNumber',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.employeeReport.list.col7" />,
+      title: <FormattedMessage id="app.expiredMedicine.list.col5" />,
       align: 'left',
       sorter: () => {},
-      render: (text, row) => (
-        <span>
-          {formatNumber(text || '')}{' '}
-          {row?.taxType === 1 ? 'VNĐ' : row?.taxType !== 0 ? '%' : ''}
-        </span>
-      ),
     },
     {
-      dataIndex: 'totalRevenue',
-      name: 'totalRevenue',
+      dataIndex: 'producerName',
+      name: 'producerName',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.employeeReport.list.col8" />,
+      title: <FormattedMessage id="app.expiredMedicine.list.col6" />,
       align: 'left',
       sorter: () => {},
-      render: (text) => <span>{formatNumber(text)}</span>,
+    },
+    {
+      dataIndex: 'warehouseName',
+      name: 'warehouseName',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.expiredMedicine.list.col7" />,
+      align: 'left',
+      sorter: () => {},
     },
     {
       dataIndex: 'total',
       name: 'total',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.employeeReport.list.col9" />,
+      title: <FormattedMessage id="app.expiredMedicine.list.col8" />,
       align: 'left',
       sorter: () => {},
       render: (text) => <span>{formatNumber(text)}</span>,
@@ -427,7 +403,7 @@ const EmployeeReport = ({ isMobile, intl, headerPage }) => {
         <>
           {headerPage}
           <HeaderContent
-            title={<FormattedMessage id="app.employeeReport.header.col1" />}
+            title={<FormattedMessage id="app.expiredMedicine.header.col1" />}
           >
             <div className="tableListForm">{renderForm()}</div>
             <div
@@ -477,4 +453,4 @@ const EmployeeReport = ({ isMobile, intl, headerPage }) => {
   );
 };
 
-export default EmployeeReport;
+export default ExpiredMedicineV2;

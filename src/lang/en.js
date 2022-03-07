@@ -45,6 +45,7 @@ const DoctorReport = require('./en-US/DoctorReport');
 const CustomerReport = require('./en-US/CustomerReport');
 const EmployeeReport = require('./en-US/EmployeeReport');
 const SupplierReport = require('./en-US/SupplierReport');
+const ExpiredMedicine = require('./en-US/ExpiredMedicine');
 
 module.exports = {
   'app.common.validate.max300':
@@ -176,4 +177,5 @@ module.exports = {
   ...CustomerReport,
   ...EmployeeReport,
   ...SupplierReport,
+  ...ExpiredMedicine,
 };

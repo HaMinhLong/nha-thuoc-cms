@@ -3,6 +3,7 @@ import {
   getListCustomerReport,
   getListEmployeeReport,
   getListSupplierReport,
+  getListExpiredMedicineReport,
 } from '../../api/medicineReport';
 
 function* getList({ payload, callback }) {
@@ -17,9 +18,14 @@ function* getListSupplier({ payload, callback }) {
   const { data } = yield call(getListSupplierReport, payload);
   if (callback) callback(data);
 }
+function* getListExpiredMedicine({ payload, callback }) {
+  const { data } = yield call(getListExpiredMedicineReport, payload);
+  if (callback) callback(data);
+}
 
 export function* medicineReportSaga() {
   yield takeLatest('medicineReport/customerReport', getList);
   yield takeLatest('medicineReport/employeeReport', getListEmployee);
   yield takeLatest('medicineReport/supplierReport', getListSupplier);
+  yield takeLatest('medicineReport/expiredMedicine', getListExpiredMedicine);
 }

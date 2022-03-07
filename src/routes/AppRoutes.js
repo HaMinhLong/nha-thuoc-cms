@@ -45,6 +45,8 @@ import DoctorReport from '../pages/ClinicReport/DoctorReport';
 import CustomerReport from '../pages/MedicineReport/CustomerReport';
 import EmployeeReport from '../pages/MedicineReport/EmployeeReport';
 import SupplierReport from '../pages/MedicineReport/SupplierReport';
+import ExpiredMedicine from '../pages/MedicineReport/ExpiredMedicine';
+import ExpiredMedicineV2 from '../pages/MedicineReport/ExpiredMedicineV2';
 
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
@@ -267,6 +269,20 @@ const AppRoutes = ({ headerPage }) => {
         </Route>
         <Route path="/medicine-supplier/:id">
           <SupplierReport
+            isMobile={isMobile}
+            intl={intl}
+            headerPage={headerPage}
+          />
+        </Route>
+        <Route path="/exipred-medicine/:id">
+          <ExpiredMedicine
+            isMobile={isMobile}
+            intl={intl}
+            headerPage={headerPage}
+          />
+        </Route>
+        <Route path="/exipred-medicine-2/:id">
+          <ExpiredMedicineV2
             isMobile={isMobile}
             intl={intl}
             headerPage={headerPage}

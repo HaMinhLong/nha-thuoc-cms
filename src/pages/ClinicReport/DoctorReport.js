@@ -509,7 +509,9 @@ const DoctorReport = ({ isMobile, intl, headerPage }) => {
   if (result && result.length && result[result.length - 1].id !== '-1') {
     result.push({
       id: '-1',
-      clinicServiceName: 'Tổng cộng',
+      clinicServiceName: intl.formatMessage({
+        id: 'app.customerReport.list.col10',
+      }),
       amount: totalAmount2,
       price: totalPrice2,
       discount: totalDiscount2,

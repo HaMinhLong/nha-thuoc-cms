@@ -282,7 +282,11 @@ const SupplierReport = ({ isMobile, intl, headerPage }) => {
       render: (value, row, index) => {
         const obj = {
           children: (
-            <p style={{ fontWeight: 600, marginBottom: 0 }}>Tổng cộng</p>
+            <p style={{ fontWeight: 600, marginBottom: 0 }}>
+              {intl.formatMessage({
+                id: 'app.customerReport.list.col10',
+              })}
+            </p>
           ),
           props: {},
         };
