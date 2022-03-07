@@ -4,11 +4,11 @@ import {
   Input,
   Row,
   Col,
+  DatePicker,
   Button,
   Modal,
   notification,
   Result,
-  DatePicker,
 } from 'antd';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -17,16 +17,15 @@ import Table from '../../components/Table';
 import { useParams } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import '../../utils/css/styleList.scss';
+import moment from 'moment';
 import filterIcon from '../../static/web/images/filter.svg';
 import { formatNumber } from '../../utils/utils';
-import moment from 'moment';
 import { Redirect } from 'react-router-dom';
-import WarehouseUserSelect from '../../components/Common/WarehouseUserSelect';
 
 const FormItem = Form.Item;
 const { RangePicker } = DatePicker;
 
-const ExpiredMedicineV2 = ({ isMobile, intl, headerPage }) => {
+const MedicineReport = ({ isMobile, intl, headerPage }) => {
   let { id } = useParams();
   const userGroupId = localStorage.getItem('userGroupId');
   const healthFacilityId = localStorage.getItem('healthFacilityId');
@@ -73,7 +72,7 @@ const ExpiredMedicineV2 = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify({ healthFacilityId: healthFacilityId }),
     };
     dispatch({
-      type: 'medicineReport/expiredMedicinev2',
+      type: 'medicineReport/medicine',
       payload: params,
       callback: (res) => {
         setLoading(false);
@@ -100,16 +99,12 @@ const ExpiredMedicineV2 = ({ isMobile, intl, headerPage }) => {
         : '';
     const queryName = {
       medicineName: values.medicineName && values.medicineName.trim(),
-      warehouseId: values.warehouseId,
-      healthFacilityId,
       fromDate: fromDate,
       toDate: toDate,
+      healthFacilityId,
     };
     if (!(values.medicineName && values.medicineName.trim())) {
       delete queryName.medicineName;
-    }
-    if (!values.warehouseId) {
-      delete queryName.warehouseId;
     }
     if (rangeValue.length === 0) {
       delete queryName.fromDate;
@@ -119,7 +114,7 @@ const ExpiredMedicineV2 = ({ isMobile, intl, headerPage }) => {
       filter: JSON.stringify(queryName),
     };
     dispatch({
-      type: 'medicineReport/expiredMedicinev2',
+      type: 'medicineReport/medicine',
       payload: query,
       callback: (res) => {
         setLoading(false);
@@ -155,39 +150,25 @@ const ExpiredMedicineV2 = ({ isMobile, intl, headerPage }) => {
         onFinish={handleSearch}
         initialValues={{
           medicineName: '',
-          warehouseId: '',
+          dateCreated: [],
         }}
       >
         <Row gutter={{ md: 0, lg: 8, xl: 16 }}>
           <Col xs={24} md={12} xl={8}>
             <FormItem
               name="medicineName"
-              label={<FormattedMessage id="app.expiredMedicine.list.col1" />}
+              label={<FormattedMessage id="app.medicineReport.list.col11" />}
               {...formItemLayout}
             >
               <Input
                 placeholder={intl.formatMessage({
-                  id: 'app.expiredMedicine.search.col1',
+                  id: 'app.medicineReport.search.col1',
                 })}
                 size="small"
               />
             </FormItem>
           </Col>
-          <Col xs={24} md={12} xl={8}>
-            <FormItem
-              name="warehouseId"
-              label={<FormattedMessage id="app.expiredMedicine.list.col7" />}
-              {...formItemLayout}
-            >
-              <WarehouseUserSelect
-                placeholder={intl.formatMessage({
-                  id: 'app.expiredMedicine.search.col2',
-                })}
-                size="small"
-              />
-            </FormItem>
-          </Col>
-          <Col xl={6} md={12} xs={24}>
+          <Col xl={8} md={12} xs={24}>
             <FormItem
               name="dateCreated"
               label={
@@ -214,7 +195,7 @@ const ExpiredMedicineV2 = ({ isMobile, intl, headerPage }) => {
             </FormItem>
           </Col>
           <Col
-            xl={2}
+            xl={8}
             md={24}
             xs={24}
             style={
@@ -250,23 +231,29 @@ const ExpiredMedicineV2 = ({ isMobile, intl, headerPage }) => {
     });
   };
 
+  let totalRevenue = 0;
   let total = 0;
 
   for (let index = 0; index < data.length; index++) {
-    total += data[index].price * data[index].inStock;
+    totalRevenue += data[index].totalRevenue;
+    total += data[index].total;
   }
 
   if (data && data.length && data[data.length - 1].id !== '-1') {
     data.push({
       id: '-1',
-      medicineName: intl.formatMessage({
-        id: 'app.expiredMedicine.list.col8',
-      }),
+      medicineName: intl.formatMessage({ id: 'app.customerReport.list.col10' }),
       price: '',
-      inStock: '',
+      amount: '',
+      discount: '',
+      tax: '',
+      taxType: 0,
+      discountType: 0,
+      totalRevenue: totalRevenue,
       total: total,
     });
   }
+
   const columns = [
     {
       dataIndex: null,
@@ -278,7 +265,7 @@ const ExpiredMedicineV2 = ({ isMobile, intl, headerPage }) => {
           children: (
             <p style={{ fontWeight: 600, marginBottom: 0 }}>
               {intl.formatMessage({
-                id: 'app.customerReport.list.col10',
+                id: 'app.medicineReport.list.col10',
               })}
             </p>
           ),
@@ -298,7 +285,7 @@ const ExpiredMedicineV2 = ({ isMobile, intl, headerPage }) => {
       dataIndex: 'medicineName',
       name: 'medicineName',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.expiredMedicine.list.col1" />,
+      title: <FormattedMessage id="app.medicineReport.list.col1" />,
       align: 'left',
       sorter: () => {},
       fixed: isMobile,
@@ -314,83 +301,101 @@ const ExpiredMedicineV2 = ({ isMobile, intl, headerPage }) => {
       },
     },
     {
+      dataIndex: 'registrationNumber',
+      name: 'registrationNumber',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.medicineReport.list.col2" />,
+      align: 'left',
+      sorter: () => {},
+      render: (value, row, index) => {
+        const obj = {
+          children: value,
+          props: {},
+        };
+        if (index === data.length - 1) {
+          obj.props.colSpan = 0;
+        }
+        return obj;
+      },
+    },
+    {
+      dataIndex: 'country',
+      name: 'country',
+      width: isMobile ? 150 : '15%',
+      title: <FormattedMessage id="app.medicineReport.list.col3" />,
+      align: 'left',
+      sorter: () => {},
+      render: (value, row, index) => {
+        const obj = {
+          children: value,
+          props: {},
+        };
+        if (index === data.length - 1) {
+          obj.props.colSpan = 0;
+        }
+        return obj;
+      },
+    },
+    {
       dataIndex: 'price',
       name: 'price',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.expiredMedicine.list.col2" />,
+      title: <FormattedMessage id="app.medicineReport.list.col4" />,
       align: 'left',
       sorter: () => {},
-      render: (value, row, index) => {
-        const obj = {
-          children: value,
-          props: {},
-        };
-        if (index === data.length - 1) {
-          obj.props.colSpan = 0;
-        }
-        return obj;
-      },
+      render: (text) => <span>{formatNumber(text)}</span>,
     },
     {
-      dataIndex: 'expiry',
-      name: 'expiry',
+      dataIndex: 'amount',
+      name: 'amount',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.expiredMedicine.list.col3" />,
+      title: <FormattedMessage id="app.medicineReport.list.col5" />,
       align: 'left',
       sorter: () => {},
-      render: (value, row, index) => {
-        const obj = {
-          children: value,
-          props: {},
-        };
-        if (index === data.length - 1) {
-          obj.props.colSpan = 0;
-        }
-        return obj;
-      },
+      render: (text) => <span>{formatNumber(text)}</span>,
     },
     {
-      dataIndex: 'inStock',
-      name: 'inStock',
+      dataIndex: 'discount',
+      name: 'discount',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.expiredMedicine.list.col4" />,
+      title: <FormattedMessage id="app.medicineReport.list.col6" />,
       align: 'left',
       sorter: () => {},
       render: (text, row) => (
         <span>
-          {formatNumber(text)} {row?.unitName}
+          {formatNumber(text || '')}{' '}
+          {row?.discountType === 1 ? 'VNĐ' : row?.discountType !== 0 ? '%' : ''}
         </span>
       ),
     },
     {
-      dataIndex: 'registrationNumber',
-      name: 'registrationNumber',
+      dataIndex: 'tax',
+      name: 'tax',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.expiredMedicine.list.col5" />,
+      title: <FormattedMessage id="app.medicineReport.list.col7" />,
       align: 'left',
       sorter: () => {},
+      render: (text, row) => (
+        <span>
+          {formatNumber(text || '')}{' '}
+          {row?.taxType === 1 ? 'VNĐ' : row?.taxType !== 0 ? '%' : ''}
+        </span>
+      ),
     },
     {
-      dataIndex: 'producerName',
-      name: 'producerName',
+      dataIndex: 'totalRevenue',
+      name: 'totalRevenue',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.expiredMedicine.list.col6" />,
+      title: <FormattedMessage id="app.medicineReport.list.col8" />,
       align: 'left',
       sorter: () => {},
-    },
-    {
-      dataIndex: 'warehouseName',
-      name: 'warehouseName',
-      width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.expiredMedicine.list.col7" />,
-      align: 'left',
-      sorter: () => {},
+      render: (text) => <span>{formatNumber(text)}</span>,
     },
     {
       dataIndex: 'total',
       name: 'total',
       width: isMobile ? 150 : '15%',
-      title: <FormattedMessage id="app.expiredMedicine.list.col8" />,
+      title: <FormattedMessage id="app.medicineReport.list.col9" />,
       align: 'left',
       sorter: () => {},
       render: (text) => <span>{formatNumber(text)}</span>,
@@ -403,7 +408,7 @@ const ExpiredMedicineV2 = ({ isMobile, intl, headerPage }) => {
         <>
           {headerPage}
           <HeaderContent
-            title={<FormattedMessage id="app.expiredMedicine.header.col1" />}
+            title={<FormattedMessage id="app.medicineReport.header.col1" />}
           >
             <div className="tableListForm">{renderForm()}</div>
             <div
@@ -453,4 +458,4 @@ const ExpiredMedicineV2 = ({ isMobile, intl, headerPage }) => {
   );
 };
 
-export default ExpiredMedicineV2;
+export default MedicineReport;
