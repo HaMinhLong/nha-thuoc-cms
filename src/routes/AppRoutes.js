@@ -48,6 +48,7 @@ import SupplierReport from '../pages/MedicineReport/SupplierReport';
 import ExpiredMedicine from '../pages/MedicineReport/ExpiredMedicine';
 import ExpiredMedicineV2 from '../pages/MedicineReport/ExpiredMedicineV2';
 import MedicineReport from '../pages/MedicineReport/MedicineReport';
+import ClinicCustomerReport from '../pages/ClinicReport/ClinicCustomerReport';
 
 import PageNotFound from '../pages/ErrorsPage/PageNotFound';
 
@@ -296,6 +297,14 @@ const AppRoutes = ({ headerPage }) => {
             headerPage={headerPage}
           />
         </Route>
+        <Route path="/clinic-customer/:id">
+          <ClinicCustomerReport
+            isMobile={isMobile}
+            intl={intl}
+            headerPage={headerPage}
+          />
+        </Route>
+
         <Route path="/account-config">
           <Account isMobile={isMobile} intl={intl} headerPage={headerPage} />
         </Route>
