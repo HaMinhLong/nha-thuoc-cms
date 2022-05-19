@@ -21,6 +21,7 @@ module.exports = {
   'app.receipt.list.col11': 'Price',
   'app.receipt.list.col12': 'Save and print invoices',
   'app.receipt.list.col13': 'Save information',
+  'app.receipt.list.col14': 'Save and print clinic result',
 
   // search
   'app.receipt.search.col0': 'Search by receipt code',

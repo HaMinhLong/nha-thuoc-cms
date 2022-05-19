@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import DoctorSelect from '../Common/DoctorSelect';
 import ReactToPrint from 'react-to-print';
+import PrintResults from '../PrintTemplate/Clinic/PrintResults';
 import CkEditor from '../CkEditor/CkEditor';
 import MedicalRegisterModal from './MedicalRegisterModal';
 import ClinicReceiptModal from './ClinicReceiptModal';
@@ -24,7 +25,7 @@ const ClinicResultModal = ({
   isRegisterPage,
 }) => {
   const formRef = React.createRef();
-
+  const componentRef = React.useRef();
   const dispatch = useDispatch();
   const [checkFirst, setCheckFirst] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -34,6 +35,7 @@ const ClinicResultModal = ({
   const [visibleRegister, setVisibleRegister] = useState(false);
   const [visibleReceipt, setVisibleReceipt] = useState(false);
   const [visiblePrescription, setVisiblePrescription] = useState(false);
+  const [dataForm, setDataForm] = useState([]);
 
   useEffect(() => {
     if (!visible && checkFirst) {
@@ -74,65 +76,107 @@ const ClinicResultModal = ({
     }
   };
 
-  const handleSubmit = () => {
+  const handleConfirm = () => {
     formRef.current.validateFields().then((values) => {
       const addItem = {
         ...values,
         description: data.description,
         medicalRegisterId: data?.medicalRegisterId,
+        ...dataEdit,
       };
-      if (data?.id) {
-        dispatch({
-          type: 'clinicResult/update',
-          payload: {
-            id: data?.id,
-            params: {
-              ...addItem,
-            },
-          },
-          callback: (res) => {
-            if (res?.success) {
-              openNotification(
-                'success',
-                intl.formatMessage({ id: 'app.common.edit.success' }),
-                '#f6ffed'
-              );
-              if (getList) {
-                getList();
-              }
-              changeModal('close');
-            } else {
-              openNotification('error', res.message, '#fff1f0');
-            }
-            setLoading(false);
-          },
-        });
-      } else {
-        dispatch({
-          type: 'clinicResult/add',
-          payload: addItem,
-          callback: (res) => {
-            if (res?.success) {
-              openNotification(
-                'success',
-                intl.formatMessage(
-                  { id: 'app.common.create.success' },
-                  { name: titleModal }
-                ),
-                '#f6ffed'
-              );
-              if (getList) {
-                getList();
-              }
-              changeModal('close');
-            } else {
-              openNotification('error', res.message, '#fff1f0');
-            }
-            setLoading(false);
-          },
-        });
-      }
+      setDataForm(addItem);
+      const modal = Modal.confirm({
+        title: intl.formatMessage({ id: 'app.receipt.list.col13' }),
+        content: (
+          <React.Fragment>
+            <i
+              className="fas fa-times"
+              style={{
+                position: 'absolute',
+                top: '10px',
+                right: '10px',
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                modal.destroy();
+              }}
+            />
+            {intl.formatMessage({ id: 'app.receipt.list.col12' })}
+          </React.Fragment>
+        ),
+        okText: intl.formatMessage({ id: 'app.common.yes' }),
+        cancelText: intl.formatMessage({ id: 'app.common.no' }),
+        onOk: () => handleSubmitAndPrint(true, values),
+        onCancel: () => handleSubmitAndPrint(false, values),
+      });
     });
+  };
+
+  // Lưu giá trị thay đổi và in
+  const handleSubmitAndPrint = (flag, values) => {
+    if (flag) {
+      document.getElementById('printResult').click();
+    }
+    handleSubmit(values);
+  };
+
+  const handleSubmit = (values) => {
+    const addItem = {
+      ...values,
+      description: data.description,
+      medicalRegisterId: data?.medicalRegisterId,
+    };
+    if (data?.id) {
+      dispatch({
+        type: 'clinicResult/update',
+        payload: {
+          id: data?.id,
+          params: {
+            ...addItem,
+          },
+        },
+        callback: (res) => {
+          if (res?.success) {
+            openNotification(
+              'success',
+              intl.formatMessage({ id: 'app.common.edit.success' }),
+              '#f6ffed'
+            );
+            if (getList) {
+              getList();
+            }
+            changeModal('close');
+          } else {
+            openNotification('error', res.message, '#fff1f0');
+          }
+          setLoading(false);
+        },
+      });
+    } else {
+      dispatch({
+        type: 'clinicResult/add',
+        payload: addItem,
+        callback: (res) => {
+          if (res?.success) {
+            openNotification(
+              'success',
+              intl.formatMessage(
+                { id: 'app.common.create.success' },
+                { name: titleModal }
+              ),
+              '#f6ffed'
+            );
+            if (getList) {
+              getList();
+            }
+            changeModal('close');
+          } else {
+            openNotification('error', res.message, '#fff1f0');
+          }
+          setLoading(false);
+        },
+      });
+    }
   };
 
   const openNotification = (type, message, color) => {
@@ -190,7 +234,7 @@ const ClinicResultModal = ({
               type="primary"
               htmlType="submit"
               loading={loading}
-              onClick={() => handleSubmit()}
+              onClick={() => handleConfirm()}
             >
               <i className="fa fa-save" />
               &nbsp;
@@ -343,6 +387,30 @@ const ClinicResultModal = ({
           </Spin>
         </Form>
       </Modal>
+      <div style={{ display: 'none' }}>
+        <ReactToPrint
+          trigger={() => (
+            <Button
+              id="printResult"
+              type="primary"
+              style={{ marginLeft: 8 }}
+              // loading={submitting}
+            >
+              {intl.formatMessage({ id: 'app.receipt.list.col14' })}
+            </Button>
+          )}
+          content={() => componentRef.current}
+        />
+        <div ref={componentRef}>
+          <PrintResults
+            isMobile={isMobile}
+            title={intl.formatMessage({
+              id: 'app.clinicReceipt.list.title1',
+            })}
+            dataPrint={dataForm}
+          />
+        </div>
+      </div>
       <MedicalRegisterModal
         isMobile={isMobile}
         intl={intl}
@@ -364,7 +432,7 @@ const ClinicResultModal = ({
         getList={getList}
         visible={visiblePrescription}
         dataCustomer={data}
-        dataEdit={{ id: data?.clinicPrescriptionId }}
+        dataEdit={data?.clinicPrescription}
       />
     </Fragment>
   );

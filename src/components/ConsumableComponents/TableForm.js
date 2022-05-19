@@ -191,8 +191,6 @@ const TableForm = (props) => {
             medicineUnits?.find((it) => it.unitId === values.unitId)?.amount
           ),
         };
-        console.log('data', data);
-        console.log('addMedicine', addMedicine);
         if (editOrCreate < 0) {
           addMedicine.flag = -1;
           const checkExits = data?.find(
@@ -245,10 +243,9 @@ const TableForm = (props) => {
   };
 
   const total = () => {
-    const inStock = medicines?.warehouses?.[0]?.warehouseMedicines?.inStock;
+    const inStock = medicines?.inStock;
     const amount = formRef.current.getFieldValue('amount');
-    const exchangeWarehouse =
-      medicines?.warehouses?.[0]?.warehouseMedicines?.exchange;
+    const exchangeWarehouse = medicines?.exchange;
     const unitId = formRef.current.getFieldValue('unitId');
     const exchange = Number(
       medicineUnits?.find((it) => it.unitId === unitId)?.amount

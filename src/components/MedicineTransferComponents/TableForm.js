@@ -242,11 +242,12 @@ const TableForm = (props) => {
     return formatNumber(Math.round(total));
   };
 
+  console.log('medicines', medicines);
+
   const total = () => {
-    const inStock = medicines?.warehouses?.[0]?.warehouseMedicines?.inStock;
+    const inStock = medicines?.inStock;
     const amount = formRef.current.getFieldValue('amount');
-    const exchangeWarehouse =
-      medicines?.warehouses?.[0]?.warehouseMedicines?.exchange;
+    const exchangeWarehouse = medicines?.exchange;
     const unitId = formRef.current.getFieldValue('unitId');
     const exchange = Number(
       medicineUnits?.find((it) => it.unitId === unitId)?.amount

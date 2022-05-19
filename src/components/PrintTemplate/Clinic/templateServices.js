@@ -5,14 +5,14 @@ import './styles.scss';
 
 export const template_1 = (
   dataPrint,
-  places,
+  currentHealthFacility,
   users,
   receitId,
   usersDoctorName,
   usersDoctorNameQ,
   descriptionsQ,
   province,
-  nameServices
+  serviceName
 ) => (
   <table
     style={{
@@ -34,8 +34,14 @@ export const template_1 = (
             margin: '10px 0',
           }}
         >
-          <div style={{ textAlign: 'center', fontSize: 14 }}>
-            {`SỞ Y TẾ ${province && province.toUpperCase()}`}
+          <div
+            style={{
+              textAlign: 'center',
+              fontSize: 14,
+              textTransform: 'uppercase',
+            }}
+          >
+            {`SỞ Y TẾ ${province || ''}`}
           </div>
           <div
             style={{
@@ -43,16 +49,19 @@ export const template_1 = (
               fontSize: 14,
               fontWeight: 600,
               textDecoration: 'underline',
+              textTransform: 'uppercase',
             }}
           >
-            {` ${places?.healthFacilityName?.toUpperCase()} `}
+            {` ${currentHealthFacility?.healthFacilityName} `}
           </div>
-          <div style={{ textAlign: 'center', fontSize: 10 }}>
-            {`Đ/C:  ${
-              places.info &&
-              places.info.address &&
-              places.info.address.toUpperCase()
-            } ĐT:${places?.mobile} `}
+          <div
+            style={{
+              textAlign: 'center',
+              fontSize: 10,
+              textTransform: 'uppercase',
+            }}
+          >
+            {`Đ/C:  ${currentHealthFacility.address} ĐT:${currentHealthFacility?.mobile} `}
           </div>
         </div>
         <div
@@ -69,12 +78,10 @@ export const template_1 = (
               fontWeight: 'bold',
               textAlign: 'center',
               color: '#E64C4C',
+              textTransform: 'uppercase',
             }}
           >
-            {`KẾT QUẢ ${
-              receitId?.services?.name.toUpperCase() ||
-              nameServices.toUpperCase()
-            }`}
+            {`KẾT QUẢ ${serviceName}`}
           </div>
           <span
             style={{
@@ -85,7 +92,9 @@ export const template_1 = (
             }}
           >
             Họ và tên:&nbsp;
-            <span style={{ fontWeight: 500 }}>{receitId?.customers?.name}</span>
+            <span style={{ fontWeight: 500 }}>
+              {dataPrint?.customer?.customerName}
+            </span>
           </span>
           <span
             style={{
@@ -108,13 +117,13 @@ export const template_1 = (
             Tuổi:&nbsp;
             <span style={{ fontWeight: 500 }}>
               {Number(moment().year()) -
-                Number(moment(receitId?.customers?.birthday).year()) || 0}
+                Number(moment(dataPrint?.customer?.dateOfBirth).year()) || 0}
             </span>
           </span>
           <span style={{ width: '100%', float: 'left', fontWeight: 600 }}>
             Địa chỉ:{' '}
             <span style={{ fontWeight: 500 }}>
-              {receitId?.customers?.address}
+              {dataPrint?.customer?.address}
             </span>
           </span>
           <span style={{ width: '100%', float: 'left', fontWeight: 600 }}>
@@ -183,14 +192,14 @@ export const template_1 = (
 
 export const template_2 = (
   dataPrint,
-  places,
+  currentHealthFacility,
   users,
   receitId,
   usersDoctorName,
   usersDoctorNameQ,
   descriptionsQ,
   province,
-  nameServices
+  serviceName
 ) => (
   <table
     style={{
@@ -206,9 +215,14 @@ export const template_2 = (
       <td>
         <div style={{ color: '#348de5', margin: '10px auto' }}>
           <div
-            style={{ textAlign: 'center', fontSize: 16, fontWeight: 'bold' }}
+            style={{
+              textAlign: 'center',
+              fontSize: 16,
+              fontWeight: 'bold',
+              textTransform: 'uppercase',
+            }}
           >
-            {`SỞ Y TẾ ${province && province.toUpperCase()}`}
+            {`SỞ Y TẾ ${province || ''}`}
           </div>
           <div
             style={{
@@ -216,12 +230,13 @@ export const template_2 = (
               fontSize: 20,
               fontWeight: 600,
               color: '#E64C4C',
+              textTransform: 'uppercase',
             }}
           >
-            {` ${places?.healthFacilityName?.toUpperCase()} `}
+            {` ${currentHealthFacility?.healthFacilityName} `}
           </div>
           <div style={{ textAlign: 'center', fontSize: 14, fontWeight: 600 }}>
-            {`Địa chỉ: ${places?.address}`}
+            {`Địa chỉ: ${currentHealthFacility?.address}`}
           </div>
           <div
             style={{
@@ -231,7 +246,7 @@ export const template_2 = (
               fontSize: 14,
             }}
           >
-            {`Điện thoại: ${places?.mobile}`}
+            {`Điện thoại: ${currentHealthFacility?.mobile}`}
           </div>
         </div>
         <div style={{ color: '#348de5', margin: '10px auto' }}>
@@ -241,12 +256,10 @@ export const template_2 = (
               fontWeight: 'bold',
               textAlign: 'center',
               color: '#E64C4C',
+              textTransform: 'uppercase',
             }}
           >
-            {`KẾT QUẢ ${
-              receitId?.services?.name.toUpperCase() ||
-              nameServices.toUpperCase()
-            }`}
+            {`KẾT QUẢ ${serviceName}`}
           </div>
           <span
             style={{
@@ -257,7 +270,9 @@ export const template_2 = (
             }}
           >
             Họ và tên:&nbsp;
-            <span style={{ fontWeight: 500 }}>{receitId?.customers?.name}</span>
+            <span style={{ fontWeight: 500 }}>
+              {dataPrint?.customer?.customerName}
+            </span>
           </span>
           <span
             style={{
@@ -280,13 +295,13 @@ export const template_2 = (
             Tuổi:&nbsp;
             <span style={{ fontWeight: 500 }}>
               {Number(moment().year()) -
-                Number(moment(receitId?.customers?.birthday).year()) || 0}
+                Number(moment(dataPrint?.customer?.dateOfBirth).year()) || 0}
             </span>
           </span>
           <span style={{ width: '100%', float: 'left', fontWeight: 600 }}>
             Địa chỉ:{' '}
             <span style={{ fontWeight: 500 }}>
-              {receitId?.customers?.address}
+              {dataPrint?.customer?.address}
             </span>
           </span>
           <span style={{ width: '100%', float: 'left', fontWeight: 600 }}>
@@ -363,14 +378,14 @@ export const template_2 = (
 
 export const template_3 = (
   dataPrint,
-  places,
+  currentHealthFacility,
   users,
   receitId,
   usersDoctorName,
   usersDoctorNameQ,
   descriptionsQ,
   province,
-  nameServices
+  serviceName
 ) => (
   <table
     style={{
@@ -392,12 +407,13 @@ export const template_3 = (
               paddingTop: 10,
               fontWeight: 600,
               color: '#E64C4C',
+              textTransform: 'uppercase',
             }}
           >
-            {` ${places?.healthFacilityName?.toUpperCase()} `}
+            {` ${currentHealthFacility?.healthFacilityName} `}
           </div>
           <div style={{ textAlign: 'right', fontSize: 14, fontWeight: 600 }}>
-            {places?.address}
+            {currentHealthFacility?.address}
           </div>
           <div
             style={{
@@ -407,17 +423,19 @@ export const template_3 = (
               fontSize: 14,
             }}
           >
-            {`Điện thoại: ${places?.mobile}`}
+            {`Điện thoại: ${currentHealthFacility?.mobile}`}
           </div>
         </div>
         <div style={{ color: '#348de5', margin: '10px auto' }}>
           <div
-            style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}
+            style={{
+              fontSize: 18,
+              fontWeight: 'bold',
+              textAlign: 'center',
+              textTransform: 'uppercase',
+            }}
           >
-            {`KẾT QUẢ ${
-              receitId?.services?.name.toUpperCase() ||
-              nameServices.toUpperCase()
-            }`}
+            {`KẾT QUẢ ${serviceName}`}
           </div>
           <div
             style={{
@@ -437,7 +455,9 @@ export const template_3 = (
             }}
           >
             Họ và tên:&nbsp;
-            <span style={{ fontWeight: 500 }}>{receitId?.customers?.name}</span>
+            <span style={{ fontWeight: 500 }}>
+              {dataPrint?.customer?.customerName}
+            </span>
           </span>
           <span
             style={{
@@ -460,13 +480,13 @@ export const template_3 = (
             Tuổi:&nbsp;
             <span style={{ fontWeight: 500 }}>
               {Number(moment().year()) -
-                Number(moment(receitId?.customers?.birthday).year()) || 0}
+                Number(moment(dataPrint?.customer?.dateOfBirth).year()) || 0}
             </span>
           </span>
           <span style={{ width: '100%', float: 'left', fontWeight: 600 }}>
             Địa chỉ:{' '}
             <span style={{ fontWeight: 500 }}>
-              {receitId?.customers?.address}
+              {dataPrint?.customer?.address}
             </span>
           </span>
           <span style={{ width: '100%', float: 'left', fontWeight: 600 }}>
@@ -539,14 +559,14 @@ export const template_3 = (
 
 export const template_4 = (
   dataPrint,
-  places,
+  currentHealthFacility,
   users,
   receitId,
   usersDoctorName,
   usersDoctorNameQ,
   descriptionsQ,
   province,
-  nameServices
+  serviceName
 ) => (
   <table
     style={{
@@ -562,9 +582,14 @@ export const template_4 = (
       <td>
         <div style={{ color: '#348de5', margin: '10px auto' }}>
           <div
-            style={{ textAlign: 'center', fontSize: 16, fontWeight: 'bold' }}
+            style={{
+              textAlign: 'center',
+              fontSize: 16,
+              fontWeight: 'bold',
+              textTransform: 'uppercase',
+            }}
           >
-            {`SỞ Y TẾ ${province && province.toUpperCase()}`}
+            {`SỞ Y TẾ ${province || ''}`}
           </div>
           <div
             style={{
@@ -573,12 +598,13 @@ export const template_4 = (
               paddingTop: 10,
               fontWeight: 600,
               color: '#E64C4C',
+              textTransform: 'uppercase',
             }}
           >
-            {` ${places?.healthFacilityName?.toUpperCase()} `}
+            {` ${currentHealthFacility?.healthFacilityName} `}
           </div>
           <div style={{ textAlign: 'center', fontSize: 14, fontWeight: 600 }}>
-            {`Địa chỉ: ${places?.address}`}
+            {`Địa chỉ: ${currentHealthFacility?.address}`}
           </div>
           <div
             style={{
@@ -588,7 +614,7 @@ export const template_4 = (
               fontSize: 14,
             }}
           >
-            {`Điện thoại: ${places?.mobile}`}
+            {`Điện thoại: ${currentHealthFacility?.mobile}`}
           </div>
           <div
             style={{
@@ -597,12 +623,10 @@ export const template_4 = (
               textAlign: 'center',
               color: '#E64C4C',
               marginTop: 15,
+              textTransform: 'uppercase',
             }}
           >
-            {`KẾT QUẢ ${
-              receitId?.services?.name.toUpperCase() ||
-              nameServices.toUpperCase()
-            }`}
+            {`KẾT QUẢ ${serviceName}`}
           </div>
           <span
             style={{
@@ -615,7 +639,9 @@ export const template_4 = (
             }}
           >
             Họ và tên:&nbsp;
-            <span style={{ fontWeight: 500 }}>{receitId?.customers?.name}</span>
+            <span style={{ fontWeight: 500 }}>
+              {dataPrint?.customer?.customerName}
+            </span>
           </span>
           <span
             style={{
@@ -642,7 +668,7 @@ export const template_4 = (
             Tuổi:&nbsp;
             <span style={{ fontWeight: 500 }}>
               {Number(moment().year()) -
-                Number(moment(receitId?.customers?.birthday).year()) || 0}
+                Number(moment(dataPrint?.customer?.dateOfBirth).year()) || 0}
             </span>
           </span>
           <span
@@ -656,7 +682,7 @@ export const template_4 = (
           >
             Địa chỉ:{' '}
             <span style={{ fontWeight: 500 }}>
-              {receitId?.customers?.address}
+              {dataPrint?.customer?.address}
             </span>
           </span>
           <span
@@ -732,14 +758,14 @@ export const template_4 = (
 
 export const template_5 = (
   dataPrint,
-  places,
+  currentHealthFacility,
   users,
   receitId,
   usersDoctorName,
   usersDoctorNameQ,
   descriptionsQ,
   province,
-  nameServices
+  serviceName
 ) => (
   <table
     style={{
@@ -760,9 +786,10 @@ export const template_5 = (
               fontSize: 16,
               paddingTop: 5,
               fontWeight: 'bold',
+              textTransform: 'uppercase',
             }}
           >
-            {`SỞ Y TẾ ${province && province.toUpperCase()}`}
+            {`SỞ Y TẾ ${province || ''}`}
           </div>
           <div
             style={{
@@ -771,9 +798,10 @@ export const template_5 = (
               paddingTop: 5,
               fontWeight: 600,
               color: '#E64C4C',
+              textTransform: 'uppercase',
             }}
           >
-            {` ${places?.healthFacilityName?.toUpperCase()} `}
+            {` ${currentHealthFacility?.healthFacilityName} `}
           </div>
           <div
             style={{
@@ -783,7 +811,7 @@ export const template_5 = (
               fontWeight: 600,
             }}
           >
-            {`Địa chỉ: ${places?.address}`}
+            {`Địa chỉ: ${currentHealthFacility?.address}`}
           </div>
           <div
             style={{
@@ -793,7 +821,7 @@ export const template_5 = (
               fontSize: 14,
             }}
           >
-            {`Điện thoại: ${places?.mobile}`}
+            {`Điện thoại: ${currentHealthFacility?.mobile}`}
           </div>
         </div>
         <div style={{ color: '#348de5', margin: '10px 0' }}>
@@ -803,12 +831,10 @@ export const template_5 = (
               fontWeight: 'bold',
               textAlign: 'center',
               color: '#E64C4C',
+              textTransform: 'uppercase',
             }}
           >
-            {`KẾT QUẢ ${
-              receitId?.services?.name.toUpperCase() ||
-              nameServices.toUpperCase()
-            }`}
+            {`KẾT QUẢ ${serviceName}`}
           </div>
           <span
             style={{
@@ -820,7 +846,9 @@ export const template_5 = (
             }}
           >
             Họ và tên:&nbsp;
-            <span style={{ fontWeight: 500 }}>{receitId?.customers?.name}</span>
+            <span style={{ fontWeight: 500 }}>
+              {dataPrint?.customer?.customerName}
+            </span>
           </span>
           <span
             style={{
@@ -845,13 +873,13 @@ export const template_5 = (
             Tuổi:&nbsp;
             <span style={{ fontWeight: 500 }}>
               {Number(moment().year()) -
-                Number(moment(receitId?.customers?.birthday).year()) || 0}
+                Number(moment(dataPrint?.customer?.dateOfBirth).year()) || 0}
             </span>
           </span>
           <span style={{ width: '100%', float: 'left', fontWeight: 600 }}>
             Địa chỉ:{' '}
             <span style={{ fontWeight: 500 }}>
-              {receitId?.customers?.address}
+              {dataPrint?.customer?.address}
             </span>
           </span>
           <span style={{ width: '100%', float: 'left', fontWeight: 600 }}>

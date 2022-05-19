@@ -38,7 +38,6 @@ const PAGE_SIZE = process.env.REACT_APP_PAGE_SIZE;
 const Customer = ({ isMobile, intl, headerPage }) => {
   let { id } = useParams();
   const userGroupId = localStorage.getItem('userGroupId');
-  const healthFacilityId = localStorage.getItem('healthFacilityId');
   const dispatch = useDispatch();
   const list = useSelector(customer);
   const [loading, setLoading] = useState(false);
@@ -81,7 +80,7 @@ const Customer = ({ isMobile, intl, headerPage }) => {
     const queryFilter = list.filter;
     setLoading(true);
     let params = {
-      filter: JSON.stringify({ healthFacilityId: healthFacilityId }),
+      filter: JSON.stringify({}),
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
       attributes:
@@ -174,7 +173,6 @@ const Customer = ({ isMobile, intl, headerPage }) => {
       gender: queryFilter && queryFilter.gender,
       fromDate: fromDate,
       toDate: toDate,
-      healthFacilityId,
     };
     if (!(queryFilter.customerName && queryFilter.customerName.trim())) {
       delete queryName.customerName;
@@ -234,7 +232,6 @@ const Customer = ({ isMobile, intl, headerPage }) => {
       gender: values && values.gender,
       fromDate: fromDate,
       toDate: toDate,
-      healthFacilityId,
     };
     if (!(values.customerName && values.customerName.trim())) {
       delete queryName.customerName;

@@ -7,19 +7,19 @@ import {
   template_4,
   template_5,
 } from './templateServices';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { healthFacility } from '../../../features/healthFacility/healthFacilitySlice';
 
 const Result = ({ dataPrint }) => {
   const dispatch = useDispatch();
+  const list = useSelector(healthFacility);
+  const currentHealthFacility = list.info;
   const token = localStorage.getItem('token');
   const [receiptId, setReceiptId] = useState({});
-  const healthFacilityId = localStorage.getItem('healthFacilityId');
   const [currentUser, setCurrentUser] = useState({});
-  const [currentHealthFacility, setCurrentHealthFacility] = useState({});
 
   useEffect(() => {
     getCurrentUser();
-    getHealthFacility();
   }, []);
 
   const getCurrentUser = () => {
@@ -30,23 +30,6 @@ const Result = ({ dataPrint }) => {
         if (res?.success) {
           const { list } = res.results;
           setCurrentUser(list);
-        } else {
-          openNotification('error', res && res.message, '#fff1f0');
-        }
-      },
-    });
-  };
-
-  const getHealthFacility = () => {
-    dispatch({
-      type: 'healthFacility/getOne',
-      payload: {
-        id: healthFacilityId,
-      },
-      callback: (res) => {
-        if (res?.success) {
-          const { list } = res.results;
-          setCurrentHealthFacility(list);
         } else {
           openNotification('error', res && res.message, '#fff1f0');
         }

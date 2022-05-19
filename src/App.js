@@ -17,17 +17,22 @@ const App = () => {
   const [localLanguage, setLocalLanguage] = useState(
     localStorage.getItem('lang')
   );
+  const healthFacilityId = localStorage.getItem('healthFacilityId');
+
   if (!localLanguage) {
     localStorage.setItem('lang', 'vi-VI');
     setLocalLanguage('vi-VI');
   }
+
   let lang;
   if (localLanguage === 'en-US') {
     lang = English;
   } else {
     lang = Vietnamese;
   }
+
   const token = localStorage.getItem('token');
+
   useEffect(() => {
     setLoading(true);
     dispatch({
@@ -36,6 +41,7 @@ const App = () => {
       callback: (res) => {
         if (res?.success) {
           setCheckLogin(true);
+          getHealthFacility();
         } else {
           setCheckLogin(false);
         }
@@ -44,6 +50,15 @@ const App = () => {
       },
     });
   }, [token]);
+
+  const getHealthFacility = () => {
+    dispatch({
+      type: 'healthFacility/getOne',
+      payload: {
+        id: healthFacilityId,
+      },
+    });
+  };
 
   return (
     <IntlProvider locale={localLanguage} messages={lang}>

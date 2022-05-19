@@ -524,7 +524,7 @@ const TableForm = ({ isMobile, intl, value, onChange }) => {
                         }
                         onChange={(id, name, time, userId, price) => {
                           formRef.current.setFieldsValue({
-                            userId: Number(userId),
+                            userId: userId,
                             price: Number(price),
                             clinicServiceName: name,
                           });

@@ -431,9 +431,15 @@ const ClinicResult = ({ isMobile, intl, headerPage }) => {
                           row?.medicalRegister?.customer?.dateOfBirth,
                         address: row?.medicalRegister?.customer?.address,
                       },
-                      userId: row?.medicalRegister?.user?.id,
+                      doctorName: row?.medicalRegister?.user?.fullName,
                       date: row?.medicalRegister?.date,
+                      userId: row?.medicalRegister?.user?.id,
                       medicalRegisterId: row?.medicalRegister?.id,
+                      printFormId:
+                        row?.medicalRegister?.clinicService
+                          ?.clinicServicePackage?.printFormId,
+                      serviceName:
+                        row?.medicalRegister?.clinicService?.clinicServiceName,
                     });
                   }}
                   icon={

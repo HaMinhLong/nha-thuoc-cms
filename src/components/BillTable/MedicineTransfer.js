@@ -462,8 +462,6 @@ const MedicineTransferPage = ({
                         />
                       </FormItem>
                     </Col>
-                    {console.log('warehouseId', warehouseId)}
-                    {console.log('dataDetails', dataDetails)}
                     <Col sm={12} xs={24}>
                       <FormItem
                         {...formItemLayout}

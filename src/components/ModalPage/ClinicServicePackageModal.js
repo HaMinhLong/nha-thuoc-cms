@@ -394,10 +394,10 @@ const ClinicServicePackageModal = ({
                           receiptIdProps={{}}
                           dataPrint={{
                             descriptions: getFieldValue('sampleResults'),
-                            nameServices: getFieldValue(
+                            serviceName: getFieldValue(
                               'clinicServicePackageName'
                             ),
-                            templateReceiptPrints: getFieldValue('printFormId'),
+                            printFormId: getFieldValue('printFormId'),
                           }}
                         />
                       </div>

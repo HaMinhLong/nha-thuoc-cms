@@ -73,10 +73,8 @@ const UserGroupSelect = ({
     checkDataAll
   ) => {
     const pagesize = 20;
-    const healthFacilityId = localStorage.getItem('healthFacilityId');
     const tfilter = {
       supplierGroupName: searchValue,
-      healthFacilityId: healthFacilityId,
       status: 1,
     };
     if (getAll) {

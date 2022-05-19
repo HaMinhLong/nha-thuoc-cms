@@ -70,6 +70,7 @@ const MedicalRegisterModal = ({
           setLoading(false);
           if (res?.success) {
             const { list } = res.results;
+            setKeyStyle({ id: list.clinicTimeId || '' });
             handleChangeClinicService(
               list.clinicService.id,
               list.clinicService.time,
@@ -201,95 +202,91 @@ const MedicalRegisterModal = ({
     formRef.current
       .validateFields()
       .then((values) => {
-        if (!keyStyle.id) {
-          openNotification('warning', 'Vui lòng chọn giờ khám!', '#fff1f0');
-        } else {
-          setLoading(true);
-          const healthFacilityId = localStorage.getItem('healthFacilityId');
-          const addItem = {
-            ...values,
-            customerName: values.customerName && values.customerName.trim(),
-            healthFacilityId,
-            clinicTimeId: keyStyle.id,
-            exitsCustomer,
+        setLoading(true);
+        const healthFacilityId = localStorage.getItem('healthFacilityId');
+        const addItem = {
+          ...values,
+          customerName: values.customerName && values.customerName.trim(),
+          healthFacilityId,
+          clinicTimeId: keyStyle.id,
+          exitsCustomer,
+        };
+        if (data?.id) {
+          const item = {
+            isClose: true,
           };
-          if (data?.id) {
-            const item = {
-              isClose: true,
-            };
-            const itemOld = {
-              isClose: false,
-            };
-            dispatch({
-              type: 'clinicTime/updateStatus',
-              payload: {
-                id: keyStyle.id,
-                params: item,
+          const itemOld = {
+            isClose: false,
+          };
+          dispatch({
+            type: 'clinicTime/updateStatus',
+            payload: {
+              id: keyStyle.id,
+              params: item,
+            },
+          });
+          dispatch({
+            type: 'clinicTime/updateStatus',
+            payload: {
+              id: data.clinicTimeId,
+              params: itemOld,
+            },
+          });
+          dispatch({
+            type: 'medicalRegister/update',
+            payload: {
+              id: data?.id,
+              params: {
+                ...addItem,
               },
-            });
-            dispatch({
-              type: 'clinicTime/updateStatus',
-              payload: {
-                id: data.clinicTimeId,
-                params: itemOld,
-              },
-            });
-            dispatch({
-              type: 'medicalRegister/update',
-              payload: {
-                id: data?.id,
-                params: {
-                  ...addItem,
-                },
-              },
-              callback: (res) => {
-                if (res?.success) {
-                  openNotification(
-                    'success',
-                    intl.formatMessage({ id: 'app.common.edit.success' }),
-                    '#f6ffed'
-                  );
-                  getList();
-                  changeModal('close');
-                } else {
-                  openNotification('error', res.message, '#fff1f0');
-                }
-                setLoading(false);
-              },
-            });
-          } else {
-            const item = {
-              isClose: true,
-            };
-            dispatch({
-              type: 'clinicTime/updateStatus',
-              payload: {
-                id: keyStyle.id,
-                params: item,
-              },
-            });
-            dispatch({
-              type: 'medicalRegister/add',
-              payload: addItem,
-              callback: (res) => {
-                if (res?.success) {
-                  openNotification(
-                    'success',
-                    intl.formatMessage(
-                      { id: 'app.common.create.success' },
-                      { name: titleModal }
-                    ),
-                    '#f6ffed'
-                  );
-                  getList();
-                  changeModal('close');
-                } else {
-                  openNotification('error', res.message, '#fff1f0');
-                }
-                setLoading(false);
-              },
-            });
-          }
+            },
+            callback: (res) => {
+              if (res?.success) {
+                openNotification(
+                  'success',
+                  intl.formatMessage({ id: 'app.common.edit.success' }),
+                  '#f6ffed'
+                );
+                getList();
+                changeModal('close');
+              } else {
+                openNotification('error', res.message, '#fff1f0');
+              }
+              setLoading(false);
+            },
+          });
+        } else {
+          const item = {
+            isClose: true,
+          };
+          dispatch({
+            type: 'clinicTime/updateStatus',
+            payload: {
+              id: keyStyle.id,
+              params: item,
+            },
+          });
+          dispatch({
+            type: 'medicalRegister/add',
+            payload: addItem,
+            callback: (res) => {
+              if (res?.success) {
+                openNotification(
+                  'success',
+                  intl.formatMessage(
+                    { id: 'app.common.create.success' },
+                    { name: titleModal }
+                  ),
+                  '#f6ffed'
+                );
+                getList();
+                changeModal('close');
+              } else {
+                openNotification('error', res.message, '#fff1f0');
+              }
+              setLoading(false);
+            },
+          });
         }
       })
       .catch(({ errorFields }) => {

@@ -84,7 +84,7 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
     const queryFilter = list.filter;
     setLoading(true);
     let params = {
-      filter: JSON.stringify({ healthFacilityId: healthFacilityId }),
+      filter: JSON.stringify({}),
       range: JSON.stringify([0, PAGE_SIZE]),
       sort: JSON.stringify(['createdAt', 'DESC']),
       attributes: 'id,producerGroupName,status,createdAt',
@@ -274,7 +274,6 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
       status: queryFilter && queryFilter.status,
       fromDate: fromDate,
       toDate: toDate,
-      healthFacilityId,
     };
     if (
       !(queryFilter.producerGroupName && queryFilter.producerGroupName.trim())
@@ -334,7 +333,6 @@ const ProducerGroup = ({ isMobile, intl, headerPage }) => {
       status: values && values.status,
       fromDate: fromDate,
       toDate: toDate,
-      healthFacilityId,
     };
     if (!(values.producerGroupName && values.producerGroupName.trim())) {
       delete queryName.producerGroupName;

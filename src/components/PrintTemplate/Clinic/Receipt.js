@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { notification } from 'antd';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import _ from 'lodash';
 import { formatNumber } from '../../../utils/utils';
 import '../../../utils/css/stylePrint.scss';
+import { healthFacility } from '../../../features/healthFacility/healthFacilitySlice';
 
 const Receipt = ({ intl, isMobile, title, dataForm }) => {
   const dispatch = useDispatch();
+  const list = useSelector(healthFacility);
+  const currentHealthFacility = list.info;
   const token = localStorage.getItem('token');
-  const healthFacilityId = localStorage.getItem('healthFacilityId');
   const [currentUser, setCurrentUser] = useState({});
-  const [currentHealthFacility, setCurrentHealthFacility] = useState({});
 
   useEffect(() => {
     getCurrentUser();
-    getHealthFacility();
   }, []);
 
   const getCurrentUser = () => {
@@ -26,23 +26,6 @@ const Receipt = ({ intl, isMobile, title, dataForm }) => {
         if (res?.success) {
           const { list } = res.results;
           setCurrentUser(list);
-        } else {
-          openNotification('error', res && res.message, '#fff1f0');
-        }
-      },
-    });
-  };
-
-  const getHealthFacility = () => {
-    dispatch({
-      type: 'healthFacility/getOne',
-      payload: {
-        id: healthFacilityId,
-      },
-      callback: (res) => {
-        if (res?.success) {
-          const { list } = res.results;
-          setCurrentHealthFacility(list);
         } else {
           openNotification('error', res && res.message, '#fff1f0');
         }

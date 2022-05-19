@@ -59,6 +59,7 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
   const [dataClinicReceipt, setDataClinicReceipt] = useState({});
   const [visibleClinicResult, setVisibleClinicResult] = useState(false);
   const [dataEditClinicResult, setDataEditClinicResult] = useState({});
+  const [dataCustomerReceipt, setDataCustomerReceipt] = useState({});
 
   useEffect(() => {
     getPermission();
@@ -459,7 +460,6 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
               setVisibleClinicResult(!visibleClinicResult);
               setDataEditClinicResult({
                 id: row?.clinicResults?.[0]?.id,
-                clinicPrescriptionId: row?.clinicPrescriptions?.[0]?.id,
                 customer: {
                   id: row?.customer?.id,
                   customerName: row?.customer?.customerName,
@@ -467,9 +467,26 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
                   dateOfBirth: row?.customer?.dateOfBirth,
                   address: row?.customer?.address,
                 },
+                doctorName: row?.user?.fullName,
                 date: row?.date,
                 userId: row?.userId,
                 medicalRegisterId: row?.id,
+                printFormId:
+                  row?.clinicService?.clinicServicePackage?.printFormId,
+                serviceName: row?.clinicService?.clinicServiceName,
+                clinicPrescription: {
+                  id: row?.clinicPrescriptions?.[0]?.id,
+                  receiptCode: '',
+                  customer: {
+                    id: row?.customer?.id,
+                    customerName: row?.customer?.customerName,
+                    mobile: row?.customer?.mobile,
+                    dateOfBirth: row?.customer?.dateOfBirth,
+                    gender: row?.customer?.gender,
+                    address: row?.customer?.address,
+                  },
+                  doctorName: row?.user?.fullName,
+                },
               });
             }}
           >
@@ -482,6 +499,7 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
             onClick={() => {
               setDataClinicRegister(row);
               setDataClinicReceipt({});
+              setDataCustomerReceipt(row?.customer);
               setDataEditClinicReceiptServices([
                 {
                   id: row?.clinicService?.id,
@@ -873,6 +891,7 @@ const MedicalRegister = ({ isMobile, intl, headerPage }) => {
         dataClinicRegister={dataClinicRegister}
         getListMedicalRegister={getList}
         dataEdit={dataClinicReceipt}
+        dataCustomer={dataCustomerReceipt}
       />
       <ClinicResultModal
         isMobile={isMobile}

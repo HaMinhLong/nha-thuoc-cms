@@ -423,6 +423,7 @@ const ClinicPrescription = ({ isMobile, intl, headerPage }) => {
                     setVisibleModal(!visibleModal);
                     setDataEdit({
                       id: row.id,
+                      receiptCode: '',
                       customer: {
                         id: row?.medicalRegister?.customer?.id,
                         customerName:
@@ -431,8 +432,10 @@ const ClinicPrescription = ({ isMobile, intl, headerPage }) => {
                         dateOfBirth:
                           row?.medicalRegister?.customer?.dateOfBirth,
                         address: row?.medicalRegister?.customer?.address,
+                        gender: row?.medicalRegister?.customer?.gender,
                       },
                       userId: row?.medicalRegister?.user?.id,
+                      doctorName: row?.medicalRegister?.user?.fullName,
                       date: row?.medicalRegister?.date,
                       medicalRegisterId: row?.medicalRegister?.id,
                     });

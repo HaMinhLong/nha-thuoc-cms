@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { notification } from 'antd';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   template_1,
   template_2,
@@ -8,18 +8,20 @@ import {
   template_4,
   template_5,
 } from './templateServices';
+import { healthFacility } from '../../../features/healthFacility/healthFacilitySlice';
 
-const PrintResults = ({ dataPrint, receiptIdProps, ref }) => {
+const PrintResults = ({ dataPrint }) => {
   const dispatch = useDispatch();
+  const list = useSelector(healthFacility);
+  const currentHealthFacility = list.info;
   const [receiptId, setReceiptId] = useState({});
   const [currentUser, setCurrentUser] = useState({});
-  const [currentHealthFacility, setCurrentHealthFacility] = useState({});
   const token = localStorage.getItem('token');
-  const healthFacilityId = localStorage.getItem('healthFacilityId');
+
   useEffect(() => {
     getCurrentUser();
-    getHealthFacility();
   }, []);
+
   const getCurrentUser = () => {
     dispatch({
       type: 'user/current',
@@ -34,22 +36,7 @@ const PrintResults = ({ dataPrint, receiptIdProps, ref }) => {
       },
     });
   };
-  const getHealthFacility = () => {
-    dispatch({
-      type: 'healthFacility/getOne',
-      payload: {
-        id: healthFacilityId,
-      },
-      callback: (res) => {
-        if (res?.success) {
-          const { list } = res.results;
-          setCurrentHealthFacility(list);
-        } else {
-          openNotification('error', res && res.message, '#fff1f0');
-        }
-      },
-    });
-  };
+
   const openNotification = (type, message, color) => {
     notification[type]({
       message: message,
@@ -57,12 +44,14 @@ const PrintResults = ({ dataPrint, receiptIdProps, ref }) => {
       style: { background: color },
     });
   };
-  const usersDoctorName = '……………………………';
-  const usersDoctorNameQ = '……………………………';
+
+  const usersDoctorName = dataPrint?.doctorName;
+  const usersDoctorNameQ = dataPrint?.doctorName;
   const descriptionsQ = '';
   const province = currentHealthFacility?.province?.provinceName;
-  const nameServices = dataPrint?.nameServices;
-  const templateReceiptPrintsId = dataPrint?.templateReceiptPrints;
+  const serviceName = dataPrint?.serviceName;
+  const templateReceiptPrintsId = dataPrint?.printFormId;
+
   if (Number(templateReceiptPrintsId) === 1189) {
     return template_1(
       dataPrint,
@@ -73,9 +62,10 @@ const PrintResults = ({ dataPrint, receiptIdProps, ref }) => {
       usersDoctorNameQ,
       descriptionsQ,
       province,
-      nameServices
+      serviceName
     );
   }
+
   if (Number(templateReceiptPrintsId) === 1289) {
     return template_2(
       dataPrint,
@@ -86,9 +76,10 @@ const PrintResults = ({ dataPrint, receiptIdProps, ref }) => {
       usersDoctorNameQ,
       descriptionsQ,
       province,
-      nameServices
+      serviceName
     );
   }
+
   if (Number(templateReceiptPrintsId) === 1389) {
     return template_3(
       dataPrint,
@@ -99,9 +90,10 @@ const PrintResults = ({ dataPrint, receiptIdProps, ref }) => {
       usersDoctorNameQ,
       descriptionsQ,
       province,
-      nameServices
+      serviceName
     );
   }
+
   if (Number(templateReceiptPrintsId) === 1489) {
     return template_4(
       dataPrint,
@@ -112,9 +104,10 @@ const PrintResults = ({ dataPrint, receiptIdProps, ref }) => {
       usersDoctorNameQ,
       descriptionsQ,
       province,
-      nameServices
+      serviceName
     );
   }
+
   if (Number(templateReceiptPrintsId) === 1589) {
     return template_5(
       dataPrint,
@@ -125,9 +118,10 @@ const PrintResults = ({ dataPrint, receiptIdProps, ref }) => {
       usersDoctorNameQ,
       descriptionsQ,
       province,
-      nameServices
+      serviceName
     );
   }
+
   return template_2(
     dataPrint,
     currentHealthFacility,
@@ -137,7 +131,7 @@ const PrintResults = ({ dataPrint, receiptIdProps, ref }) => {
     usersDoctorNameQ,
     descriptionsQ,
     province,
-    nameServices
+    serviceName
   );
 };
 

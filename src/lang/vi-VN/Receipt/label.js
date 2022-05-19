@@ -21,6 +21,7 @@ module.exports = {
   'app.receipt.list.col11': 'Thành tiền',
   'app.receipt.list.col12': 'Lưu và in hóa đơn',
   'app.receipt.list.col13': 'Lưu thông tin',
+  'app.receipt.list.col14': 'Lưu và in kết quả khám',
 
   // search
   'app.receipt.search.col0': 'Tìm kiếm theo số phiếu',

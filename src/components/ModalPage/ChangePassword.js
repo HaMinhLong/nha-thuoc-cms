@@ -13,7 +13,7 @@ import regexHelper from '../../utils/regexHelper';
 import { FormattedMessage } from 'react-intl';
 
 const FormItem = Form.Item;
-const { isFullNameNnumber, isPassword } = regexHelper;
+const { isFullName200, isPassword } = regexHelper;
 const ChangePassword = ({ intl, visible }) => {
   const formRef = React.createRef();
   const dispatch = useDispatch();
@@ -149,7 +149,7 @@ const ChangePassword = ({ intl, visible }) => {
               name="username"
               rules={[
                 {
-                  pattern: isFullNameNnumber,
+                  pattern: isFullName200,
                   message: intl.formatMessage({
                     id: 'app.common.crud.validate.fomat',
                   }),
